@@ -1,21 +1,29 @@
 --===============================================
--- SCRIPPS COLLEGE JOURNAL Software Version 1.0 for Mac, tested and compiled on macOS 10.15.7 (19H15) (Intel-based)
+-- SCRIPPS COLLEGE JOURNAL Software Version 1.0 for Mac, tested and compiled on macOS 10.15.7 (19H114) (Intel-based)
 -- Intel x86 binary
--- Last updated 						November 9 2020
+-- Last updated 						January 24 2021
 -- First released staffwide 				February 2021
--- Beta entered limited staff testing 		December 2020
--- Development began 					July 2020
+-- Beta entered limited staff testing 		January 2021
+-- Development began 					July 11 2020
 -- Originally packaged with SCJ Visual Design System Version 2.1 for Volume 22
 -- © 2020–2021 Shay Lari-Hosain. All rights reserved. Scripps College and The Claremont Colleges do not own any portion of this software. This installer and design system are student-created. The author is not responsible for any modifications, or the consequences of modifications, that are made to this software by others.
+-- Last updated by: Shay Lari-Hosain PZ (replace with new name if further development continues after me)
+-- Created by: Shay Lari-Hosain PZ
 --===============================================
 
--- SCJ (Replace with code from elswhere, this is for debugging)
+-- SCJ (Replace with code from elsewhere, this is for debugging)
 
-set compatibilityscriptpath to (((path to me as text) & "::ComprehensiveCompatibilityCheck.scpt") as alias) as string -- CHANGE TO PATH TO RESOURCE
-run script file compatibilityscriptpath
+-- Compatibility Verification
+property cverify : true
+if cverify is true then
+	set compatibilityscriptpath to (((path to me as text) & "::ComprehensiveCompatibilityCheck.scpt") as alias) as string -- CHANGE TO PATH TO RESOURCE
+	run script file compatibilityscriptpath
+	-- For testing purposes only: display notification "Ccheck passed"
+end if
 -- Maybe put compatibility and disk check in their own handlers so that you can decide to call them or not call them depending on last status
 -- Remember to call each variable as global also
 
+-- Disk Verification
 set diskscriptpath to (((path to me as text) & "::FreeDiskSpace.scpt") as alias) as string -- CHANGE TO PATH TO RESOURCE
 run script file diskscriptpath
 
@@ -34,6 +42,8 @@ set computername to computer name of sysinfo
 set macmodel to (do shell script "/usr/sbin/system_profiler SPHardwareDataType | sed -En '/Model Name:/ s/^[^:]+: *//p'")
 set macmodelid to (do shell script "/usr/sbin/system_profiler SPHardwareDataType | sed -En '/Model Identifier:/ s/^[^:]+: *//p'")
 
+set uuid to (do shell script "/usr/sbin/system_profiler SPHardwareDataType | sed -En '/Hardware UUID:/ s/^[^:]+: *//p'")
+
 -- SCJ Issue
 
 if currentmonthInt is less than 6 then
@@ -49,38 +59,51 @@ set scjvolume to (scjissueyear - 1999)
 global lastUser
 global lastComputer
 global lastMachine
+global lastMachineID
 global lastUserName
+global lastUnixName
+global lastUniqueID
+property openedbeforeThisMachine : false
 property neverRan : true
 property runcount : 0
 property runcountThisMachine : 0
 
 if runcount is greater than 0 then
-	if lastComputer is not computername and lastUser is not fullname then
-		set diffCompMsg to "If you got it from " & lastUserName & " instead of downloading it directly, it may not function correctly."
-		-- if runcount is greater than 0 then set diffCompMsg to diffCompMsg & return & return & "Make sure to save any work first."
-		set diffCompAlert to button returned of (display alert "This app has already been run on a different " & lastMachine & "." message diffCompMsg buttons {"Continue", "Redownload…"} default button "Redownload…" as critical)
-		if diffCompAlert is "Redownload…" then
-			DownloadSCJ()
-			error number -128
-		end if
+	if computername is not lastComputer and firstname is not lastUserName or macmodelid is not lastMachineID and fullname is not lastUser or lastUniqueID is not uuid and fullname is not lastUser or macmodelid is not lastMachineID and computername is not lastComputer or shortname is not lastUnixName then
+		set runcountThisMachine to 0
+		set openedbeforeThisMachine to false
+		set loggedIn to false
 	end if
 end if
 
-if runcount is greater than 0 then
-	if computername is not lastComputer then
-		set loggedIn to false
-	else if firstname is not lastUserName then
-		set loggedIn to false
+if runcount is greater than 0 and runcountThisMachine is 0 then
+	if lastMachine starts with "a" or lastMachine starts with "e" or lastMachine starts with "i" or lastMachine starts with "o" or lastMachine starts with "u" then
+		set pronoun to "an"
+	else
+		set pronoun to "a"
 	end if
-	if computername is not lastComputer and firstname is not lastUserName then
-		set runcountThisMachine to 0
+	set diffCompMsg to "If you got it from " & lastUserName & " instead of downloading it directly from us, it may not function correctly."
+	-- if runcount is greater than 0 then set diffCompMsg to diffCompMsg & return & return & "Make sure to save any work first."
+	set diffCompAlert to button returned of (display alert "This app has already been run by " & lastUserName & " on " & pronoun & " " & lastMachine & "." message diffCompMsg buttons {"Continue Anyway", "Redownload from SCJ…"} default button "Redownload from SCJ…" as critical)
+	if diffCompAlert is "Redownload…" then
+		DownloadSCJ()
+		error number -128
 	end if
 end if
+
+-- Get Started
+set getstartedscriptpath to (((path to me as text) & "::FirstTime.scpt") as alias) as string -- CHANGE TO PATH TO RESOURCE
+if openedbeforeThisMachine is false then
+	run script file getstartedscriptpath
+	set openedbeforeThisMachine to true
+end if
+
+
 
 --=========================
 (* NLU Dialog 1.1 *)
 
--- Info: Inactive until 2023. Program runs once every four runs.
+-- Info: Inactive until 2026. Program runs once every four runs.
 -- Created September 5 2020
 -- Last updated September 18 2020
 --=========================
@@ -88,7 +111,7 @@ end if
 property NLUdialog : false -- NLU stands for No Longer Updated
 property NLUdismissedForever : false
 
-if currentyear is greater than 2022 then
+if currentyear is greater than 2025 then
 	
 	if runcount mod 4 is 0 then
 		set r to yes
@@ -150,7 +173,7 @@ on Dialog()
 end Dialog
 
 on DownloadSCJ()
-	set FileDownload to "https://dl.dropboxusercontent.com/s/0bd3o9p81jyt47n/DownloadFileTest.zip?dl=0" -- CHANGE FINAL URL
+	set FileDownload to "https://dl.dropboxusercontent.com/s/0bd3o9p81jyt47n/DownloadFileTest.zip?dl=0" -- CHANGE FINAL URL, USE GITHUB?
 	set FileExtension to ".zip"
 	set FileName to "SCJDesign"
 	do shell script "curl -f '" & FileDownload & "' -o ~/Desktop/" & FileName & FileExtension -- doesn't work with Google Drive files for some reason
@@ -241,11 +264,11 @@ end if
 -- Verification is complete and installer launch may begin
 
 --=========================
-(* WelcomeDialog 2.5b; Dynamic Welcome Message (Fork) *)
+(* WelcomeDialog 2.5.4; Dynamic Welcome Message (Fork) *)
 
--- Info: Program within BaseCode that provides the front-end user interface and manages SCJ user authentication
+-- Info: Program (now integrated within BaseCode) that provides the front-end user interface and manages SCJ user authentication
 -- Created July 12 2020
--- Last updated November 9 2020
+-- Last updated January 24 2021
 --=========================
 
 set neverRan to false
@@ -299,6 +322,12 @@ on Welcome()
 		set startButton to "Continue Designing"
 	end if
 	
+	if runcountThisMachine is less than 6 then
+		set welcomeMsg2 to return & return & "You can drag the SCJ icon from the folder into the Dock for quick access."
+	else if runcountThisMachine is greater than 5 then
+		set welcomeMsg2 to ""
+	end if
+	
 	if runcountThisMachine is greater than 100 then
 		set welcomeMsg0 to "Wow, your dedication to SCJ is admirable! Maybe it's time to take a break—please make sure you're taking care of yourself first and foremost, "
 		set welcomeMsg1 to ". We love what you're doing with Volume "
@@ -313,9 +342,7 @@ Put all art pieces in the ‘Artwork’ folder before placing them on your pages
 
 The best way to preview your work and assess your pages’ layout is to print them at 100% scale, if you have easy access to a printer.
 
-Be sure to back up your work periodically, either with Time Machine or by dragging key files into Google Drive.
-
-You can drag the SCJ icon from the folder into the Dock for quick access." buttons {"About…", "Cancel", startButton} default button 3 cancel button "Cancel")
+Be sure to back up your work periodically, either with Time Machine or by dragging key files into Google Drive." & welcomeMsg2 buttons {"About…", "Quit", startButton} default button 3 cancel button "Quit")
 	
 	if (text of launchButton) is "About…" then
 		set backButton to button returned of (display dialog "© Scripps College Journal
@@ -334,17 +361,23 @@ Design version 2.1" with title "About" buttons {adminButton, "Acknowledgments…
 		else if text of backButton is "Acknowledgments…" then
 			Acknowledgments()
 		else if text of backButton is "Log In As Admin…" then
-			set authenticateAdmin to (((path to me as text) & "::PasswordProtect2.scpt") as alias) as string -- CHANGE THIS TO REAL THING
+			set authenticateAdmin to (((path to me as text) & "::PasswordProtect3.scpt") as alias) as string -- CHANGE THIS TO REAL THING
 			set loggedIn to (run script (file authenticateAdmin) with parameters (loggedIn))
-			display dialog "WelcomeDialog received login status: " & loggedIn
+			-- DEBUGGER display dialog "WelcomeDialog received login status: " & loggedIn
+			if loggedIn is true then
+				display notification "Welcome back, SCJ Senior Designer."
+				set cverify to false
+			end if
 			-- AuthenticationHandler()
 			Welcome()
 		else if text of backButton is "Log Out Of Admin…" then
 			set loggedIn to false
-			display dialog "Logged out!" buttons {"OK"} default button 1
+			display notification "Logged out! Welcome back, SCJ Designer."
+			set cverify to true
 			Welcome()
 		end if
 	end if
+	
 end Welcome
 
 set licenseopen to false
@@ -352,19 +385,19 @@ set privacyopen to false
 global licenseopen
 global privacyopen
 set licensebt to "License Agreement"
-set privacybt to "Privacy"
+set privacybt to "Usage"
 
 on Acknowledgments()
 	global licensebt
 	global privacybt
-	set abtn to button returned of (display dialog "SCJ Visual Design System, Guides, and App created by" & return & "Shay Lari-Hosain" & return & return & "Special thanks to" & return & "Ariel So, Jamie Jiang and Kerry Taylor" & return & return & "SCJ Flag designed by" & return & "Shay Lari-Hosain" & return & return & "SCJ Leaf illustrated by" & return & "Karen Wang" with title "Acknowledgments" buttons {licensebt, privacybt, "Back…"} default button "Back…")
+	set abtn to button returned of (display dialog "SCJ Visual Design System and App created by" & return & "Shay Lari-Hosain" & return & return & "Special thanks to" & return & "Ariel So, Jamie Jiang and Kerry Taylor" & return & return & "SCJ Leaf illustrated by" & return & "Karen Wang" & return & return & "SCJ Flag designed by" & return & "Shay Lari-Hosain" with title "Acknowledgments" buttons {licensebt, privacybt, "Back…"} default button "Back…")
 	if abtn is "Back…" then
 		tell application "Preview" to close (every window whose name contains "SCJ License Agreement")
-		tell application "Preview" to close (every window whose name contains "SCJ Privacy Info")
+		tell application "Preview" to close (every window whose name contains "SCJ Usage Info")
 		set licenseopen to false
 		set privacyopen to false
 		set licensebt to "License Agreement"
-		set privacybt to "Privacy"
+		set privacybt to "Usage"
 		Welcome()
 	else if abtn is "License Agreement" or abtn is "Close License Agreement" then
 		if licenseopen is false then
@@ -378,16 +411,16 @@ on Acknowledgments()
 			set licensebt to "License Agreement"
 		end if
 		Acknowledgments()
-	else if abtn is "Privacy" or abtn is "Close Privacy" then
+	else if abtn is "Usage" or abtn is "Close Usage" then
 		if privacyopen is false then
-			set privacyinfo to (path to me as text) & "::SCJ Privacy Info.pdf" as alias -- relocate to Resources path inside app
+			set privacyinfo to (path to me as text) & "::SCJ Usage Info.pdf" as alias -- relocate to Resources path inside app
 			set privacyopen to true
 			tell application "Preview" to open file privacyinfo
-			set privacybt to "Close Privacy"
+			set privacybt to "Close Usage"
 		else if privacyopen is true then
-			tell application "Preview" to close (every window whose name contains "SCJ Privacy Info")
+			tell application "Preview" to close (every window whose name contains "SCJ Usage Info")
 			set privacyopen to false
-			set privacybt to "Privacy"
+			set privacybt to "Usage"
 		end if
 		Acknowledgments()
 	end if
@@ -508,6 +541,8 @@ set lastComputer to computername
 set lastMachine to macmodel
 set lastMachineID to macmodelid
 set lastUserName to firstname
+set lastUnixName to shortname
+set lastUniqueID to uuid
 
 set runcount to runcount + 1
 set runcountThisMachine to runcountThisMachine + 1
