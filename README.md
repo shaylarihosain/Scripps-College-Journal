@@ -2,7 +2,7 @@
 Introduces designers to SCJ's design system and prepares their computer automatically.
 
 # System requirements
-macOS Mojave or later
+macOS Mojave or later  
 Adobe Creative Cloud 2021  
 2 GB of free space recommended 
 
