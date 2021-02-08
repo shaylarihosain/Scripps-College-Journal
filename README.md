@@ -5,6 +5,6 @@ Introduces designers to SCJ's design system and prepares their computer for SCJ 
 Version 1.0:  
 macOS Mojave  
 Adobe Creative Cloud 2021  
-1.8 GB of disk space recommended  
+2 GB of disk space recommended  
 
 # Info
