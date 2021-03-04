@@ -11,8 +11,6 @@ Download it here.
 
 # Installation
 
-**Opening for the first time**
-
 Open the downloaded installer on your Mac.
 
 One by one, drag the app, and the Assets folder, into Applications.
@@ -23,6 +21,9 @@ Open System Preferences, and go to “Security & Privacy."
 
 In the “General” tab, click the “Open Anyway” button near the bottom.
 
+**Running for the first time**
+
+For the app to work, please grant access when your Mac prompts you. It will ask about Finder, System Events, Preview, InDesign, and Applications.
 
 # System requirements
 macOS Mojave or later  
