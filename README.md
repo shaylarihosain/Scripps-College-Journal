@@ -13,7 +13,7 @@ Download it here.
 
 Open the downloaded installer on your Mac.
 
-One by one, drag 'Scripps College Journal', and the `Assets` folder, into `Applications`.
+One by one, drag `Scripps College Journal`, and the `Assets` folder, into `Applications`.
 
 Open the Applications folder, and open the SCJ app. You’ll see a warning. Click `Cancel`.
 
