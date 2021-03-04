@@ -29,3 +29,12 @@ For the app to work, please grant access when your Mac prompts you. It will ask 
 macOS Mojave or later  
 Adobe Creative Cloud 2021  
 2 GB of free space recommended 
+
+# FAQ
+**I'm on Windows. How do I access the design system?**
+
+Download the same package linked above, use 7-Zip or another archive extractor to unzip the Mac disk image installer, and delete the Scripps College Journal app, as you won't need it on a PC. Unfortunately, we don't have an app for Windows.
+
+But everything you need to build Scripps College Journal, including our InDesign and Illustrator brand guides, font files, InDesign workspace, and PDF export presets, is included.
+
+You can install or open each manually, drag the issue's artwork into the Artwork folder using Windows Explorer, and export your final PDFs using InDesign's standard export function.
