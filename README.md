@@ -37,4 +37,6 @@ Download the same package linked above, use 7-Zip or another archive extractor t
 
 But everything you need to build Scripps College Journal, including our InDesign and Illustrator brand guides, font files, InDesign workspace, and PDF export presets, is included.
 
-You can install or open each manually, drag the issue's artwork into the Artwork folder using Windows Explorer, and export your final PDFs using InDesign's standard export function.
+You can install or open each manually, drag the issue's artwork into the Artwork folder using Windows Explorer, and export your final PDFs using InDesign's standard export function. 
+
+(Note: On Windows, be sure to install the included SCJ-specific PDF export presets before doing so. This is absolutely mandatory if you are creating a final print file. On a Mac, the SCJ app ensures that the PDF presets are imported automatically, and if you use the app to export the package, the magazine is exported automatically using the correct color profile, resolution and format for the Journal.)
