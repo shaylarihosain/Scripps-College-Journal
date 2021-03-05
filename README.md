@@ -13,13 +13,13 @@ Download it here.
 
 Open the downloaded installer on your Mac.
 
-One by one, drag `Scripps College Journal`, and the `Assets` folder, into `Applications`.
+One by one, drag _Scripps College Journal_, and the _Assets_ folder, into _Applications_.
 
-Open the Applications folder, and open the SCJ app. You’ll see a warning. Click `Cancel`.
+Open the Applications folder, and open the SCJ app. You’ll see a warning. Click _Cancel_.
 
-Open System Preferences, and go to `Security & Privacy`.
+Open System Preferences, and go to _Security & Privacy_.
 
-In the `General` tab, click the `Open Anyway` button near the bottom.
+In the _General_ tab, click the _Open Anyway_ button near the bottom.
 
 **Running for the first time**
 
@@ -33,7 +33,7 @@ Adobe Creative Cloud 2021
 # FAQ
 **I'm on Windows. How do I access the design system?**
 
-Download the same package linked above, use 7-Zip or another archive extractor to unzip the Mac disk image installer, and delete the Scripps College Journal app, as you won't need it on a PC. Unfortunately, we don't have an app for Windows.
+Download the same package linked above, use 7-Zip or another archive extractor to unzip the Mac disk image installer, and delete the _Scripps College Journal_ app, as you won't need it on a PC. Unfortunately, we don't have an app for Windows.
 
 Everything you need to build Scripps College Journal, including our InDesign and Illustrator brand guides, font files, InDesign workspace, and PDF export presets, is still included.
 
