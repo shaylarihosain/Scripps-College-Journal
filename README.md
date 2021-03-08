@@ -39,7 +39,9 @@ Everything you need to build Scripps College Journal, including our InDesign and
 
 You will have to open each file manually. For example, you'll drag the issue's artwork into the Artwork folder using Windows Explorer, install the included fonts on your PC by right-clicking on them, and export your final PDFs using InDesign's standard export dialog. Because there is no app to mandate any Adobe compatibility rules, please speak with a member of your team to ensure you use the correct versions of InDesign and Illustrator.
 
-(Note: On Windows, be sure to install the included SCJ-specific PDF export presets before exporting any PDFs. This is absolutely mandatory if you are creating a final print file. On a Mac, the SCJ app ensures that the PDF presets are imported automatically, and if you use the app to export the package, the magazine is exported automatically using the correct color profile, resolution and format for our print house.)
+(Note: On Windows, be sure to install the included SCJ-specific PDF export presets before exporting any PDFs. This is absolutely mandatory if you are creating a final print file, so that the magazine prints correctly.
+
+On a Mac, the SCJ app does this all for you automatically. It imports the PDF presets automatically as you use it, and it exports the magazine automatically using the correct color profile, resolution and format for our print house.)
 
 **How do I make sure I have the latest version of the design guides?**
 
