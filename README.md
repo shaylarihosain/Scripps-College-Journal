@@ -33,10 +33,10 @@ Adobe Creative Cloud 2021
 # FAQ
 **I'm on Windows. How do I access the design system?**
 
-Download the same package linked above, use 7-Zip or another archive extractor to unzip the Mac disk image installer, and delete the _Scripps College Journal_ app, as you won't need it on a PC. Unfortunately, we don't have an app for Windows.
+Unfortunately, we don't have an app for Windows. On a PC, download the _Assets.zip_ package.
 
 Everything you need to build Scripps College Journal, including our InDesign and Illustrator brand guides, font files, InDesign workspace, and PDF export presets, is still included.
 
 You can install or open each manually, drag the issue's artwork into the Artwork folder using Windows Explorer, and export your final PDFs using InDesign's standard export function. 
 
-(Note: On Windows, be sure to install the included SCJ-specific PDF export presets before doing so. This is absolutely mandatory if you are creating a final print file. On a Mac, the SCJ app ensures that the PDF presets are imported automatically, and if you use the app to export the package, the magazine is exported automatically using the correct color profile, resolution and format for the Journal.)
+(Note: On Windows, be sure to install the included SCJ-specific PDF export presets before exporting any PDFs. This is absolutely mandatory if you are creating a final print file. On a Mac, the SCJ app ensures that the PDF presets are imported automatically, and if you use the app to export the package, the magazine is exported automatically using the correct color profile, resolution and format for the Journal.)
