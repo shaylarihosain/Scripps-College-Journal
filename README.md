@@ -1,13 +1,13 @@
+**THIS IS NOT THE FINAL REPOSITORY FOR THIS APP. EXPECT LINKS TO BREAK UNTIL YOU DO NOT SEE THIS MESSAGE ANYMORE.**
+
 # Scripps College Journal
 Introduces designers to Scripps College Journal's design and brand system, and prepares their computer automatically.
 
-Installs fonts, configures InDesign's layout, shows designers around the brand guides.
+Installs fonts, configures InDesign's layout, shows designers around the brand guides. 
 
-Upon designers' request, it can export final packages for print and web, correctly formatted with appropriate color management and image resolution automatically, and it can download Creative Cloud when not already installed, or reinstall itself if components are missing.
+Upon designers' request, it creates final packages for print (and web) that are formatted correctly for our print house, with appropriate color management and image resolution. It can download Creative Cloud when not already installed, or reinstall itself if components are missing.
 
 [Download it here](https://github.com/shaylarihosain/Scripps-College-Journal/releases/download/v0.4/InstallScrippsCollegeJournal.dmg).
-
-**THIS IS NOT THE FINAL REPOSITORY FOR THIS APP. EXPECT LINKS TO BREAK UNTIL YOU DO NOT SEE THIS MESSAGE ANYMORE.**
 
 # Installation
 
