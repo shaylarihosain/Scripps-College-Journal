@@ -40,3 +40,11 @@ Everything you need to build Scripps College Journal, including our InDesign and
 You can install or open each manually, drag the issue's artwork into the Artwork folder using Windows Explorer, and export your final PDFs using InDesign's standard export function. 
 
 (Note: On Windows, be sure to install the included SCJ-specific PDF export presets before exporting any PDFs. This is absolutely mandatory if you are creating a final print file. On a Mac, the SCJ app ensures that the PDF presets are imported automatically, and if you use the app to export the package, the magazine is exported automatically using the correct color profile, resolution and format for the Journal.)
+
+**How do I make sure I have the latest version of the design guides?**
+
+Quit the SCJ app, and delete the existing design guide folder from your Mac. It may be in your _Documents_ folder or _Applications_ folder. 
+
+Then launch the app. When it prompts you to select a new Assets folder, click _Choose_ without selecting a proper folder. 
+
+A window will pop up that says "SCJ Assets are missing or damaged," and you will then be given the option to download new design guides.
