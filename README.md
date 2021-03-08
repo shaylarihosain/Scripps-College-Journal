@@ -23,7 +23,7 @@ In the _General_ tab, click the _Open Anyway_ button near the bottom.
 
 **Running for the first time**
 
-For the app to work, please grant access when your Mac prompts you. It will ask about Finder, System Events, Preview, InDesign, and Applications.
+For the app to work, please grant access when your Mac prompts you. It will ask about Finder, System Events, Preview, InDesign, and Documents.
 
 The first time it runs, it will download the design guides.
 
