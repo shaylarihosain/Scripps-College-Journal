@@ -13,7 +13,7 @@ Upon designers' request, it creates final packages for print (and web) that are 
 
 Open the downloaded installer on your Mac.
 
-One by one, drag _Scripps College Journal_, and the _Assets_ folder, into _Applications_.
+Drag _Scripps College Journal_ into _Applications_.
 
 Open the Applications folder, and open the SCJ app. You’ll see a warning. Click _Cancel_.
 
@@ -24,6 +24,8 @@ In the _General_ tab, click the _Open Anyway_ button near the bottom.
 **Running for the first time**
 
 For the app to work, please grant access when your Mac prompts you. It will ask about Finder, System Events, Preview, InDesign, and Applications.
+
+The first time it runs, it will download the design guides.
 
 # System requirements
 macOS Mojave or later  
