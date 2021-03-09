@@ -1,5 +1,4 @@
-**THIS IS NOT THE FINAL REPOSITORY FOR THIS APP. EXPECT LINKS TO BREAK UNTIL YOU DO NOT SEE THIS MESSAGE ANYMORE.
-Unauthorized copying or reproduction of any part of the contents of this repository, including code, binaries, disk images, or Scripps College Journal logotypes, brand assets and design guides, via any medium, is strictly prohibited. © 2019–2021. All rights reserved. **
+**THIS IS NOT THE FINAL REPOSITORY FOR THIS APP. EXPECT LINKS TO BREAK UNTIL YOU DO NOT SEE THIS MESSAGE ANYMORE.**
 
 # Scripps College Journal
 Introduces designers to Scripps College Journal's design and brand system, and prepares their computer automatically.
@@ -53,3 +52,7 @@ Quit the SCJ app, and delete the existing design guide folder from your Mac. It 
 Then launch the app. When it prompts you to select a new Assets folder, click _Choose_ without selecting a proper folder. 
 
 A window will pop up that says "SCJ Assets are missing or damaged," and you will then be given the option to download new design guides.
+
+————————————————————
+
+Unauthorized copying or reproduction of any part of the contents of this repository, including code, binaries, disk images, or Scripps College Journal logotypes, brand assets and design guides, via any medium, is strictly prohibited. © 2019–2021. All rights reserved.**
