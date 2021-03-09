@@ -1,5 +1,5 @@
 **THIS IS NOT THE FINAL REPOSITORY FOR THIS APP. EXPECT LINKS TO BREAK UNTIL YOU DO NOT SEE THIS MESSAGE ANYMORE.
-Unauthorized copying or reproduction of any part of the contents of this repository, including code, binaries, disk images, or Sripps College Journal logotypes, brand assets and design guides, via any medium, is strictly prohibited. Proprietary and confidential.**
+Unauthorized copying or reproduction of any part of the contents of this repository, including code, binaries, disk images, or SCripps College Journal logotypes, brand assets and design guides, via any medium, is strictly prohibited. Proprietary and confidential.**
 
 # Scripps College Journal
 Introduces designers to Scripps College Journal's design and brand system, and prepares their computer automatically.
