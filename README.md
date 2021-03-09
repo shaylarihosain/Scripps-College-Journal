@@ -11,7 +11,7 @@ Upon designers' request, it creates final packages for print (and web) that are 
 
 # Installation
 
-0. Open the downloaded installer on your Mac.
+Open the downloaded installer on your Mac.
 
 1. Drag _Scripps College Journal_ into _Applications_.
 
