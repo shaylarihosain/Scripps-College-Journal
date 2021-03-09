@@ -13,13 +13,13 @@ Upon designers' request, it creates final packages for print (and web) that are 
 
 Open the downloaded installer on your Mac.
 
-Drag _Scripps College Journal_ into _Applications_.
+1. Drag _Scripps College Journal_ into _Applications_.
 
-Open the Applications folder, and open the SCJ app. You’ll see a warning. Click _Cancel_.
+2. Open the Applications folder, and open the SCJ app. You’ll see a warning. Click _Cancel_.
 
-Open System Preferences, and go to _Security & Privacy_.
+3. Open System Preferences, and go to _Security & Privacy_.
 
-In the _General_ tab, click the _Open Anyway_ button near the bottom.
+4. In the _General_ tab, click the _Open Anyway_ button near the bottom.
 
 **Running for the first time**
 
@@ -47,11 +47,11 @@ On a Mac, the SCJ app does this all for you automatically. It imports the PDF pr
 
 **How do I make sure I have the latest version of the design guides?**
 
-Quit the SCJ app, and delete the existing design guide folder from your Mac. It may be in your _Documents_ folder or _Applications_ folder. 
+1. Quit the SCJ app, and delete the existing design guide folder from your Mac. It may be in your _Documents_ folder or _Applications_ folder. 
 
-Then launch the app. When it prompts you to select a new Assets folder, click _Choose_ without selecting a proper folder. 
+2. Then launch the app. When it prompts you to select a new Assets folder, click _Choose_ without selecting a proper folder. 
 
-A window will pop up that says "SCJ Assets are missing or damaged," and you will then be given the option to download new design guides.
+3. A window will pop up that says "SCJ Assets are missing or damaged," and you will then be given the option to download new design guides.
 
 ————————————————————
 
