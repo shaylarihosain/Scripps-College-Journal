@@ -55,4 +55,4 @@ A window will pop up that says "SCJ Assets are missing or damaged," and you will
 
 ————————————————————
 
-Unauthorized copying or reproduction of any part of the contents of this repository, including code, binaries, disk images, or Scripps College Journal logotypes, brand assets and design guides, via any medium, is strictly prohibited. © 2019–2021. All rights reserved.**
+###### Unauthorized copying or reproduction of any part of the contents of this repository, including code, binaries, disk images, or Scripps College Journal logotypes, brand assets and design guides, via any medium, is strictly prohibited. © 2019–2021. All rights reserved.
