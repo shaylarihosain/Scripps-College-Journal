@@ -1,5 +1,3 @@
-**THIS IS NOT THE FINAL REPOSITORY FOR THIS APP. EXPECT LINKS TO BREAK UNTIL YOU DO NOT SEE THIS MESSAGE ANYMORE.**
-
 # Scripps College Journal
 Introduces designers to Scripps College Journal's design and brand system, and prepares their computer automatically.
 
