@@ -28,15 +28,18 @@ The first time it runs, it will download the design guides.
 # Features
 
 - **Move content into the correct folder**
-     - When leadership sends you the visual artwork selected for use in the _Journal_, you need to put it into the Artwork folder. (That's because we all work with one set of artwork that made it into this year's issue—when we split up the issue for multiple designers to work on, we don't need to repackage the artwork every time. 
+     - When leadership sends you the visual artwork selected for use in the _Journal_, you need to put it into the Artwork folder. (We all work with one set of artwork that was accepted for this year's issue. When we split up the issue for multiple designers to work on, we don't need to repackage the artwork every time.) 
      - With the _Scripps College Journal_ app, you can drag all the images you download onto its Dock icon, and it'll move those files to the correct folder automatically, so that when you export the PDF, the links will be intact for the senior designer, who combines everyone's work.
 
-- **Automatic magazine export** (Beta) 
-     - When you're done with your pages, drag the InDesign file onto the SCJ Dock icon, and click __
-     - (Feature under development) When you're done with the magazine, drag the InDesign file onto the SCJ Dock icon and the magazine will be packaged automatically with properly formatted, sized and colored print PDFs that matches our print house's specifications, a PDF suitable for digital viewing, the InDesign .indd file, and an .idml XML archive file for InDesign CS4.
+- **Automatic magazine export** (Beta, some features may not be functional or operating correctly for now) 
+     - When you're done with your pages, drag the InDesign file onto the SCJ Dock icon, and click _Package for Senior Designer_. You'll have the option to email the created files. (Currently only exports preview PDF)
+     - When you're done with the magazine, drag the InDesign file onto the SCJ Dock icon and the magazine will be packaged automatically with properly formatted, sized and colored print PDFs that matches our print house's specifications, a PDF suitable for digital viewing, the InDesign .indd file, and an .idml XML archive file for InDesign CS4. (Not functional right now)
 
 - **Install Adobe Creative Cloud**
-     - If you don't have Creative Cloud installed, the app can download it for you
+     - If you don't have Creative Cloud installed, the app can download it for you.
+
+- **For senior designers**
+     - When deploying a new design guide, the Assets zip folder is all that needs to be changed. The app will use whatever font files are in the fonts folder, and whatever version of the design guide is present. 
 
 # System requirements
 macOS Mojave or later  
