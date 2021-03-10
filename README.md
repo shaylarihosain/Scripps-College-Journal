@@ -42,8 +42,12 @@ The first time it runs, it will download the design guides.
 - **Install Adobe Creative Cloud**
      - If you don't have Creative Cloud installed, the app can download it for you.
 
+- **Auto-updating compatibility rules**
+     - If each member of the design team uses different versions of InDesign, the work they create will not be compatible. To prevent this issue from occurring, _Scripps College Journal_ will notify users with out-of-date InDesign installations before letting them start, and provide them with clear instructions on how to rectify the issue. The app will keep everyone on the team each year on the same version automatically.
+
 - **For senior designers**
      - When deploying a new design guide, the Assets zip folder here on GitHub is all that needs to be updated. The app will use whatever font files are in the fonts folder, and whatever version of the design guide is present.
+     - (Beta) Logging in will disable Adobe and macOS compatibility checks. Use at your own risk.
 
 # System requirements
 macOS Mojave or later  
