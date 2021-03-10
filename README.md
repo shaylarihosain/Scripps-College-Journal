@@ -31,7 +31,7 @@ The first time it runs, it will download the design guides.
 
 - **Injects more convenient custom Adobe InDesign interface layout tailored to magazine design**
 
-- **Move artwork into the correct folder**
+- **Moves the issue's artwork into the correct folder**
      - When leadership sends you the visual artwork selected for use in the _Journal_, you need to put it into the Artwork folder. (We all work with one set of artwork that was accepted for this year's issue. When we split up the issue for multiple designers to work on, we don't need to repackage the artwork every time.) 
      - With the _Scripps College Journal_ app, you can drag all the images you download onto its Dock icon, and it'll move those files to the correct folder automatically, so that when you export the PDF, the links will be intact for the senior designer, who combines everyone's work.
 
