@@ -51,7 +51,7 @@ On a Mac, the SCJ app does this all for you automatically. It imports the PDF pr
 
 3. A window will pop up that says "SCJ Assets are missing or damaged," and you will then be given the option to download new design guides.
 
-————————————————————
+###### ————————————————————
 
 ###### Unauthorized copying or reproduction of any part of the contents of this repository, including code, binaries, disk images, or Scripps College Journal logotypes, brand assets and design guides, via any medium, is strictly prohibited. 
 ###### © 2019–2021 Shay Lari-Hosain. All rights reserved.
