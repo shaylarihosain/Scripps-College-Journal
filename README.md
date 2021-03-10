@@ -38,6 +38,7 @@ The first time it runs, it will download the design guides.
 - **Automatic magazine export** (Beta, some features may not be functional or operating correctly for now) 
      - When you're done with your pages, drag the InDesign file onto the SCJ Dock icon, and click _Package for Senior Designer_. You'll have the option to email the created files. (Currently only exports preview PDF)
      - When you're done with the magazine, drag the InDesign file onto the SCJ Dock icon and the magazine will be packaged automatically with properly formatted, sized and colored print PDFs that matches our print house's specifications, a PDF suitable for digital viewing, the InDesign .indd file, and an .idml XML archive file for InDesign CS4. (Not functional right now)
+     - Cuts down or completely eliminates diagnosing and rectifying print proofing errors. Preserves institutional memory, so that information on preparing files for Claremont Print is not lost.
 
 - **Install Adobe Creative Cloud**
      - If you don't have Creative Cloud installed, _Scripps College Journal_ will download it for you.
