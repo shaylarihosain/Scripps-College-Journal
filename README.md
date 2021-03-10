@@ -48,7 +48,7 @@ The first time it runs, it will download the design guides.
 
 - **For senior designers**
      - When deploying a new design guide, the Assets zip folder here on GitHub is all that needs to be updated. The app will use whatever font files are in the fonts folder, and whatever version of the design guide is present. New installations will automatically download the newest guides, as long as the new _Assets.zip_ replaces the old one.
-     - (Beta) Logging in will disable Adobe and macOS compatibility checks. Use at your own risk.
+     - (Beta) Signing in as leadership in the app will disable Adobe and macOS compatibility checks on that machine. Use at your own risk.
 
 # System requirements
 macOS Mojave or later  
