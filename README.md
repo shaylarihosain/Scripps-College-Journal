@@ -28,11 +28,12 @@ The first time it runs, it will download the design guides.
 # Features
 
 - **Move content into the correct folder**
-     - When leadership sends you the visual artwork selected for use in the _Journal_, you need to put it into the Artwork folder. (That's because we all work with one set of artwork that made it into this year's issue—when we split up the issue for multiple designers to work on, we don't need to repackage the artwork every time. With the _Scripps College Journal_ app, you can drag all the images onto its Dock icon, and it'll move those files to the correct folder automatically, so that when you export the PDF, the links will be intact for the senior designer, who merges all the work from everyone.
+     - When leadership sends you the visual artwork selected for use in the _Journal_, you need to put it into the Artwork folder. (That's because we all work with one set of artwork that made it into this year's issue—when we split up the issue for multiple designers to work on, we don't need to repackage the artwork every time. 
+     - With the _Scripps College Journal_ app, you can drag all the images you download onto its Dock icon, and it'll move those files to the correct folder automatically, so that when you export the PDF, the links will be intact for the senior designer, who combines everyone's work.
 
 - **Automatic magazine export** (Beta) 
      - When you're done with your pages, drag the InDesign file onto the SCJ Dock icon, and click __
-     - (Feature under development) When you're done with the magazine, drag the InDesign file onto the SCJ Dock icon 
+     - (Feature under development) When you're done with the magazine, drag the InDesign file onto the SCJ Dock icon and the magazine will be packaged automatically with properly formatted, sized and colored print PDFs that matches our print house's specifications, a PDF suitable for digital viewing, the InDesign .indd file, and an .idml XML archive file for InDesign CS4.
 
 - **Install Adobe Creative Cloud**
      - If you don't have Creative Cloud installed, the app can download it for you
