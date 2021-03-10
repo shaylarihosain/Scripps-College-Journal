@@ -25,10 +25,22 @@ For the app to work, please grant access when your Mac prompts you. It will ask 
 
 The first time it runs, it will download the design guides.
 
+# Features
+
+- **Move content into the correct folder**
+     - When leadership sends you the visual artwork selected for use in the _Journal_, you need to put it into the Artwork folder. (That's because we all work with one set of artwork that made it into this year's issue—when we split up the issue for multiple designers to work on, we don't need to repackage the artwork every time. With the _Scripps College Journal_ app, you can drag all the images onto its Dock icon, and it'll move those files to the correct folder automatically, so that when you export the PDF, the links will be intact for the senior designer, who merges all the work from everyone.
+
+- **Automatic magazine export** (Beta) 
+     - When you're done with your pages, drag the InDesign file onto the SCJ Dock icon, and click __
+     - (Feature under development) When you're done with the magazine, drag the InDesign file onto the SCJ Dock icon 
+
+- **Install Adobe Creative Cloud**
+     - If you don't have Creative Cloud installed, the app can download it for you
+
 # System requirements
 macOS Mojave or later  
 Adobe Creative Cloud 2021  
-2 GB of free space recommended 
+2 GB of free space recommended, 0.2 GB required
 
 # FAQ
 **I'm on Windows. How do I access the design system?**
