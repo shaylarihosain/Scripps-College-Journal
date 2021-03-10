@@ -14,9 +14,9 @@ Open the downloaded installer on your Mac.
 
 1. Drag _Scripps College Journal_ into _Applications_.
 
-2. Open the Applications folder, and open the SCJ app. You’ll see a warning. Click _Cancel_.
+2. Open the _Applications_ folder, and open the SCJ app. You’ll see a warning. Click _Cancel_.
 
-3. Open System Preferences, and go to _Security & Privacy_.
+3. Open _System Preferences_, and go to _Security & Privacy_.
 
 4. In the _General_ tab, click the _Open Anyway_ button near the bottom.
 
