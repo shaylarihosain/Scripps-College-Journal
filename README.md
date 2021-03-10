@@ -27,7 +27,11 @@ The first time it runs, it will download the design guides.
 
 # Features
 
-- **Move content into the correct folder**
+- **Installs fonts**
+
+- **Injects more convenient Adobe InDesign interface layout tailored to SCJ magazine design**
+
+- **Move artwork into the correct folder**
      - When leadership sends you the visual artwork selected for use in the _Journal_, you need to put it into the Artwork folder. (We all work with one set of artwork that was accepted for this year's issue. When we split up the issue for multiple designers to work on, we don't need to repackage the artwork every time.) 
      - With the _Scripps College Journal_ app, you can drag all the images you download onto its Dock icon, and it'll move those files to the correct folder automatically, so that when you export the PDF, the links will be intact for the senior designer, who combines everyone's work.
 
@@ -39,7 +43,7 @@ The first time it runs, it will download the design guides.
      - If you don't have Creative Cloud installed, the app can download it for you.
 
 - **For senior designers**
-     - When deploying a new design guide, the Assets zip folder is all that needs to be changed. The app will use whatever font files are in the fonts folder, and whatever version of the design guide is present. 
+     - When deploying a new design guide, the Assets zip folder here on GitHub is all that needs to be updated. The app will use whatever font files are in the fonts folder, and whatever version of the design guide is present.
 
 # System requirements
 macOS Mojave or later  
