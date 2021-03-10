@@ -40,7 +40,7 @@ The first time it runs, it will download the design guides.
      - When you're done with the magazine, drag the InDesign file onto the SCJ Dock icon and the magazine will be packaged automatically with properly formatted, sized and colored print PDFs that matches our print house's specifications, a PDF suitable for digital viewing, the InDesign .indd file, and an .idml XML archive file for InDesign CS4. (Not functional right now)
 
 - **Install Adobe Creative Cloud**
-     - If you don't have Creative Cloud installed, the app can download it for you.
+     - If you don't have Creative Cloud installed, _Scripps College Journal_ will download it for you.
 
 - **Auto-updating compatibility rules**
      - If each member of the design team uses different versions of InDesign, the work they create will not be compatible. To prevent this issue from occurring, _Scripps College Journal_ will notify users with out-of-date InDesign installations before letting them start, and provide them with clear instructions on how to rectify the issue. Each year, the app will keep team members on the same version automatically.
