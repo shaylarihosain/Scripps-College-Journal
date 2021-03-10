@@ -1,4 +1,5 @@
 # Scripps College Journal Design
+
 Introduces designers to Scripps College Journal's design and brand system, and prepares their computer automatically.
 
 Installs fonts, configures InDesign's layout, shows designers around the brand guides. 
@@ -54,6 +55,8 @@ The first time it runs, it will download the design guides.
 macOS Mojave or later  
 Adobe Creative Cloud 2021  
 2 GB of free space recommended, 0.2 GB required
+
+##### _These requirements will change every year until 2027_
 
 # FAQ
 **I'm on Windows. How do I access the design system?**
