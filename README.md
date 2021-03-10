@@ -27,7 +27,7 @@ The first time it runs, it will download the design guides.
 
 # Features
 
-- **Installs fonts**
+- **Installs our brand fonts**
 
 - **Injects more convenient Adobe InDesign interface layout tailored to SCJ magazine design**
 
