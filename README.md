@@ -46,7 +46,7 @@ The first time it runs, it will download the design guides.
      - If each member of the design team uses different versions of InDesign, the work they create will not be compatible. To prevent this issue from occurring, _Scripps College Journal_ will notify users with out-of-date InDesign installations before letting them start, and provide them with clear instructions on how to rectify the issue. The app will keep everyone on the team each year on the same version automatically.
 
 - **For senior designers**
-     - When deploying a new design guide, the Assets zip folder here on GitHub is all that needs to be updated. The app will use whatever font files are in the fonts folder, and whatever version of the design guide is present.
+     - When deploying a new design guide, the Assets zip folder here on GitHub is all that needs to be updated. The app will use whatever font files are in the fonts folder, and whatever version of the design guide is present. New installations will automatically download the newest guides, as long as the new _Assets.zip_ replaces the old one.
      - (Beta) Logging in will disable Adobe and macOS compatibility checks. Use at your own risk.
 
 # System requirements
