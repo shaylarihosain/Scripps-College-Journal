@@ -1,4 +1,4 @@
-# Scripps College Journal
+# Scripps College Journal Design
 Introduces designers to Scripps College Journal's design and brand system, and prepares their computer automatically.
 
 Installs fonts, configures InDesign's layout, shows designers around the brand guides. 
