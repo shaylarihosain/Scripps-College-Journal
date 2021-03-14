@@ -73,11 +73,7 @@ On a Mac, the SCJ app does this all for you automatically. It imports the PDF pr
 
 **How do I make sure I have the latest version of the design guides?**
 
-1. Quit the SCJ app, and delete the existing design guide folder from your Mac. It may be in your _Documents_ folder or _Applications_ folder. 
-
-2. Then launch the app. When it prompts you to select a new Assets folder, click _Choose_ without selecting a proper folder. 
-
-3. A window will pop up that says "SCJ Assets are missing or damaged," and you will then be given the option to download new design guides.
+The app should notify you on startup if the design guides you have are older, and you'll be given the option to update them.
 
 ###### ————————————————————
 
