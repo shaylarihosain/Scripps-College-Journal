@@ -12,17 +12,34 @@
 --===============================================
 
 --=========================
-(* AppTranslocationSecurityCheck 1.1 *)
+(* AppTranslocationSecurityCheck 1.2 *)
 
 -- Info: Complies with Apple security provisions for apps distributed via unsigned distribution methods
 -- Created March 1 2021
--- Last updated March 1 2021
+-- Last updated March 2 2021
 --=========================
 set appleAppTranslocationCheck to (((path to me as text) as alias) as string) as text
 -- display dialog appleAppTranslocationCheck -- debugger
 if appleAppTranslocationCheck does not contain "Users:" and appleAppTranslocationCheck does not contain "Applications:" and appleAppTranslocationCheck does not contain "Library:" then
-	display alert "To install the SCJ app, please move its icon out of the Visual Design System folder. Then place it right back in the folder." message "You can move the folder anywhere you want. We recommend Documents or Applications."
+	-- ZIP alert display alert "To install the SCJ app, please move its icon out of the Visual Design System folder. Then place it right back in the folder." message "You can move the folder anywhere you want. We recommend Documents or Applications."
+	set correctPathInstalled to false
+	display alert "To install SCJ, drag it to Applications." & return & "Then drag the Assets folder there too." message "Read the enclosed instructions before opening it for the first time."
 	continue quit
+else
+	set correctPathInstalled to true
+end if
+
+property runcount : 0
+
+-- Code if app is installed via DMG disk image (won't break if distributed via ZIP)
+if runcount is 0 then
+	if correctPathInstalled is true then
+		tell application "Preview" to close (every window whose name contains "Read Me First")
+		tell application "Preview" to close (every window whose name contains "Release Notes")
+		try
+			tell application "Finder" to eject disk "Install Scripps College Journal"
+		end try
+	end if
 end if
 
 -- Run IconSwitcher
@@ -83,17 +100,17 @@ global lastUserName
 global lastUnixName
 global lastUniqueID
 -- Defaults at first run
-property openedbeforeThisMachine : false
+property openedBeforeThisMachine : false
 property neverRan : true
 property neverRanThisMachine : true
-property runcount : 0
+-- used to define runcount here, but then moved up
 property runcountThisMachine : 0
 property dontShowAlert : false
 
 if runcount is greater than 0 then
 	if computername is not lastComputer and firstname is not lastUserName or macmodelid is not lastMachineID and fullname is not lastUser or lastUniqueID is not uuid and fullname is not lastUser or macmodelid is not lastMachineID and computername is not lastComputer or shortname is not lastUnixName then
 		set runcountThisMachine to 0
-		set openedbeforeThisMachine to false
+		set openedBeforeThisMachine to false
 		set neverRanThisMachine to true
 		set loggedIn to false
 		set lastUniqueID to missing value
@@ -122,9 +139,9 @@ end if
 
 -- Get Started
 set getstartedscriptpath to (((path to me as text) & "Contents:Resources:Scripts:FirstTime.scpt") as alias) as string
-if openedbeforeThisMachine is false then
+if openedBeforeThisMachine is false then
 	-- COMMENTED OUT FOR DEBUGGING run script file getstartedscriptpath
-	set openedbeforeThisMachine to true
+	set openedBeforeThisMachine to true
 end if
 
 
