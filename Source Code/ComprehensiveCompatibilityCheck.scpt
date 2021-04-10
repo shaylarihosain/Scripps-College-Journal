@@ -1,9 +1,11 @@
 --=========================
-(* ComprehensiveCompatibilityCheck 7.2R *)
+(* ComprehensiveCompatibilityCheck 7.3R *)
 
 -- Info: Validates user's computer for any Adobe Creative Cloud or macOS incompatibilities; instructs them in detail how to rectify issues if any exist. The program will keep up-to-date on its own—compatibility rules auto-update until SCJ Vol 27. Early builds named OSDetect until version 3. Debugged with sister program OSDetectDebugger which maintains parity in its codebase with CCC and does not ship in final release.
 -- Created July 17 2020
--- Last updated March 1 2021
+-- Last updated March 13 2021
+
+---- © 2020–2021 Shay Lari-Hosain. All rights reserved. Unauthorized copying or reproduction of any part of the proprietary contents of this file, via any medium, is strictly prohibited.
 --=========================
 
 (* Determine system configuration *)
@@ -271,9 +273,11 @@ If you're not sure, just ask your senior designer. They're here to help."
 					end if
 				end try
 			else if addButton is "Quit" then
+				tell application id "edu.scrippsjournal.design" to quit
 				error number -128
 			end if
 		else if thisButton is "Quit" then
+			tell application id "edu.scrippsjournal.design" to quit
 			error number -128
 		end if
 		
@@ -301,18 +305,21 @@ You need CC " & projectedadobeCCver & ". Ask the senior designer to confirm. It'
 				display notification "Downloading the Adobe Creative Cloud installer"
 				delay 20
 				display notification "Once you install Creative Cloud, sign in with your Scripps credentials."
+				tell application id "edu.scrippsjournal.design" to quit
 				error number -128
 			end if
 		else if IDexists is true and AIexists is false then
 			set adobeButton to button returned of (display alert "Install Adobe Illustrator first." message missingadobemsg buttons {"Quit", "Get Illustrator…"} default button 2 cancel button 1 as critical)
 			if adobeButton is "Get Illustrator…" then
 				OpenCCManager(i)
+				tell application id "edu.scrippsjournal.design" to quit
 				error number -128
 			end if
 		else if AIexists is true and IDexists is false then
 			set adobeButton to button returned of (display alert "Install Adobe InDesign first." message missingadobemsg buttons {"Quit", "Get InDesign…"} default button 2 cancel button 1 as critical)
 			if adobeButton is "Get InDesign…" then
 				OpenCCManager(a)
+				tell application id "edu.scrippsjournal.design" to quit
 				error number -128
 			end if
 		else if IDver is less than projectedminIDver and AIver is less than projectedminAIver then
@@ -324,18 +331,21 @@ You need CC " & projectedadobeCCver & ". Ask the senior designer to confirm. It'
 			set adobeButton to button returned of (display alert adobecheckhead message adobecheckmsg1 & adobecheckmsg buttons {"Quit", "Update…"} default button 2 cancel button 1 as critical)
 			if adobeButton is "Update…" then
 				OpenCCManager(i)
+				tell application id "edu.scrippsjournal.design" to quit
 				error number -128
 			end if
 		else if IDver is greater than or equal to projectedminIDver and AIver is not greater than or equal to projectedminAIver then
 			set adobeButton to button returned of (display alert adobecheckhead message "You have an old version of Illustrator" & adobecheckmsg buttons {"Quit", "Update Illustrator…"} default button 2 cancel button 1 as critical)
 			if adobeButton is "Update Illustrator…" then
 				OpenCCManager(a)
+				tell application id "edu.scrippsjournal.design" to quit
 				error number -128
 			end if
 		else if AIver is greater than or equal to projectedminAIver and IDver is not greater than or equal to projectedminIDver then
 			set adobeButton to button returned of (display alert adobecheckhead message "You have an old version of InDesign" & adobecheckmsg buttons {"Quit", "Update InDesign…"} default button 2 cancel button 1 as critical)
 			if adobeButton is "Update InDesign…" then
 				OpenCCManager(i)
+				tell application id "edu.scrippsjournal.design" to quit
 				error number -128
 			end if
 		end if
@@ -365,6 +375,7 @@ on OpenCCManager(x)
 		on error
 			set aupdatebutton to button returned of (display alert "Sorry, we weren't able to open the Adobe updater." message "You'll have to open it yourself." buttons {"Quit"} default button "Quit")
 			if aupdatebutton is "Quit" then
+				tell application id "edu.scrippsjournal.design" to quit
 				error number -128
 			end if
 			-- display notification "Sorry, somehow we couldn't open the Adobe updater. You'll have to do it yourself." with title "Scripps College Journal"
@@ -374,6 +385,7 @@ on OpenCCManager(x)
 		if CSbutton is "Get Creative Cloud…" then
 			open location "https://creativecloud.adobe.com/apps/download/creative-cloud"
 			display notification "Downloading the Adobe Creative Cloud installer"
+			tell application id "edu.scrippsjournal.design" to quit
 			error number -128
 		end if
 	end if
