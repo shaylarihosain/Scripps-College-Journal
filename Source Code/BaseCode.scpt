@@ -1,8 +1,8 @@
 --===============================================
 -- SCRIPPS COLLEGE JOURNAL Software Version 0 Beta for Mac, tested and compiled on macOS 10.15.7 (19H524) (Intel-based)
 -- Intel x86 binary
--- Last updated 						March 1 2021
--- First released staffwide 				February 2021
+-- Last updated 						March 4 2021
+-- First released staffwide 				March 2021
 -- Beta entered limited staff testing 		February 2021
 -- Development began 					July 11 2020
 -- Originally packaged with SCJ Visual Design System Version 2.1 for Volume 22
@@ -12,18 +12,18 @@
 --===============================================
 
 --=========================
-(* AppTranslocationSecurityCheck 1.2 *)
+(* AppTranslocationSecurityCheck 1.2.1 *)
 
 -- Info: Complies with Apple security provisions for apps distributed via unsigned distribution methods
 -- Created March 1 2021
 -- Last updated March 2 2021
 --=========================
-set appleAppTranslocationCheck to (((path to me as text) as alias) as string) as text
+set appleTranslocationCheck to (((path to me as text) as alias) as string) as text
 -- display dialog appleAppTranslocationCheck -- debugger
-if appleAppTranslocationCheck does not contain "Users:" and appleAppTranslocationCheck does not contain "Applications:" and appleAppTranslocationCheck does not contain "Library:" then
+if appleTranslocationCheck does not contain "Users:" and appleTranslocationCheck does not contain "Applications:" and appleTranslocationCheck does not contain "Library:" then
 	-- ZIP alert display alert "To install the SCJ app, please move its icon out of the Visual Design System folder. Then place it right back in the folder." message "You can move the folder anywhere you want. We recommend Documents or Applications."
 	set correctPathInstalled to false
-	display alert "To install SCJ, drag it to Applications." & return & "Then drag the Assets folder there too." message "Read the enclosed instructions before opening it for the first time."
+	display alert "To install SCJ, drag it to Applications." & return & "Then drag the Assets folder there too." message "Please read the enclosed instructions before opening it for the first time."
 	continue quit
 else
 	set correctPathInstalled to true
@@ -124,10 +124,10 @@ if dontShowAlert is false then
 		else
 			set pronoun to "a"
 		end if
-		set diffCompMsg to "If you got it from " & lastUserName & " instead of downloading it directly from us, it may not function correctly."
+		set diffCompMsg to "If you got it from " & lastUserName & " instead of downloading it directly from us, it may not function as expected."
 		-- if runcount is greater than 0 then set diffCompMsg to diffCompMsg & return & return & "Make sure to save any work first."
-		set diffCompAlert to button returned of (display alert "This app was already run by " & lastUserName & " on " & pronoun & " " & lastMachine & "." message diffCompMsg buttons {"Don't Show Again", "Continue", "Redownload from SCJ…"} default button "Redownload from SCJ…" as critical)
-		if diffCompAlert is "Redownload…" then
+		set diffCompAlert to button returned of (display alert "This app was already run by " & lastUserName & " on " & pronoun & " " & lastMachine & "." message diffCompMsg buttons {"Don't Show Again", "Continue", "Reinstall……"} default button "Reinstall……" as critical)
+		if diffCompAlert is "Reinstall…" then
 			DownloadSCJ()
 			error number -128
 			if diffCompAlert is "Don't Show Again" then
@@ -190,11 +190,11 @@ if currentyear is greater than 2026 then
 end if
 
 --=========================
-(* BaseCode 10.3R *)
+(* BaseCode 10.3.3R *)
 
--- Info: Main program that handles the primary tasks the SCJ application is designed for. Very early builds named Get Started
+-- Info: Main program that handles the primary tasks the SCJ application is designed for. Contains numerous smaller handlers or programs. Very early builds named Get Started.
 -- Created July 12 2020
--- Last updated March 1 2021
+-- Last updated March 7 2021
 --=========================
 
 -- Directory tree is damaged alert
@@ -206,23 +206,31 @@ on Dialog()
 		set damagedMsg to "Don't send team members your app. Point them to the original."
 	else if neverRan is false then
 		set damagedAlert to "Assets are missing or damaged."
-		set damagedMsg to "Please delete and redownload the SCJ Design System. If you've worked on any files, make sure to keep them." & return & return & "You can put the top folder anywhere you want, but never rename its subfolders." & return & return & "Don't send team members your app. Point them to the original."
+		set damagedMsg to "Please delete and reinstall the SCJ Design System. If you've worked on any files, make sure to keep them." & return & return & "Don't send team members your app. Point them to the original."
 	end if
-	set assetbutton to button returned of (display alert damagedAlert message damagedMsg as critical buttons {"Quit", "Redownload…"} default button "Redownload…")
-	if assetbutton is "Redownload…" then
+	set assetbutton to button returned of (display alert damagedAlert message damagedMsg as critical buttons {"Quit", "Update Assets…", "Reinstall…"} default button "Reinstall…")
+	if assetbutton is "Reinstall…" then
 		DownloadSCJ()
-		-- Future feature: If neverRan is false then replace the files. Detect where they currently are, and replace with the files in the one that's on the desktop. Display notification "we've migrated the contents to the new installation."
+		-- Future feature: If neverRan is false and runcountThisMachine is greater than 0 then replace the files. Detect where they currently are, move indds if necessary, maybe to (/tmp), the app can search for them, and replace with the files in the one that's on the desktop. Display notification "we've migrated the contents to the new installation."
 		error number -128
 	else if assetbutton is "Quit" then
 		error number -128
 	end if
 end Dialog
 
+--=========================
+(* Download SCJ 3.0A *)
+
+-- Info: 
+-- Created July 25 2020
+-- Last updated March 4 2021
+--=========================
+
 on DownloadSCJ()
-	set FileDownload to "https://dl.dropboxusercontent.com/s/0bd3o9p81jyt47n/DownloadFileTest.zip?dl=0" -- CHANGE FINAL URL, USE GITHUB?
-	set FileExtension to ".zip"
-	set FileName to "SCJDesign"
-	do shell script "curl -f '" & FileDownload & "' -o ~/Desktop/" & FileName & FileExtension -- doesn't work with Google Drive files for some reason
+	set FileDownload to "https://github.com/shaylarihosain/Scripps-College-Journal/releases/download/main/Install.Scripps.College.Journal.dmg" -- CHANGE FINAL URL
+	set FileExtension to ".dmg"
+	set FileName to "ReinstallScrippsCollegeJournal"
+	DownloadSCJInstaller(FileDownload, FileExtension, FileName)
 	display notification "A new copy of SCJ has been downloaded to your desktop."
 	tell application "Finder"
 		open file ((path to desktop folder as text) & FileName & FileExtension)
@@ -233,10 +241,24 @@ on DownloadSCJ()
 	end tell
 end DownloadSCJ
 
+on DownloadSCJInstaller(FileDownload, FileExtension, FileName)
+	
+	try
+		do shell script "curl -L -0 '" & FileDownload & "' -o ~/Desktop/" & FileName & FileExtension -- untested on Google Drive files
+	on error
+		set networkError to button returned of (display alert "Check your network connection and try again." buttons {"Quit", "Try Again…"} default button 2 as critical)
+		if networkError is "Try Again…" then
+			DownloadSCJInstaller(FileDownload, FileExtension, FileName)
+		else if networkError is "Quit" then
+			error number -128
+		end if
+	end try
+end DownloadSCJInstaller
+
 -- Define asset locations & asset integrity check
 
 global new_name
-if neverRan is true then
+if neverRan is true then -- rename Assets folder to final name
 	set new_name to "Scripps College Journal — Volume " & scjvolume
 	try
 		tell application "System Events" to set name of folder ((((path to me as text) & "::Assets") as alias) as string) to new_name
@@ -265,7 +287,7 @@ on error
 		set assets_path to (((path to me as text) & "::" & new_name) as alias) as string
 	on error
 		set assets_path to (choose folder with prompt "The SCJ Assets folder has been renamed or moved. Please relocate it:") as alias as string
-		try
+		try -- checks if it's a real SCJ Assets folder
 			set rcheck to ((assets_path & "Fonts") as alias) as string
 		on error
 			try
@@ -276,6 +298,7 @@ on error
 		end try
 	end try
 end try
+
 
 if neverRan is true then
 	try
@@ -323,11 +346,11 @@ else
 end if
 
 --=========================
-(* WelcomeManager 2.9.2; Dynamic Welcome Message (Fork) *)
+(* WelcomeManager 2.9.3; Dynamic Welcome Message (Fork) *)
 
 -- Info: Program (now integrated within BaseCode) that provides the main front-end user interface and manages SCJ user authentication
 -- Created July 12 2020
--- Last updated February 26 2021
+-- Last updated March 3 2021
 --=========================
 
 set neverRan to false
@@ -413,6 +436,13 @@ on Welcome()
 		set transferMsg to ""
 	end if
 	
+	try
+		set versionLocation to POSIX path of (assets_path & ".SCJ Design Version.txt")
+		set scjDesignVersion to (paragraphs of (read POSIX file versionLocation) as text)
+	on error
+		set scjDesignVersion to "unknown"
+	end try
+	
 	set loadFDS to (load script diskscriptpath as alias)
 	set freeSpace to DetermineDisk() of loadFDS as integer
 	set diskUnit to " GB"
@@ -445,8 +475,7 @@ Logged in as " & SCJuser & " on " & computername & "
 
 Adobe CC " & adobeCCver & " " & "installed
 
-" & diskAbout & "App version " & version & "
-Design version 2.1" with title "About" buttons {adminButton, "Acknowledgments…", "Back…"} default button "Back…" with icon note) -- can change this to a different icon if we don't want the Construction icon
+" & diskAbout & "App version " & version & return & "Design version " & scjDesignVersion with title "About" buttons {adminButton, "Acknowledgments…", "Back…"} default button "Back…" with icon note) -- can change this to a different icon if we don't want the Construction icon
 		if text of backButton is "Back…" then
 			Welcome()
 		else if text of backButton is "Acknowledgments…" then
@@ -490,6 +519,7 @@ Design version 2.1" with title "About" buttons {adminButton, "Acknowledgments…
 	else if launchButton is "Quit" then
 		display notification "Press ⌘Q to quit"
 		-- display notification "Press ⌘Q to quit. Drag files to the Dock icon to move them to the Artwork folder."
+		error number -128
 	end if
 	
 end Welcome
@@ -584,7 +614,7 @@ on Designing()
 	if runcountThisMachine is 0 then
 		try
 			rsyncPDFpresets()
-			delay 3
+			delay 4
 			display notification with title "SCJ PDF export presets were installed."
 		end try
 	else if runcountThisMachine is greater than 0 then
@@ -676,7 +706,7 @@ on Designing()
 		display notification "This is the SCJ magazine template" & magDesc with title "InDesign is active"
 		delay 4
 		tell application id "com.adobe.Illustrator" to activate
-		display notification "This is the front cover template. Once it's designed, you'll update it in two locations." with title "Illustrator is active"
+		display notification "This is the front cover template. Once it's designed, you'll update the link in InDesign." with title "Illustrator is active"
 		delay 4
 		
 	end if
