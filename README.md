@@ -6,7 +6,7 @@ Installs fonts, configures InDesign's layout, shows designers around the brand g
 
 Upon designers' request, it creates final packages for print (and web) that are formatted correctly for our print house, with appropriate color management and image resolution. It can download Creative Cloud when not already installed, or reinstall itself if components are missing.
 
-[Download it here](https://github.com/shaylarihosain/Scripps-College-Journal/releases/download/v0.6/InstallScrippsCollegeJournal.dmg).
+[Download it here](https://github.com/shaylarihosain/Scripps-College-Journal/releases/download/0.6/InstallScrippsCollegeJournal.dmg).
 
 # Installation
 
