@@ -1,11 +1,11 @@
 --===============================================
 -- SCRIPPS COLLEGE JOURNAL Software for Mac
--- Version 0.5.4 (Beta)
+-- Version 0.6 (Beta)
 --------------------------------------------------------------------------------------
 -- Compiled on macOS 10.15.7 (19H524) (Intel-based)
 -- Intel x86 binary
 --------------------------------------------------------------------------------------
--- Last updated 						March 23 2021
+-- Last updated 						March 31 2021
 -- First released staffwide 				April 2021
 -- Beta entered limited staff testing 		February 28 2021
 -- Software development began 			July 11 2020
@@ -35,25 +35,60 @@ end if
 
 property runcount : 0
 
-(* if application "Preview" is running then
+if runcount is 0 then
+	try
+		tell application "System Events"
+			make new folder at "tmp" with properties {name:"SysEvCheck"}
+		end tell
+	on error msg number n
+		if n = -1743 then
+			set processAlert to "“System Events,”"
+			set processCategory to "Automation"
+			set processName to "System Events"
+			permissionsMsg(processAlert, processCategory, processName)
+		end if
+	end try
+end if
+
+on permissionsMsg(processAlert, processCategory, processName)
+	tell me to activate
+	display alert "Please grant Scripps College Journal access to " & processAlert & " or the app won't work." message "To do this, start by opening System Preferences." buttons {"Open System Preferences"}
+	try
+		do shell script "open /System/Library/PreferencePanes/Security.prefPane/"
+		set eventPermissionsAlert to "Now, click the “Privacy” tab."
+	on error
+		tell application "System Preferences" to activate
+		set eventPermissionsAlert to "Click “Security & Privacy.” Then, click the “Privacy” tab."
+	end try
+	tell me to activate
+	display alert eventPermissionsAlert message "Scroll down until you see the “" & processCategory & "” section." & return & return & "Then find Scripps College Journal, and tick the “" & processName & "” checkbox." buttons {"Done"}
+end permissionsMsg
+
+if application "Preview" is running then
 	set alreadyOpenPreview to true
 else
 	set alreadyOpenPreview to false
-end if *)
+end if
 
 -- Code if app is installed via DMG disk image (won't break if distributed via ZIP)
 if runcount is 0 then -- doesn't need to be runcountThisMachine because regular runcount will always = 0 when installed from the DMG
 	if correctPathInstalled is true then
-		-- if alreadyOpenPreview is true then
-		tell application "Preview" to close (every window whose name contains "Read Me First")
-		tell application "Preview" to close (every window whose name contains "Release Notes")
-		(* else
+		if alreadyOpenPreview is true then
+			tell application "Preview" to close (every window whose name contains "Read Me First")
+			tell application "Preview" to close (every window whose name contains "Release Notes")
+		else
 			tell application "Preview" to quit
-		end if *)
+		end if
 		try
 			tell application "Finder" to eject disk "Install Scripps College Journal"
+		on error msg number n
+			if n = -1743 then
+				set processAlert to "“Finder,”"
+				set processCategory to "Automation"
+				set processName to "Finder"
+				permissionsMsg(processAlert, processCategory, processName)
+			end if
 		end try
-		
 		try
 			set dmgLeftover to ((((path to downloads folder as text) & "InstallScrippsCollegeJournal.dmg") as alias) as string)
 		on error
@@ -77,7 +112,7 @@ set iconScript to (((path to me as text) & "Contents:IconSwitcher.scpt") as alia
 run script file iconScript
 
 -- Check for app updates
-if runcount mod 4 is 0 then
+if runcountThisMachine mod 2 is 0 then
 	set checkSuccess to true
 	set appVersionDownload to "https://raw.githubusercontent.com/shaylarihosain/Scripps-College-Journal/main/Attributes/App%20Version" -- CHANGE FINAL URL
 	set getReleaseNotes to "https://raw.githubusercontent.com/shaylarihosain/Scripps-College-Journal/main/Attributes/App%20Release%20Notes" -- CHANGE FINAL URL
@@ -108,6 +143,18 @@ if runcount mod 4 is 0 then
 				continue quit -- tell application id "edu.scrippsjournal.design" to quit
 			end if
 		end if
+		
+		if version is less than "1.0" and appLatestVersion is greater than or equal to "1.0" then -- (REMOVE THIS BLOCK on 1.0 release)
+			set betaWarningButton to button returned of (display alert "This beta version of Scripps College Journal was for testing purposes, and presents a security risk." message "You should update to version " & appLatestVersion & ", the latest stable release." buttons {"Quit", "Update…"} default button 2)
+			if betaWarningButton is "Update…" then
+				display notification "After dragging the new app to the Applications folder, click “Replace” when prompted."
+				DownloadSCJ()
+				continue quit
+			else
+				continue quit
+			end if
+		end if
+		
 	else if checkSuccess is false then
 		set appLatestVersion to "unknown"
 	end if
@@ -259,11 +306,11 @@ if currentyear is greater than 2026 then
 end if
 
 --=========================
-(* BaseCode 11.3R *)
+(* BaseCode 11.4R *)
 
 -- Info: Main program that handles the primary tasks the SCJ application is designed for. Contains numerous smaller handlers or programs. Very early builds named Get Started.
 -- Created July 12 2020
--- Last updated March 15 2021
+-- Last updated March 31 2021
 --=========================
 
 -- Directory tree is damaged alert
@@ -306,15 +353,36 @@ on scjRestart()
 end scjRestart
 
 --=========================
-(* Download SCJ 3.1A *)
+(* Download SCJ 3.2A *)
 
 -- Info: 
 -- Created July 25 2020
--- Last updated March 7 2021
+-- Last updated March 25 2021
 --=========================
 
 on DownloadSCJ()
-	set scjDownload to "https://github.com/shaylarihosain/Scripps-College-Journal/releases/download/v0.5/InstallScrippsCollegeJournal.dmg" -- CHANGE FINAL URL
+	global scjissueyear
+	if currentyear is greater than or equal to 2021 and currentmonthInt is greater than 9 then -- (October 2021)
+		set scjDownload to ("https://github.com/scrippscollegejournal/Scripps-College-Journal/releases/latest/download/InstallScrippsCollegeJournal.dmg" as string)
+	else
+		set scjDownload to ("https://github.com/shaylarihosain/Scripps-College-Journal/releases/download/0.6/InstallScrippsCollegeJournal.dmg" as string) -- CHANGE FINAL URL
+		
+		-- start beta code
+		set appVersionDownload to "https://raw.githubusercontent.com/shaylarihosain/Scripps-College-Journal/main/Attributes/App%20Version" -- CHANGE FINAL URL
+		try
+			set checkSuccess to true
+			set appLatestVersion to do shell script "curl " & appVersionDownload
+		on error
+			set checkSuccess to false
+		end try
+		if checkSuccess is true then
+			if appLatestVersion is greater than or equal to "1.0" then
+				set scjDownload to ("https://github.com/shaylarihosain/Scripps-College-Journal/releases/latest/download/InstallScrippsCollegeJournal.dmg" as string)
+			end if
+		end if -- end beta code
+		
+	end if
+	
 	set scjExtension to ".dmg"
 	set scjName to "ReinstallScrippsCollegeJournal"
 	set scjDestination to "Desktop"
@@ -510,7 +578,7 @@ end if
 -- Check for asset updates
 
 try
-	set versionLocation to POSIX path of (assets_path & ".SCJ Design Version.txt")
+	set versionLocation to POSIX path of (assets_path & ".SCJ Design Version.txt" as string) -- 'as string' inside the brackets was added for v0.6
 	set scjDesignVersion to (paragraphs of (read POSIX file versionLocation) as text)
 on error
 	set scjDesignVersion to "unknown ⚠️"
@@ -528,8 +596,12 @@ if scjDesignVersion is not "unknown ⚠️" then
 	
 	if checkSuccess is true then
 		if scjDesignVersion is less than scjLatestVersion then
+			set additionalMsg to ""
+			(* if runcountThisMachine is greater than 15 and AssetsNew is false and currentmonthInt is greater than or equal to 4 and currentmonthInt is less than 7 then
+				set additionalMsg to return & return & "It seems you've already worked on these files a lot, so if you're almost finished with your work, you don't need to update the guides." & return & return & "If you're curious about what's changed, temporarily move your current folder out of its current location, so that the updated guides don't overwrite them."
+			end if REJECTED; this should be combined with DownloadAssets handler's message *)
 			tell me to activate
-			set updateButton to button returned of (display alert "An update to the SCJ design guides is available. Would you like to download it now?" message "Design system version " & scjLatestVersion & " introduces new changes and rules. You have " & scjDesignVersion & "." buttons {"Not Now", "Update…"} default button 2)
+			set updateButton to button returned of (display alert "An update to the SCJ design guides is available. Would you like to download it now?" message "Design system version " & scjLatestVersion & " introduces new changes and rules. You have " & scjDesignVersion & "." & additionalMsg buttons {"Not Now", "Update…"} default button 2)
 			if updateButton is "Update…" then
 				DownloadAssets()
 				scjRestart()
@@ -539,6 +611,12 @@ if scjDesignVersion is not "unknown ⚠️" then
 		set scjLatestVersion to "unknown"
 	end if
 end if
+
+try
+	tell application "Finder" to set assetDisplayLocation to (name of folder of folder assets_path) as string
+on error
+	set assetDisplayLocation to false
+end try
 
 -- Verification is complete and installer launch may begin
 
@@ -580,11 +658,11 @@ else
 end if
 
 --=========================
-(* WelcomeManager 2.11.1; Dynamic Welcome Message (Fork) *)
+(* WelcomeManager 2.12; Dynamic Welcome Message (Fork) *)
 
 -- Info: Program (now integrated within BaseCode) that provides the main front-end user interface and manages SCJ user authentication
 -- Created July 12 2020
--- Last updated March 16 2021
+-- Last updated March 31 2021
 --=========================
 
 set neverRan to false
@@ -611,6 +689,7 @@ on Welcome()
 	global scjDesignVersion
 	global scjLatestVersion
 	global appLatestVersion
+	global assetDisplayLocation
 	set depnoticetext to "its compatibility rules to notify you of any Adobe or OS incompatibilities. Everyone on the design team must verify manually that they're using the same version of Adobe CC."
 	if scjissueyear is 2026 then
 		set deprecatednotice to return & return & "Starting next year, this app will no longer auto-update " & depnoticetext
@@ -635,20 +714,31 @@ on Welcome()
 	else
 		set aboutApp to " — Update available ⚠️"
 	end if
-	if scjDesignVersion is greater than or equal to scjLatestVersion then
-		set aboutDesign to " — Up to date"
-	else if scjLatestVersion is "unknown" then
-		set aboutDesign to " — Couldn't check for updates"
-	else
-		set aboutDesign to " — Update available"
-		try
-			set dV to character 1 of scjDesignVersion as integer
-			set LV to character 1 of scjLatestVersion as integer
-			if (LV - dV) is greater than or equal to 1 then
-				set aboutDesign to " — Update available ⚠️"
-			end if
-		end try
-	end if
+	try
+		if scjDesignVersion is greater than or equal to scjLatestVersion then
+			set aboutDesign to " — Up to date"
+		else if scjLatestVersion is "unknown" then
+			set aboutDesign to " — Couldn't check for updates"
+		else
+			set aboutDesign to " — Update available"
+			try
+				set dV to character 1 of scjDesignVersion as integer
+				set LV to character 1 of scjLatestVersion as integer
+				if (LV - dV) is greater than or equal to 1 then
+					set aboutDesign to " — Update available ⚠️"
+				end if
+			end try
+		end if
+	on error msg number n
+		if n = -2753 then
+			tell me to activate
+			set processAlert to "your Documents folder"
+			set processCategory to "Files and Folders"
+			set processName to "Documents Folder"
+			permissionsMsg(processAlert, processCategory, processName)
+			continue quit
+		end if
+	end try
 	
 	if runcountThisMachine is less than 2 then
 		set welcomeMsg1 to ". You're ready to begin building Volume "
@@ -722,8 +812,14 @@ on Welcome()
 	
 	if loggedIn is true then
 		set diskAbout to freeSpace & diskUnit & " free on disk" & return & return
+		if assetDisplayLocation is not "missing" then
+			set assetDisplay to return & return & "Design guides located in " & assetDisplayLocation & " folder"
+		else
+			set assetDisplay to ""
+		end if
 	else
 		set diskAbout to ""
+		set assetDisplay to ""
 	end if
 	
 	-- 🎨📚🖌🌻
@@ -740,9 +836,7 @@ For internal use only
 
 Upcoming issue is Spring " & scjissueyear & ", Volume " & scjvolume & deprecatednotice & "
 
-Logged in as " & SCJuser & " on " & computername & "
-
-Adobe CC " & adobeCCver & " " & "installed" & return & return & diskAbout & "App version " & version & aboutApp & return & "Design version " & scjDesignVersion & aboutDesign with title "About" buttons {adminButton, "Acknowledgments…", "Back…"} default button "Back…" with icon note) -- can change this to a different icon if we don't want the Construction icon
+Logged in as " & SCJuser & " on " & computername & assetDisplay & return & return & "Adobe CC " & adobeCCver & " " & "installed" & return & return & diskAbout & "App version " & version & aboutApp & return & "Design version " & scjDesignVersion & aboutDesign with title "About" buttons {adminButton, "Acknowledgments…", "Back…"} default button "Back…" with icon note) -- can change this to a different icon if we don't want the Construction icon
 		if text of backButton is "Back…" then
 			Welcome()
 		else if text of backButton is "Acknowledgments…" then
