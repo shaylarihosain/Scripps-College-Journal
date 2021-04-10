@@ -1,13 +1,17 @@
 --===============================================
--- SCRIPPS COLLEGE JOURNAL Software Version 0 Beta for Mac, tested and compiled on macOS 10.15.7 (19H524) (Intel-based)
+-- SCRIPPS COLLEGE JOURNAL Software for Mac
+-- Version 0.5 (Beta)
+
+-- Compiled on macOS 10.15.7 (19H524) (Intel-based)
 -- Intel x86 binary
--- Last updated 						March 7 2021
+
+-- Last updated 						March 13 2021
 -- First released staffwide 				March 2021
 -- Beta entered limited staff testing 		February 2021
 -- Development began 					July 11 2020
--- Originally packaged with SCJ Visual Design System Version 2.1 for Volume 22
--- © 2020–2021 Shay Lari-Hosain. All rights reserved. Scripps College and The Claremont Colleges do not own any portion of this software. This installer and design system are student-created. The author is not responsible for any modifications, or the consequences of modifications, that are made to this software by others.
--- Last updated by: Shay Lari-Hosain PZ (replace with new name if further development continues)
+
+-- Copyright © 2020–2021 Shay Lari-Hosain. All rights reserved. Unauthorized copying or reproduction of any part of the contents of this file, via any medium, is strictly prohibited. Proprietary and confidential. Scripps College and The Claremont Colleges do not own any portion of this software. This installer and design system are student-created. The author is not responsible for any modifications, or the consequences of modifications, that are made to this software in any form by others.
+-- Last updated by: Shay Lari-Hosain PZ
 -- Created by: Shay Lari-Hosain PZ
 --===============================================
 
@@ -45,6 +49,28 @@ end if
 -- Run IconSwitcher
 set iconScript to (((path to me as text) & "Contents:IconSwitcher.scpt") as alias) as string
 run script file iconScript
+
+-- Check for app updates
+if runcount mod 4 is 0 then
+	set checkSuccess to true
+	set appVersionDownload to "https://raw.githubusercontent.com/shaylarihosain/Scripps-College-Journal/main/App%20Version" -- CHANGE FINAL URL
+	try
+		set appLatestVersion to do shell script "curl " & appVersionDownload
+	on error
+		set checkSuccess to false
+	end try
+	
+	if checkSuccess is true then
+		if version is less than appLatestVersion then
+			set updateButton to button returned of (display alert "An update to the SCJ app is available. Would you like to download it now?" message "The latest version is " & appLatestVersion & ". You have " & version & "." buttons {"Not Now", "Update…"} default button 2)
+			if updateButton is "Update…" then
+				display notification "When you drag the new app to the Applications folder, click “Replace.”"
+				DownloadSCJ()
+				tell application id "edu.scrippsjournal.design" to quit
+			end if
+		end if
+	end if
+end if
 
 -- Run Compatibility Verification
 set loadTime to (((path to me as text) & "Contents:Resources:Scripts:SetTimeHandler.scpt") as alias) as string
@@ -129,7 +155,7 @@ if dontShowAlert is false then
 		set diffCompAlert to button returned of (display alert "This app was already run by " & lastUserName & " on " & pronoun & " " & lastMachine & "." message diffCompMsg buttons {"Don't Show Again", "Continue", "Reinstall……"} default button "Reinstall……" as critical)
 		if diffCompAlert is "Reinstall…" then
 			DownloadSCJ()
-			tell application id "edu.scrippsjournal.design" to quit -- CHANGE TO FINAL ID
+			tell application id "edu.scrippsjournal.design" to quit
 			-- display notification "Press ⌘Q to quit"
 			-- error number -128
 			if diffCompAlert is "Don't Show Again" then
@@ -192,11 +218,11 @@ if currentyear is greater than 2026 then
 end if
 
 --=========================
-(* BaseCode 11.0R *)
+(* BaseCode 11.1R *)
 
 -- Info: Main program that handles the primary tasks the SCJ application is designed for. Contains numerous smaller handlers or programs. Very early builds named Get Started.
 -- Created July 12 2020
--- Last updated March 7 2021
+-- Last updated March 13 2021
 --=========================
 
 -- Directory tree is damaged alert
@@ -214,21 +240,26 @@ on Dialog()
 	if assetbutton is "Download Assets…" then
 		DownloadAssets()
 		tell me to activate
-		display alert "Scripps College Journal is going to quit now. Please open it again." buttons {""} giving up after 3
-		display notification "You can click on this notification to re-open SCJ once it quits."
-		tell application id "edu.scrippsjournal.design" to quit -- CHANGE TO FINAL ID 
+		scjRestart()
 	else if assetbutton is "Reinstall SCJ…" then
 		DownloadSCJ()
 		-- Future possible feature: If neverRan is false and runcountThisMachine is greater than 0 then replace the files. Detect where they currently are, move indds if necessary, maybe to (/tmp), the app can search for them, and replace with the files in the one that's on the desktop. Display notification "we've migrated the contents to the new installation."
-		tell application id "edu.scrippsjournal.design" to quit -- CHANGE TO FINAL ID
+		tell application id "edu.scrippsjournal.design" to quit
 		-- display notification "Press ⌘Q to quit"
 		-- error number -128
 	else if assetbutton is "Quit" then
-		tell application id "edu.scrippsjournal.design" to quit -- CHANGE TO FINAL ID
+		tell application id "edu.scrippsjournal.design" to quit
 		-- display notification "Press ⌘Q to quit"
 		--- error number -128
 	end if
 end Dialog
+
+on scjRestart()
+	tell me to activate
+	display alert "Scripps College Journal is going to quit now. Please open it again." buttons {""} giving up after 3
+	display notification "You can click on this notification to re-open SCJ once it quits."
+	tell application id "edu.scrippsjournal.design" to quit
+end scjRestart
 
 --=========================
 (* Download SCJ 3.1A *)
@@ -239,7 +270,7 @@ end Dialog
 --=========================
 
 on DownloadSCJ()
-	set scjDownload to "https://github.com/shaylarihosain/Scripps-College-Journal/releases/download/main/Install.Scripps.College.Journal.dmg" -- CHANGE FINAL URL
+	set scjDownload to "https://github.com/shaylarihosain/Scripps-College-Journal/releases/download/v0.5/InstallScrippsCollegeJournal.dmg" -- CHANGE FINAL URL
 	set scjExtension to ".dmg"
 	set scjName to "ReinstallScrippsCollegeJournal"
 	set scjDestination to "Desktop"
@@ -263,7 +294,7 @@ on downloadResources(FileDownload, FileExtension, FileName, FileDestination)
 		if networkError is "Try Again…" then
 			downloadResources(FileDownload, FileExtension, FileName, FileDestination)
 		else if networkError is "Quit" then
-			tell application id "edu.scrippsjournal.design" to quit -- CHANGE TO FINAL ID
+			tell application id "edu.scrippsjournal.design" to quit
 			-- error number -128
 		end if
 	end try
@@ -290,7 +321,7 @@ on DownloadAssets()
 				delete folder checkDocumentsFolder
 			end tell
 		else if replaceOldAssets is "Quit" then
-			tell application id "edu.scrippsjournal.design" to quit -- CHANGE TO FINAL ID
+			tell application id "edu.scrippsjournal.design" to quit
 			-- display notification "Press ⌘Q to quit"
 			-- error number -128
 		end if
@@ -378,19 +409,22 @@ on error
 		set assets_path to ((assetInitial & new_name) as alias) as string
 		set assetsLocated to true
 	on error
+		set assetsLocated to false
 		set assets_path to (choose folder with prompt "The SCJ Assets folder has been renamed or moved. Please relocate it:") as alias as string
-		try -- checks if it's a real SCJ Assets folder
-			set rcheck to ((assets_path & "Fonts") as alias) as string
-			set assetsLocated to true
-		on error
-			try
-				set rcheck to ((assets_path & ".Fonts") as alias) as string
-				set assetsLocated to true
-			on error
-				set assetsLocated to false
-				Dialog()
-			end try
-		end try
+		-- the below try block was moved from here
+	end try
+end try
+
+try -- checks if it's a real SCJ Assets folder; last line of defense (added with v0.5)
+	set rcheck to ((assets_path & "Fonts") as alias) as string
+	set assetsLocated to true
+on error
+	try
+		set rcheck to ((assets_path & ".Fonts") as alias) as string
+		set assetsLocated to true
+	on error
+		set assetsLocated to false
+		Dialog()
 	end try
 end try
 
@@ -424,6 +458,36 @@ if runcount is greater than 0 then
 	end try
 end if
 
+-- Check for asset updates
+
+try
+	set versionLocation to POSIX path of (assets_path & ".SCJ Design Version.txt")
+	set scjDesignVersion to (paragraphs of (read POSIX file versionLocation) as text)
+on error
+	set scjDesignVersion to "unknown ⚠️"
+end try
+
+if scjDesignVersion is not "unknown ⚠️" then
+	set checkSuccess to true
+	
+	set scjDownload to "https://raw.githubusercontent.com/shaylarihosain/Scripps-College-Journal/main/Assets%20Version" -- CHANGE FINAL URL
+	try
+		set scjLatestVersion to do shell script "curl " & scjDownload
+	on error
+		set checkSuccess to false
+	end try
+	
+	if checkSuccess is true then
+		if scjDesignVersion is less than scjLatestVersion then
+			set updateButton to button returned of (display alert "An update to the SCJ design guides is available. Would you like to download it now?" message "Design system version " & scjLatestVersion & " introduces new changes and rules. You have " & scjDesignVersion & "." buttons {"Not Now", "Update…"} default button 2)
+			if updateButton is "Update…" then
+				DownloadAssets()
+				scjRestart()
+			end if
+		end if
+	end if
+end if
+
 -- Verification is complete and installer launch may begin
 
 set launchFinished to false
@@ -440,11 +504,11 @@ else
 end if
 
 --=========================
-(* WelcomeManager 2.9.3; Dynamic Welcome Message (Fork) *)
+(* WelcomeManager 2.9.4; Dynamic Welcome Message (Fork) *)
 
 -- Info: Program (now integrated within BaseCode) that provides the main front-end user interface and manages SCJ user authentication
 -- Created July 12 2020
--- Last updated March 3 2021
+-- Last updated March 9 2021
 --=========================
 
 set neverRan to false
@@ -466,6 +530,9 @@ on Welcome()
 	global adobeCCver
 	global diskscriptpath
 	global assets_path
+	global alreadyOpenID
+	global alreadyOpenAI
+	global scjDesignVersion
 	set depnoticetext to "its compatibility rules to notify you of any Adobe or OS incompatibilities. Everyone on the design team must verify manually that they're using the same version of Adobe CC."
 	if scjissueyear is 2026 then
 		set deprecatednotice to return & return & "Starting next year, this app will no longer auto-update " & depnoticetext
@@ -494,9 +561,19 @@ on Welcome()
 			set welcomeMsg0 to "You got this, "
 		end if
 	end if
+	
+	if alreadyOpenID is true and alreadyOpenAI is false then
+		set whenDoneMsg to "When you're done working, quit SCJ to close the front cover template."
+	else if alreadyOpenID is false and alreadyOpenAI is true then
+		set whenDoneMsg to "When you're done working, quit SCJ to close the magazine design guide."
+	else if alreadyOpenID is false and alreadyOpenAI is false then
+		set whenDoneMsg to "When you're done working, quit SCJ to close everything."
+	else if alreadyOpenID is true and alreadyOpenAI is true then
+		set whenDoneMsg to ""
+	end if
 	if runcountThisMachine is less than 1 then
 		set startButton to "Start Designing"
-		set welcomeMsg2 to return & return & "With one click, we'll configure your Adobe apps with everything you need, and show you around the design guides." & return & return & "When you're done working, quit SCJ to close everything."
+		set welcomeMsg2 to return & return & "With one click, we'll configure your Adobe apps with everything you need, and show you around the design guides." & return & return & whenDoneMsg
 	else if runcountThisMachine is greater than 0 then
 		set startButton to "Continue Designing"
 	end if
@@ -529,13 +606,6 @@ on Welcome()
 	else
 		set transferMsg to ""
 	end if
-	
-	try
-		set versionLocation to POSIX path of (assets_path & ".SCJ Design Version.txt")
-		set scjDesignVersion to (paragraphs of (read POSIX file versionLocation) as text)
-	on error
-		set scjDesignVersion to "unknown ⚠️"
-	end try
 	
 	set loadFDS to (load script diskscriptpath as alias)
 	set freeSpace to DetermineDisk() of loadFDS as integer
