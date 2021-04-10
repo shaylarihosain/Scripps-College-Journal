@@ -1,7 +1,7 @@
 --===============================================
 -- SCRIPPS COLLEGE JOURNAL Software Version 0 Beta for Mac, tested and compiled on macOS 10.15.7 (19H524) (Intel-based)
 -- Intel x86 binary
--- Last updated 						March 4 2021
+-- Last updated 						March 7 2021
 -- First released staffwide 				March 2021
 -- Beta entered limited staff testing 		February 2021
 -- Development began 					July 11 2020
@@ -23,7 +23,7 @@ set appleTranslocationCheck to (((path to me as text) as alias) as string) as te
 if appleTranslocationCheck does not contain "Users:" and appleTranslocationCheck does not contain "Applications:" and appleTranslocationCheck does not contain "Library:" then
 	-- ZIP alert display alert "To install the SCJ app, please move its icon out of the Visual Design System folder. Then place it right back in the folder." message "You can move the folder anywhere you want. We recommend Documents or Applications."
 	set correctPathInstalled to false
-	display alert "To install SCJ, drag it to Applications." & return & "Then drag the Assets folder there too." message "Please read the enclosed instructions before opening it for the first time."
+	display alert "To install SCJ, drag it to Applications." & return & "Then drag the Assets folder to there or Documents." message "Please read the enclosed instructions before opening SCJ for the first time."
 	continue quit
 else
 	set correctPathInstalled to true
@@ -129,7 +129,9 @@ if dontShowAlert is false then
 		set diffCompAlert to button returned of (display alert "This app was already run by " & lastUserName & " on " & pronoun & " " & lastMachine & "." message diffCompMsg buttons {"Don't Show Again", "Continue", "Reinstall……"} default button "Reinstall……" as critical)
 		if diffCompAlert is "Reinstall…" then
 			DownloadSCJ()
-			error number -128
+			tell application id "edu.scrippsjournal.design" to quit -- CHANGE TO FINAL ID
+			-- display notification "Press ⌘Q to quit"
+			-- error number -128
 			if diffCompAlert is "Don't Show Again" then
 				set dontShowAlert to true
 			end if
@@ -190,7 +192,7 @@ if currentyear is greater than 2026 then
 end if
 
 --=========================
-(* BaseCode 10.3.3R *)
+(* BaseCode 11.0R *)
 
 -- Info: Main program that handles the primary tasks the SCJ application is designed for. Contains numerous smaller handlers or programs. Very early builds named Get Started.
 -- Created July 12 2020
@@ -208,60 +210,148 @@ on Dialog()
 		set damagedAlert to "Assets are missing or damaged."
 		set damagedMsg to "Please delete and reinstall the SCJ Design System. If you've worked on any files, make sure to keep them." & return & return & "Don't send team members your app. Point them to the original."
 	end if
-	set assetbutton to button returned of (display alert damagedAlert message damagedMsg as critical buttons {"Quit", "Update Assets…", "Reinstall…"} default button "Reinstall…")
-	if assetbutton is "Reinstall…" then
+	set assetbutton to button returned of (display alert damagedAlert message damagedMsg as critical buttons {"Quit", "Reinstall SCJ…", "Download Assets…"} default button "Download Assets…")
+	if assetbutton is "Download Assets…" then
+		DownloadAssets()
+		tell me to activate
+		display alert "Scripps College Journal is going to quit now. Please open it again." buttons {""} giving up after 3
+		display notification "You can click on this notification to re-open SCJ once it quits."
+		tell application id "edu.scrippsjournal.design" to quit -- CHANGE TO FINAL ID 
+	else if assetbutton is "Reinstall SCJ…" then
 		DownloadSCJ()
-		-- Future feature: If neverRan is false and runcountThisMachine is greater than 0 then replace the files. Detect where they currently are, move indds if necessary, maybe to (/tmp), the app can search for them, and replace with the files in the one that's on the desktop. Display notification "we've migrated the contents to the new installation."
-		error number -128
+		-- Future possible feature: If neverRan is false and runcountThisMachine is greater than 0 then replace the files. Detect where they currently are, move indds if necessary, maybe to (/tmp), the app can search for them, and replace with the files in the one that's on the desktop. Display notification "we've migrated the contents to the new installation."
+		tell application id "edu.scrippsjournal.design" to quit -- CHANGE TO FINAL ID
+		-- display notification "Press ⌘Q to quit"
+		-- error number -128
 	else if assetbutton is "Quit" then
-		error number -128
+		tell application id "edu.scrippsjournal.design" to quit -- CHANGE TO FINAL ID
+		-- display notification "Press ⌘Q to quit"
+		--- error number -128
 	end if
 end Dialog
 
 --=========================
-(* Download SCJ 3.0A *)
+(* Download SCJ 3.1A *)
 
 -- Info: 
 -- Created July 25 2020
--- Last updated March 4 2021
+-- Last updated March 7 2021
 --=========================
 
 on DownloadSCJ()
-	set FileDownload to "https://github.com/shaylarihosain/Scripps-College-Journal/releases/download/main/Install.Scripps.College.Journal.dmg" -- CHANGE FINAL URL
-	set FileExtension to ".dmg"
-	set FileName to "ReinstallScrippsCollegeJournal"
-	DownloadSCJInstaller(FileDownload, FileExtension, FileName)
+	set scjDownload to "https://github.com/shaylarihosain/Scripps-College-Journal/releases/download/main/Install.Scripps.College.Journal.dmg" -- CHANGE FINAL URL
+	set scjExtension to ".dmg"
+	set scjName to "ReinstallScrippsCollegeJournal"
+	set scjDestination to "Desktop"
+	downloadResources(scjDownload, scjExtension, scjName, scjDestination)
 	display notification "A new copy of SCJ has been downloaded to your desktop."
 	tell application "Finder"
-		open file ((path to desktop folder as text) & FileName & FileExtension)
+		open file ((path to desktop folder as text) & scjName & scjExtension)
 	end tell
 	delay 3
 	tell application "System Events"
-		delete file ((path to desktop folder as text) & FileName & FileExtension)
+		delete file ((path to desktop folder as text) & scjName & scjExtension)
 	end tell
 end DownloadSCJ
 
-on DownloadSCJInstaller(FileDownload, FileExtension, FileName)
+on downloadResources(FileDownload, FileExtension, FileName, FileDestination)
 	
 	try
-		do shell script "curl -L -0 '" & FileDownload & "' -o ~/Desktop/" & FileName & FileExtension -- untested on Google Drive files
+		do shell script "curl -L -0 '" & FileDownload & "' -o ~/" & FileDestination & "/" & FileName & FileExtension -- untested on Google Drive files
 	on error
 		set networkError to button returned of (display alert "Check your network connection and try again." buttons {"Quit", "Try Again…"} default button 2 as critical)
 		if networkError is "Try Again…" then
-			DownloadSCJInstaller(FileDownload, FileExtension, FileName)
+			downloadResources(FileDownload, FileExtension, FileName, FileDestination)
 		else if networkError is "Quit" then
-			error number -128
+			tell application id "edu.scrippsjournal.design" to quit -- CHANGE TO FINAL ID
+			-- error number -128
 		end if
 	end try
-end DownloadSCJInstaller
+end downloadResources
+
+-- Download Assets folder to Documents folder
+
+on DownloadAssets()
+	global new_name
+	try
+		try
+			set checkDocumentsFolder to ((((path to documents folder as text) & "Assets") as alias) as string)
+		on error
+			set checkDocumentsFolder to ((((path to documents folder as text) & new_name) as alias) as string)
+		end try
+		set documentsGood to false
+	on error
+		set documentsGood to true
+	end try
+	if documentsGood is false then
+		set replaceOldAssets to button returned of (display alert "We found existing SCJ assets in your Documents folder. Please check if you have worked on any file in that folder." & return & return & "If you have, please copy it elsewhere, as it will be deleted when you click “OK.”" buttons {"Quit", "OK"} as critical)
+		if replaceOldAssets is "OK" then
+			tell application "System Events"
+				delete folder checkDocumentsFolder
+			end tell
+		else if replaceOldAssets is "Quit" then
+			tell application id "edu.scrippsjournal.design" to quit -- CHANGE TO FINAL ID
+			-- display notification "Press ⌘Q to quit"
+			-- error number -128
+		end if
+	end if
+	-- tell application "Finder" to activate
+	-- display notification with title "Downloading latest SCJ design guides…" message "Please wait. We'll have you up and running in no time."
+	display alert "Downloading latest SCJ design guides…" message "Please wait. You'll be up and running in no time." buttons {""} giving up after 3
+	set assetsDownload to "https://github.com/shaylarihosain/Scripps-College-Journal/blob/main/Assets.zip?raw=true" -- CHANGE FINAL URL
+	set assetsExtension to ".zip"
+	set assetsName to "SCJAssets"
+	set assetsDestination to "Documents"
+	downloadResources(assetsDownload, assetsExtension, assetsName, assetsDestination)
+	-- display notification "A new copy of SCJ has been downloaded to your downloads."
+	display notification with title "Almost done…"
+	tell application "Finder"
+		open file ((path to documents folder as text) & assetsName & assetsExtension)
+	end tell
+	
+	delay 3
+	tell application "System Events"
+		delete file ((path to documents folder as text) & assetsName & assetsExtension)
+	end tell
+	
+end DownloadAssets
 
 -- Define asset locations & asset integrity check
 
+set assetsLocated to false
+global assetsRedownloaded
+set assetsRedownloaded to false
 global new_name
-if neverRan is true then -- rename Assets folder to final name
-	set new_name to "Scripps College Journal — Volume " & scjvolume
+set new_name to "Scripps College Journal — Volume " & scjvolume
+
+try
 	try
-		tell application "System Events" to set name of folder ((((path to me as text) & "::Assets") as alias) as string) to new_name
+		set assetLocationCheck to ((((path to me as text) & ":Assets") as alias) as string)
+	on error
+		set assetLocationCheck to ((((path to me as text) & ":" & new_name) as alias) as string)
+	end try
+	set assetInitial to (path to me as text) & "::"
+on error
+	try
+		set assetLocationCheck to ((((path to documents folder as text) & "Assets") as alias) as string)
+	on error
+		try
+			set assetLocationCheck to ((((path to documents folder as text) & new_name) as alias) as string)
+		on error
+			if neverRanThisMachine is true then
+				DownloadAssets()
+			else if neverRanThisMachine is false then
+				set assets_path to (choose folder with prompt "The SCJ Assets folder has been renamed or moved. Please relocate it:") as alias as string
+			end if
+			set assetsLocated to true
+		end try
+	end try
+	set assetInitial to (path to documents folder as text)
+end try
+
+if neverRan is true then -- rename Assets folder to final name
+	try
+		tell application "System Events" to set name of folder (((assetInitial & "Assets") as alias) as string) to new_name
 		(*
 	on error
 		set assets_path to (choose folder with prompt "The SCJ Assets folder has been renamed or moved. Please relocate it:") as alias as string
@@ -279,26 +369,30 @@ if neverRan is true then -- rename Assets folder to final name
 end if
 
 try
-	set assets_path to (((path to me as text) & "::" & new_name) as alias) as string
+	set assets_path to ((assetInitial & new_name) as alias) as string
+	set assetsLocated to true
 on error
 	try
-		set assets_path to (((path to me as text) & "::Assets") as alias) as string -- In the instance that app has already been run but folder has been swapped with fresh Assets folder.
-		tell application "System Events" to set name of folder ((((path to me as text) & "::Assets") as alias) as string) to new_name
-		set assets_path to (((path to me as text) & "::" & new_name) as alias) as string
+		set assets_path to ((assetInitial & "Assets") as alias) as string -- In the instance that app has already been run but folder has been swapped with fresh Assets folder.
+		tell application "System Events" to set name of folder (((assetInitial & "Assets") as alias) as string) to new_name
+		set assets_path to ((assetInitial & new_name) as alias) as string
+		set assetsLocated to true
 	on error
 		set assets_path to (choose folder with prompt "The SCJ Assets folder has been renamed or moved. Please relocate it:") as alias as string
 		try -- checks if it's a real SCJ Assets folder
 			set rcheck to ((assets_path & "Fonts") as alias) as string
+			set assetsLocated to true
 		on error
 			try
 				set rcheck to ((assets_path & ".Fonts") as alias) as string
+				set assetsLocated to true
 			on error
+				set assetsLocated to false
 				Dialog()
 			end try
 		end try
 	end try
 end try
-
 
 if neverRan is true then
 	try
@@ -440,7 +534,7 @@ on Welcome()
 		set versionLocation to POSIX path of (assets_path & ".SCJ Design Version.txt")
 		set scjDesignVersion to (paragraphs of (read POSIX file versionLocation) as text)
 	on error
-		set scjDesignVersion to "unknown"
+		set scjDesignVersion to "unknown ⚠️"
 	end try
 	
 	set loadFDS to (load script diskscriptpath as alias)
@@ -459,11 +553,12 @@ on Welcome()
 	end if
 	
 	-- 🎨📚🖌🌻
+	tell me to activate
 	set launchButton to button returned of (display alert "Welcome to the Scripps College Journal Design Guide" message welcomeMsg0 & firstname & welcomeMsg1 & scjvolume & ".
 
 " & transferMsg & "Move art to the Artwork folder before placing on your pages.
 
-To do that now, just click “Quit” and drag the images onto the SCJ Dock icon. Then click the icon to return here." & welcomeMsg2 buttons {"About…", "Quit", startButton} default button 3)
+To do that now, just click “Close” and drag the images onto the SCJ Dock icon. Then click the icon to return here." & welcomeMsg2 buttons {"About…", "Close", startButton} default button 3)
 	
 	if (text of launchButton) is "About…" then
 		set backButton to button returned of (display dialog "© Scripps College Journal
@@ -516,7 +611,7 @@ Adobe CC " & adobeCCver & " " & "installed
 		end if
 		-- else if launchFinished is true then
 		-- ?? make cleanUp a handler?
-	else if launchButton is "Quit" then
+	else if launchButton is "Close" then
 		display notification "Press ⌘Q to quit"
 		-- display notification "Press ⌘Q to quit. Drag files to the Dock icon to move them to the Artwork folder."
 		error number -128
@@ -812,7 +907,10 @@ end if
 
 on reopen
 	if launchFinished is false then
-		Welcome()
+		global assetsLocated
+		if assetsLocated is true then
+			Welcome()
+		end if
 	else if launchFinished is true then
 		display notification "Press ⌘Q to quit when you're done. Click the icon for random tips if you're feeling spontaneous."
 		set IDtipscriptpath to (((path to me as text) & "Contents:Resources:Scripts:Tips.scpt") as alias) as string
@@ -825,7 +923,7 @@ On Open Handler
 - images (or any files really) move the dropped files to artwork folder
 - .indd file starts export process using assets folder
 - key opens a preferences panel for compatibility rules
-- uninstaller deletes app
+- uninstaller deletes app and preferences
 - download tutorials
 
  on open --theDroppedItems
@@ -869,7 +967,7 @@ on open theDroppedItems
 				set progress description to "Preparing to uninstall…"
 				delay 1
 				try
-					run script file (((path to me as text) & "::Uninstaller:.RemoveSCJ.scpt") as alias)
+					run script file (((path to me as text) & "::Uninstaller:.RemoveSCJ.scpt") as alias) -- change to load script? or just do the tasks in this space below. security risk otherwise
 					set progress description to "Removing fonts…"
 					delay 0.5
 					set progress description to "Resetting Adobe apps…"
@@ -914,8 +1012,7 @@ on open theDroppedItems
 				try
 					set progress additional description to "Moving " & a & " out of " & length of theDroppedItems & " art " & pieces & return & "File: " & (name of (info for theCurrentDroppedItem))
 					
-					-- NEEDS TO ACTUALLY MOVE THE FILES TO THE ARTWORK FOLDER
-					-- display alert ((assets_path) & "Artwork")
+					-- Move the files to the Artwork folder
 					tell application "Finder"
 						move theCurrentDroppedItem to ((assets_path) & "Artwork")
 					end tell
@@ -968,7 +1065,7 @@ on open theDroppedItems
 		end if
 		
 	else if neverRanThisMachine is true then
-		display alert "You haven't opened SCJ before. Please open the app. When you reach the Welcome screen, click “Quit” and drag the files onto the icon again."
+		display alert "You haven't opened SCJ before. Please open the app. When you reach the Welcome screen, click “Close” and drag the files onto the icon again."
 		continue quit
 	end if
 	
