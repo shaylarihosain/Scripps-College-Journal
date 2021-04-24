@@ -1,11 +1,11 @@
 --===============================================
 -- SCRIPPS COLLEGE JOURNAL Software for Mac
--- Version 0.6 (Beta)
+-- Version 0.6.1 (Beta)
 --------------------------------------------------------------------------------------
 -- Compiled on macOS 10.15.7 (19H524) (Intel-based)
 -- Intel x86 binary
 --------------------------------------------------------------------------------------
--- Last updated 						March 31 2021
+-- Last updated 						April 19 2021
 -- First released staffwide 				April 2021
 -- Beta entered limited staff testing 		February 28 2021
 -- Software development began 			July 11 2020
@@ -16,18 +16,23 @@
 --===============================================
 
 --=========================
-(* AppTranslocationSecurityCheck 1.2.2 *)
+(* AppTranslocationSecurityCheck 1.3 *)
 
 -- Info: Complies with Apple security provisions for apps distributed via unsigned distribution methods
 -- Created March 1 2021
--- Last updated March 14 2021
+-- Last updated April 19 2021
 --=========================
 set appleTranslocationCheck to (((path to me as text) as alias) as string) as text
 -- display dialog appleAppTranslocationCheck -- debugger
 if appleTranslocationCheck does not contain "Users:" and appleTranslocationCheck does not contain "Applications:" and appleTranslocationCheck does not contain "Library:" then
 	-- ZIP alert display alert "To install the SCJ app, please move its icon out of the Visual Design System folder. Then place it right back in the folder." message "You can move the folder anywhere you want. We recommend Documents or Applications."
 	set correctPathInstalled to false
-	display alert "To install SCJ, drag it to Applications." message "Please read the enclosed instructions before opening SCJ for the first time."
+	set atcButton to button returned of (display alert "To install SCJ, drag it to Applications." message "Please read the enclosed instructions before opening SCJ for the first time." buttons {"Quit", "Instructions"} default button "Instructions")
+	if atcButton is "Instructions" then
+		try
+			tell application "Finder" to open "Install Scripps College Journal:Read Me First.pdf"
+		end try
+	end if
 	continue quit
 else
 	set correctPathInstalled to true
@@ -38,7 +43,7 @@ property runcount : 0
 if runcount is 0 then
 	try
 		tell application "System Events"
-			make new folder at "tmp" with properties {name:"SysEvCheck"}
+			make new folder at "tmp" with properties {name:"SCJPermissionsCheck"}
 		end tell
 	on error msg number n
 		if n = -1743 then
@@ -90,20 +95,12 @@ if runcount is 0 then -- doesn't need to be runcountThisMachine because regular 
 			end if
 		end try
 		try
-			set dmgLeftover to ((((path to downloads folder as text) & "InstallScrippsCollegeJournal.dmg") as alias) as string)
+			do shell script "rm -f $HOME/Downloads/InstallScrippsCollegeJournal.dmg"
 		on error
 			try
-				set dmgLeftover to ((((path to desktop folder as text) & "InstallScrippsCollegeJournal.dmg") as alias) as string)
-			on error
-				set dmgLeftover to missing value
+				do shell script "rm -f $HOME/Desktop/InstallScrippsCollegeJournal.dmg"
 			end try
 		end try
-		if dmgLeftover is not missing value then
-			tell application "System Events"
-				delete file dmgLeftover
-			end tell
-		end if
-		
 	end if
 end if
 
@@ -144,8 +141,8 @@ if runcountThisMachine mod 2 is 0 then
 			end if
 		end if
 		
-		if version is less than "1.0" and appLatestVersion is greater than or equal to "1.0" then -- (REMOVE THIS BLOCK on 1.0 release)
-			set betaWarningButton to button returned of (display alert "This beta version of Scripps College Journal was for testing purposes, and presents a security risk." message "You should update to version " & appLatestVersion & ", the latest stable release." buttons {"Quit", "Update…"} default button 2)
+		if version is less than "1.0" and appLatestVersion is greater than or equal to "1.0" then -- (REMOVE THIS BETA BLOCK on 1.0 release)
+			set betaWarningButton to button returned of (display alert "This beta version of Scripps College Journal was for testing purposes, and presents a security risk." message "You should update to version " & appLatestVersion & ", the latest stable release." & return & return & "Thanks for testing the app for us!" & return & "Love, the SCJ team ❤️" buttons {"Quit", "Update…"} default button 2)
 			if betaWarningButton is "Update…" then
 				display notification "After dragging the new app to the Applications folder, click “Replace” when prompted."
 				DownloadSCJ()
@@ -306,11 +303,11 @@ if currentyear is greater than 2026 then
 end if
 
 --=========================
-(* BaseCode 11.4R *)
+(* BaseCode 11.4.1R *)
 
 -- Info: Main program that handles the primary tasks the SCJ application is designed for. Contains numerous smaller handlers or programs. Very early builds named Get Started.
 -- Created July 12 2020
--- Last updated March 31 2021
+-- Last updated April 14 2021
 --=========================
 
 -- Directory tree is damaged alert
@@ -353,11 +350,11 @@ on scjRestart()
 end scjRestart
 
 --=========================
-(* Download SCJ 3.2A *)
+(* Download SCJ 3.2.1A *)
 
 -- Info: 
 -- Created July 25 2020
--- Last updated March 25 2021
+-- Last updated April 14 2021
 --=========================
 
 on DownloadSCJ()
@@ -365,7 +362,7 @@ on DownloadSCJ()
 	if currentyear is greater than or equal to 2021 and currentmonthInt is greater than 9 then -- (October 2021)
 		set scjDownload to ("https://github.com/scrippscollegejournal/Scripps-College-Journal/releases/latest/download/InstallScrippsCollegeJournal.dmg" as string)
 	else
-		set scjDownload to ("https://github.com/shaylarihosain/Scripps-College-Journal/releases/download/0.6/InstallScrippsCollegeJournal.dmg" as string) -- CHANGE FINAL URL
+		set scjDownload to ("https://github.com/shaylarihosain/Scripps-College-Journal/releases/download/0.6.1/InstallScrippsCollegeJournal.dmg" as string) -- CHANGE FINAL URL
 		
 		-- start beta code
 		set appVersionDownload to "https://raw.githubusercontent.com/shaylarihosain/Scripps-College-Journal/main/Attributes/App%20Version" -- CHANGE FINAL URL
@@ -378,6 +375,8 @@ on DownloadSCJ()
 		if checkSuccess is true then
 			if appLatestVersion is greater than or equal to "1.0" then
 				set scjDownload to ("https://github.com/shaylarihosain/Scripps-College-Journal/releases/latest/download/InstallScrippsCollegeJournal.dmg" as string)
+			else
+				set scjDownload to ("https://github.com/shaylarihosain/Scripps-College-Journal/releases/download/" & appLatestVersion & "/InstallScrippsCollegeJournal.dmg" as string)
 			end if
 		end if -- end beta code
 		
@@ -607,6 +606,7 @@ if scjDesignVersion is not "unknown ⚠️" then
 				scjRestart()
 			end if
 		end if
+		
 	else if checkSuccess is false then
 		set scjLatestVersion to "unknown"
 	end if
