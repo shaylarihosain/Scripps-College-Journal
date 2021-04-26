@@ -83,7 +83,7 @@ end RandomTips
 -- ===============
 on searchTips()
 	
-	set tipsDialog to (display dialog "Ask for help. If we can't find what you're looking for, you'll return here." & return & return & "You can also use Slackbot. Go to your Slack DMs, and type ‘help.’" buttons {"Stop", "Back…", "Search"} default answer "Type a topic" default button "Search" with title "Tips" with icon note)
+	set tipsDialog to (display dialog "Ask for help. If we can't find what you're looking for, you'll return here." & return & return & "You can also use Slackbot. Go to your Slack DMs, and type ‘scj help.’" buttons {"Stop", "Back…", "Search"} default answer "Type a topic" default button "Search" with title "Tips" with icon note)
 	
 	if text returned of tipsDialog is "fonts" or text returned of tipsDialog is "typography" or text returned of tipsDialog is "type" or text returned of tipsDialog is "font" then
 		display alert "Consult the style guide for the latest information about the fonts we use." buttons {"Back…"}
