@@ -1,11 +1,11 @@
 --===============================================
 -- SCRIPPS COLLEGE JOURNAL Software for Mac
--- Version 0.6.1 (Beta)
+-- Version 0.7 (Beta)
 --------------------------------------------------------------------------------------
 -- Compiled on macOS 10.15.7 (19H524) (Intel-based)
 -- Intel x86 binary
 --------------------------------------------------------------------------------------
--- Last updated 						April 19 2021
+-- Last updated 						April 26 2021
 -- First released staffwide 				April 2021
 -- Beta entered limited staff testing 		February 28 2021
 -- Software development began 			July 11 2020
@@ -135,14 +135,13 @@ if runcountThisMachine mod 2 is 0 then
 			tell me to activate
 			set updateButton to button returned of (display alert "An update to the SCJ app is available. Would you like to download it now?" message "The latest version is " & appLatestVersion & ". You have " & version & "." & updateMsg2 buttons {"Not Now", "Update…"} default button 2)
 			if updateButton is "Update…" then
-				display notification "After dragging the new app to the Applications folder, click “Replace” when prompted."
 				DownloadSCJ()
 				continue quit -- tell application id "edu.scrippsjournal.design" to quit
 			end if
 		end if
 		
 		if version is less than "1.0" and appLatestVersion is greater than or equal to "1.0" then -- (REMOVE THIS BETA BLOCK on 1.0 release)
-			set betaWarningButton to button returned of (display alert "This beta version of Scripps College Journal was for testing purposes, and presents a security risk." message "You should update to version " & appLatestVersion & ", the latest stable release." & return & return & "Thanks for testing the app for us!" & return & "Love, the SCJ team ❤️" buttons {"Quit", "Update…"} default button 2)
+			set betaWarningButton to button returned of (display alert "This beta version of Scripps College Journal was for testing purposes." message "You should upgrade to version " & appLatestVersion & ", the latest secure and stable release." & return & return & "Thanks for testing the app for us!" & return & "Love, the SCJ team ❤️" buttons {"Quit", "Update…"} default button 2)
 			if betaWarningButton is "Update…" then
 				display notification "After dragging the new app to the Applications folder, click “Replace” when prompted."
 				DownloadSCJ()
@@ -303,11 +302,11 @@ if currentyear is greater than 2026 then
 end if
 
 --=========================
-(* BaseCode 11.4.1R *)
+(* BaseCode 11.5R *)
 
 -- Info: Main program that handles the primary tasks the SCJ application is designed for. Contains numerous smaller handlers or programs. Very early builds named Get Started.
 -- Created July 12 2020
--- Last updated April 14 2021
+-- Last updated April 25 2021
 --=========================
 
 -- Directory tree is damaged alert
@@ -323,7 +322,7 @@ on Dialog()
 	end if
 	set assetbutton to button returned of (display alert damagedAlert message damagedMsg as critical buttons {"Quit", "Reinstall SCJ…", "Download Assets…"} default button "Download Assets…")
 	if assetbutton is "Download Assets…" then
-		DownloadAssets()
+		DownloadAssets(true)
 		tell me to activate
 		scjRestart()
 	else if assetbutton is "Reinstall SCJ…" then
@@ -350,11 +349,11 @@ on scjRestart()
 end scjRestart
 
 --=========================
-(* Download SCJ 3.2.1A *)
+(* Download SCJ 4.0 *)
 
 -- Info: 
 -- Created July 25 2020
--- Last updated April 14 2021
+-- Last updated April 25 2021
 --=========================
 
 on DownloadSCJ()
@@ -362,7 +361,7 @@ on DownloadSCJ()
 	if currentyear is greater than or equal to 2021 and currentmonthInt is greater than 9 then -- (October 2021)
 		set scjDownload to ("https://github.com/scrippscollegejournal/Scripps-College-Journal/releases/latest/download/InstallScrippsCollegeJournal.dmg" as string)
 	else
-		set scjDownload to ("https://github.com/shaylarihosain/Scripps-College-Journal/releases/download/0.6.1/InstallScrippsCollegeJournal.dmg" as string) -- CHANGE FINAL URL
+		set scjDownload to ("https://github.com/shaylarihosain/Scripps-College-Journal/releases/download/0.7/InstallScrippsCollegeJournal.dmg" as string) -- CHANGE FINAL URL
 		
 		-- start beta code
 		set appVersionDownload to "https://raw.githubusercontent.com/shaylarihosain/Scripps-College-Journal/main/Attributes/App%20Version" -- CHANGE FINAL URL
@@ -386,7 +385,7 @@ on DownloadSCJ()
 	set scjName to "ReinstallScrippsCollegeJournal"
 	set scjDestination to "Desktop"
 	downloadResources(scjDownload, scjExtension, scjName, scjDestination)
-	display notification "A new copy of SCJ has been downloaded to your desktop."
+	display notification "After dragging the new app to the Applications folder, click “Replace” when prompted."
 	tell application "Finder"
 		open file ((path to desktop folder as text) & scjName & scjExtension)
 	end tell
@@ -413,7 +412,7 @@ end downloadResources
 
 -- Download Assets folder to Documents folder
 
-on DownloadAssets()
+on DownloadAssets(AssetsNew)
 	global new_name
 	try
 		try
@@ -426,23 +425,50 @@ on DownloadAssets()
 		set documentsGood to true
 	end try
 	if documentsGood is false then
-		set replaceOldAssets to button returned of (display alert "We found existing SCJ assets in your Documents folder. Please check if you have worked on any file in that folder." & return & return & "If you have, please copy it elsewhere, as it will be deleted when you click “OK.”" buttons {"Quit", "OK"} as critical)
-		if replaceOldAssets is "OK" then
+		global runcountThisMachine
+		if runcountThisMachine is greater than 15 and AssetsNew is false then
+			global currentmonthInt
+			if currentmonthInt is greater than or equal to 4 and currentmonthInt is less than 7 then
+				set existingAssetsMsg to "It seems like you've already worked on them a lot, so if you have, skip the update unless your senior designer tells you otherwise." & return & return & "If you do update, we'll rename the folder containing your work. We won't replace it."
+			end if
+			set existingAssetsButtons to {"Skip", "Update…"}
+		else
+			if AssetsNew is false then
+				set cautionMsg to "⚠️ "
+				set cautionButton to "Update & Replace… ⚠️"
+			else
+				set cautionMsg to ""
+				set cautionButton to "Update & Replace…"
+			end if
+			set existingAssetsMsg to cautionMsg & "“Update & Replace” will overwrite the guides you currently have." & return & return & "DO NOT select this option if you have done valuable work on the magazine that you don't want to lose."
+			set existingAssetsButtons to {cautionButton, "Skip", "Update…"}
+		end if
+		
+		set replaceOldAssets to button returned of (display alert "We found existing SCJ assets in your Documents folder." message existingAssetsMsg buttons existingAssetsButtons as critical)
+		if replaceOldAssets is "Update…" then
+			try
+				set renameOldAssets to (new_name & " (Old)" as string)
+			on error
+				set renameOldAssets to ("Assets (Old)" as string)
+			end try
+			tell application "System Events" to set name of folder checkDocumentsFolder to (new_name & " (Old)" as string)
+			downloadAssetsThemselves()
+			scjRestart()
+		else if replaceOldAssets contains "Update & Replace…" then
 			try
 				tell application "System Events"
 					delete folder checkDocumentsFolder
 				end tell
-			on error
-				display notification "The old Assets folder that was scheduled for deletion has been moved. Download will proceed."
 			end try
-		else if replaceOldAssets is "Quit" then
-			continue quit -- tell application id "edu.scrippsjournal.design" to quit
-			-- display notification "Press ⌘Q to quit"
-			-- error number -128
+			downloadAssetsThemselves()
+			scjRestart()
 		end if
+	else
+		downloadAssetsThemselves()
 	end if
-	-- tell application "Finder" to activate
-	-- display notification "Please wait. We'll have you up and running in no time." with title "Downloading latest SCJ design guides…"
+end DownloadAssets
+
+on downloadAssetsThemselves()
 	tell me to activate
 	display alert "Downloading latest SCJ design guides…" message "Please wait. You'll be up and running in no time." buttons {""} giving up after 3
 	set assetsDownload to "https://github.com/shaylarihosain/Scripps-College-Journal/blob/main/Assets.zip?raw=true" -- CHANGE FINAL URL
@@ -460,8 +486,7 @@ on DownloadAssets()
 	tell application "System Events"
 		delete file ((path to documents folder as text) & assetsName & assetsExtension)
 	end tell
-	
-end DownloadAssets
+end downloadAssetsThemselves
 
 -- Define asset locations & asset integrity check
 
@@ -486,7 +511,7 @@ on error
 			set assetLocationCheck to ((((path to documents folder as text) & new_name) as alias) as string)
 		on error
 			if neverRanThisMachine is true then
-				DownloadAssets()
+				DownloadAssets(true)
 			else if neverRanThisMachine is false then
 				set assets_path to (choose folder with prompt "The SCJ Assets folder has been renamed or moved. Please relocate it:") as alias as string
 			end if
@@ -586,24 +611,31 @@ end try
 if scjDesignVersion is not "unknown ⚠️" then
 	set checkSuccess to true
 	
-	set scjDownload to "https://raw.githubusercontent.com/shaylarihosain/Scripps-College-Journal/main/Assets%20Version" -- CHANGE FINAL URL
+	set assetsVersionDownload to "https://raw.githubusercontent.com/shaylarihosain/Scripps-College-Journal/main/Assets%20Version" -- CHANGE FINAL URL
+	set assetsInfoDownload to "https://raw.githubusercontent.com/shaylarihosain/Scripps-College-Journal/main/Assets%20Info" -- CHANGE FINAL URL
 	try
-		set scjLatestVersion to do shell script "curl " & scjDownload
+		set scjLatestVersion to do shell script "curl " & assetsVersionDownload
 	on error
 		set checkSuccess to false
 	end try
 	
+	try
+		set assetsInfo to do shell script "curl " & assetsInfoDownload
+	on error
+		set assetsInfo to ""
+	end try
+	
 	if checkSuccess is true then
 		if scjDesignVersion is less than scjLatestVersion then
-			set additionalMsg to ""
-			(* if runcountThisMachine is greater than 15 and AssetsNew is false and currentmonthInt is greater than or equal to 4 and currentmonthInt is less than 7 then
-				set additionalMsg to return & return & "It seems you've already worked on these files a lot, so if you're almost finished with your work, you don't need to update the guides." & return & return & "If you're curious about what's changed, temporarily move your current folder out of its current location, so that the updated guides don't overwrite them."
-			end if REJECTED; this should be combined with DownloadAssets handler's message *)
+			if assetsInfo is "" or assetsInfo is " " then
+				set additionalMsg to ""
+			else
+				set additionalMsg to return & return & assetsInfo
+			end if
 			tell me to activate
 			set updateButton to button returned of (display alert "An update to the SCJ design guides is available. Would you like to download it now?" message "Design system version " & scjLatestVersion & " introduces new changes and rules. You have " & scjDesignVersion & "." & additionalMsg buttons {"Not Now", "Update…"} default button 2)
 			if updateButton is "Update…" then
-				DownloadAssets()
-				scjRestart()
+				DownloadAssets(AssetsNew)
 			end if
 		end if
 		
@@ -655,6 +687,10 @@ if application id "com.adobe.InDesign" is running then
 	set alreadyOpenID to true
 else
 	set alreadyOpenID to false
+end if
+
+if neverRanThisMachine is true then
+	display notification with title "Welcome, " & firstname & "! Click Start Designing to begin."
 end if
 
 --=========================
