@@ -1,8 +1,8 @@
 --===============================================
 -- SCRIPPS COLLEGE JOURNAL Software for Mac
--- Version 0.7 (Beta)
+-- Version 0.7-b (Beta)
 --------------------------------------------------------------------------------------
--- Compiled on macOS 10.15.7 (19H524) (Intel-based)
+-- Compiled on macOS 10.15.7 (19H1030) (Intel-based)
 -- Intel x86 binary
 --------------------------------------------------------------------------------------
 -- Last updated 						April 26 2021
@@ -306,46 +306,31 @@ end if
 
 -- Info: Main program that handles the primary tasks the SCJ application is designed for. Contains numerous smaller handlers or programs. Very early builds named Get Started.
 -- Created July 12 2020
--- Last updated April 25 2021
+-- Last updated April 26 2021
 --=========================
 
 -- Directory tree is damaged alert
 
-on Dialog()
+on damagedDialog()
 	global neverRan
-	if neverRan is true then
-		set damagedAlert to "Assets are missing or damaged. Please delete and redownload the SCJ Design System."
-		set damagedMsg to "Don't send team members your app. Point them to the original."
-	else if neverRan is false then
-		set damagedAlert to "Assets are missing or damaged."
-		set damagedMsg to "Please delete and reinstall the SCJ Design System. If you've worked on any files, make sure to keep them." & return & return & "Don't send team members your app. Point them to the original."
-	end if
-	set assetbutton to button returned of (display alert damagedAlert message damagedMsg as critical buttons {"Quit", "Reinstall SCJ…", "Download Assets…"} default button "Download Assets…")
-	if assetbutton is "Download Assets…" then
+	set damagedAlert to "Assets are missing or damaged. Please redownload the design guides."
+	set assetbutton to button returned of (display alert damagedAlert as critical buttons {"Quit", "Try Another Folder…", "Get Design Guides…"} default button "Get Design Guides…")
+	if assetbutton is "Get Design Guides…" then
 		DownloadAssets(true)
 		tell me to activate
 		scjRestart()
-	else if assetbutton is "Reinstall SCJ…" then
-		DownloadSCJ()
-		-- Future possible feature: If neverRan is false and runcountThisMachine is greater than 0 then replace the files. Detect where they currently are, move indds if necessary, maybe to (/tmp), the app can search for them, and replace with the files in the one that's on the desktop. Display notification "we've migrated the contents to the new installation."
-		continue quit -- tell application id "edu.scrippsjournal.design" to quit
-		-- display notification "Press ⌘Q to quit"
-		-- error number -128
+	else if assetbutton is "Try Another Folder…" then
+		scjRestart()
 	else if assetbutton is "Quit" then
 		continue quit -- tell application id "edu.scrippsjournal.design" to quit
 		-- display notification "Press ⌘Q to quit"
 		-- error number -128
 	end if
-end Dialog
+end damagedDialog
 
 on scjRestart()
 	return on run
-	(* 
-	tell me to activate
-	display alert "Scripps College Journal is going to quit now. Please open it again." buttons {""} giving up after 3
-	display notification "You can click on this notification to re-open SCJ once it quits."
-	continue quit -- tell application id "edu.scrippsjournal.design" to quit 
-	*)
+	(* display notification "You can click on this notification to re-open SCJ once it quits." *)
 end scjRestart
 
 --=========================
@@ -533,7 +518,7 @@ if neverRan is true then -- rename Assets folder to final name
 			try
 				set rcheck to ((assets_path & ".Fonts") as alias) as string
 			on error
-				Dialog()
+				damagedDialog()
 			end try
 		end try
 		*)
@@ -565,7 +550,7 @@ on error
 		set assetsLocated to true
 	on error
 		set assetsLocated to false
-		Dialog()
+		damagedDialog()
 	end try
 end try
 
