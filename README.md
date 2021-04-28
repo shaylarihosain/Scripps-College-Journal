@@ -10,6 +10,8 @@ The app can update the brand guides on the design team's computers when newer on
 
 [Download it here](https://github.com/shaylarihosain/Scripps-College-Journal/releases/download/0.7/InstallScrippsCollegeJournal.dmg).
 
+![SCJ](https://user-images.githubusercontent.com/74567503/116485561-63c28d80-a840-11eb-93f1-52f50148abf6.jpg)
+
 # Installation
 
 Open the downloaded installer on your Mac.
@@ -30,7 +32,9 @@ The first time it runs, it will download the design guides.
 
 # Features
 
-- **Installs our brand fonts**
+- **Updates existing SCJ brand design guides to the newest ones**
+
+- **Installs our latest brand fonts**
 
 - **Injects more convenient custom Adobe InDesign interface layout tailored to magazine design**
 
@@ -50,7 +54,7 @@ The first time it runs, it will download the design guides.
      - If each member of the design team uses different versions of InDesign, the work they create will not be compatible. To prevent this issue from occurring, _Scripps College Journal_ will notify users with out-of-date InDesign installations before letting them start, and provide them with clear instructions on how to rectify the issue. Each year, the app will keep team members on the same version automatically.
 
 - **For senior designers**
-     - When deploying a new design guide, the Assets zip folder here on GitHub is all that needs to be updated. The app will use whatever font files are in the fonts folder, and whatever version of the design guide is present. New installations will automatically download the newest guides, as long as the new _Assets.zip_ replaces the old one.
+     - When deploying a new design guide, the _Assets Version_ file and the _Assets_ zip folder here on GitHub, and the _SCJ Design Version_ file in the zip itself all need to be updated. After updating these attributes in this repository, the app downloads the newest guides on your design team's computers. In the _Assets_ folder, the app will use whatever font files exist in the fonts folder, and whatever version of the design guide is present.
      - (Beta) Signing in as a managing editor in the app will disable Adobe and macOS compatibility checks on that machine. Use at your own risk.
 
 # System requirements
@@ -75,7 +79,7 @@ On a Mac, the SCJ app does this all for you automatically. It imports the PDF pr
 
 **How do I make sure I have the latest version of the design guides?**
 
-The app should notify you on startup if the design guides you have are older, and you'll be given the option to update them.
+The app notifies you on startup if the design guides you have are older, and you'll be given the option to update them. To check their status, click the _About_ button on the main _Welcome_ screen.
 
 ###### ————————————————————
 
