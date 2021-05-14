@@ -1,11 +1,11 @@
 --===============================================
 -- SCRIPPS COLLEGE JOURNAL Software for Mac
--- Version 0.7-b (Beta)
+-- Version 0.7.1 (Beta)
 --------------------------------------------------------------------------------------
 -- Compiled on macOS 10.15.7 (19H1030) (Intel-based)
 -- Intel x86 binary
 --------------------------------------------------------------------------------------
--- Last updated 						April 26 2021
+-- Last updated 						May 11 2021
 -- First released staffwide 				April 2021
 -- Beta entered limited staff testing 		February 28 2021
 -- Software development began 			July 11 2020
@@ -104,6 +104,15 @@ if runcount is 0 then -- doesn't need to be runcountThisMachine because regular 
 	end if
 end if
 
+-- Set the time
+set loadTime to (((path to me as text) & "Contents:Resources:Scripts:SetTimeHandler.scpt") as alias) as string
+set loadTime to (load script loadTime as alias)
+
+set currentyear to getYear() of loadTime
+set currentmonth to getMonthName() of loadTime
+set currentmonthInt to getMonth() of loadTime
+set currenttime to getTime() of loadTime
+
 -- Run IconSwitcher
 set iconScript to (((path to me as text) & "Contents:IconSwitcher.scpt") as alias) as string
 run script file iconScript
@@ -156,10 +165,7 @@ if runcountThisMachine mod 2 is 0 then
 	end if
 end if
 
--- Run Compatibility Verification
-set loadTime to (((path to me as text) & "Contents:Resources:Scripts:SetTimeHandler.scpt") as alias) as string
-set loadTime to (load script loadTime as alias)
-
+-- Run compatibility verification
 property cverify : true
 set CCCpass to false
 set compatibilityscriptpath to (((path to me as text) & "Contents:Resources:Scripts:ComprehensiveCompatibilityCheck.scpt") as alias) as string
@@ -171,14 +177,9 @@ if cverify is true then
 	-- For testing purposes only: display notification "Ccheck passed"
 end if
 
--- Run Disk Verification
+-- Run disk verification
 set diskscriptpath to (((path to me as text) & "Contents:Resources:Scripts:FreeDiskSpace.scpt") as alias) as string
 run script file diskscriptpath
-
-set currentyear to getYear() of loadTime
-set currentmonth to getMonthName() of loadTime
-set currentmonthInt to getMonth() of loadTime
-set currenttime to getTime() of loadTime
 
 set adobeCCver to item 1 of CCCinfo
 set IDver to item 2 of CCCinfo
@@ -302,11 +303,11 @@ if currentyear is greater than 2026 then
 end if
 
 --=========================
-(* BaseCode 11.5R *)
+(* BaseCode 11.6R *)
 
 -- Info: Main program that handles the primary tasks the SCJ application is designed for. Contains numerous smaller handlers or programs. Very early builds named Get Started.
 -- Created July 12 2020
--- Last updated April 26 2021
+-- Last updated May 11 2021
 --=========================
 
 -- Directory tree is damaged alert
@@ -334,19 +335,20 @@ on scjRestart()
 end scjRestart
 
 --=========================
-(* Download SCJ 4.0 *)
+(* Download SCJ 4.1 *)
 
 -- Info: 
 -- Created July 25 2020
--- Last updated April 25 2021
+-- Last updated May 11 2021
 --=========================
 
 on DownloadSCJ()
-	global scjissueyear
-	if currentyear is greater than or equal to 2021 and currentmonthInt is greater than 9 then -- (October 2021)
+	global currentyear
+	global currentmonthInt
+	if currentyear is greater than or equal to 2021 and currentmonthInt is greater than 9 then -- (October 2021) -- consider changing this from a time to a GitHub file trigger (boolean)
 		set scjDownload to ("https://github.com/scrippscollegejournal/Scripps-College-Journal/releases/latest/download/InstallScrippsCollegeJournal.dmg" as string)
 	else
-		set scjDownload to ("https://github.com/shaylarihosain/Scripps-College-Journal/releases/download/0.7/InstallScrippsCollegeJournal.dmg" as string) -- CHANGE FINAL URL
+		set scjDownload to ("https://github.com/shaylarihosain/Scripps-College-Journal/releases/download/0.7.1/InstallScrippsCollegeJournal.dmg" as string) -- CHANGE FINAL URL
 		
 		-- start beta code
 		set appVersionDownload to "https://raw.githubusercontent.com/shaylarihosain/Scripps-College-Journal/main/Attributes/App%20Version" -- CHANGE FINAL URL
@@ -679,11 +681,11 @@ if neverRanThisMachine is true then
 end if
 
 --=========================
-(* WelcomeManager 2.12; Dynamic Welcome Message (Fork) *)
+(* WelcomeManager 2.12.1; Dynamic Welcome Message (Fork) *)
 
 -- Info: Program (now integrated within BaseCode) that provides the main front-end user interface and manages SCJ user authentication
 -- Created July 12 2020
--- Last updated March 31 2021
+-- Last updated April 28 2021
 --=========================
 
 set neverRan to false
@@ -729,15 +731,22 @@ on Welcome()
 	end if
 	
 	if version is greater than or equal to appLatestVersion then
-		set aboutApp to " — Up to date"
+		set aboutApp to " — Up to date ✓"
 	else if appLatestVersion is "unknown" then
 		set aboutApp to " — Couldn't check for updates"
 	else
-		set aboutApp to " — Update available ⚠️"
+		set aboutApp to " — Update available"
+		try
+			set aV to character 1 of version as integer
+			set aLV to character 1 of appLatestVersion as integer
+			if (aLV - aV) is greater than or equal to 1 then
+				set aboutApp to " — Update available ⚠️"
+			end if
+		end try
 	end if
 	try
 		if scjDesignVersion is greater than or equal to scjLatestVersion then
-			set aboutDesign to " — Up to date"
+			set aboutDesign to " — Up to date ✓"
 		else if scjLatestVersion is "unknown" then
 			set aboutDesign to " — Couldn't check for updates"
 		else
@@ -973,6 +982,12 @@ on Designing()
 	global IDverFull
 	global runcountThisMachine
 	
+	if runcountThisMachine is greater than 0 then
+		set designWork to button returned of (display alert "What are you designing today?" buttons {"Both", "Cover", "Pages"})
+	else
+		set designWork to "Both"
+	end if
+	
 	set userLibraryFontPath to (((path to library folder from user domain as text) & "Fonts") as alias)
 	tell application "System Events"
 		make new folder at end of (userLibraryFontPath) with properties {name:"SCJ"}
@@ -1061,8 +1076,14 @@ on Designing()
 		set myFolder to assets_path as alias
 		set myIDFiles to (every item of myFolder whose name extension is "indd") as alias list
 		set myAIFiles to (every item of myFolder whose name extension is "ai") as alias list
-		open myIDFiles
-		open myAIFiles
+		if designWork is "Pages" then
+			open myIDFiles
+		else if designWork is "Cover" then
+			open myAIFiles
+		else
+			open myIDFiles
+			open myAIFiles
+		end if
 	end tell
 	
 	tell application id "com.adobe.InDesign" to activate
