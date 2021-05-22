@@ -1,9 +1,9 @@
 --=========================
-(* ComprehensiveCompatibilityCheck 7.3R *)
+(* ComprehensiveCompatibilityCheck 8.0R *)
 
 -- Info: Validates user's computer for any Adobe Creative Cloud or macOS incompatibilities; instructs them in detail how to rectify issues if any exist. The program will keep up-to-date on its own—compatibility rules auto-update until SCJ Vol 27. Early builds named OSDetect until version 3. Debugged with sister program OSDetectDebugger which maintains parity in its codebase with CCC and does not ship in final release.
 -- Created July 17 2020
--- Last updated March 13 2021
+-- Last updated May 21 2021
 
 ---- © 2020–2021 Shay Lari-Hosain. All rights reserved. Unauthorized copying or reproduction of any part of the proprietary contents of this file, via any medium, is strictly prohibited.
 --=========================
@@ -12,6 +12,8 @@
 
 
 on DetermineCompatibility()
+	
+	set CCCpass to false
 	
 	set sysinfo to system info
 	set osver to system version of sysinfo
@@ -95,13 +97,13 @@ on DetermineCompatibility()
 	(* Get InDesign & Illustrator installation status and versions *)
 	
 	try
-		tell application "Finder" to get application file id "com.adobe.InDesign"
+		tell application "Finder" to get application id "com.adobe.InDesign"
 		set IDexists to true
 	on error
 		set IDexists to false
 	end try
 	try
-		tell application "Finder" to get application file id "com.adobe.Illustrator"
+		tell application "Finder" to get application id "com.adobe.Illustrator"
 		set AIexists to true
 	on error
 		set AIexists to false
@@ -109,23 +111,23 @@ on DetermineCompatibility()
 	
 	if AIexists = true and IDexists = true then
 		set part1beginning to "You have old versions of InDesign and Illustrator. Update to the versions the rest of your team uses, so you can open their design work."
-		tell application "Finder" to get version of application file id "com.adobe.Illustrator"
+		tell application "Finder" to get version of application id "com.adobe.Illustrator"
 		set AIver to text 1 thru 2 of result
-		tell application "Finder" to get version of application file id "com.adobe.InDesign"
+		tell application "Finder" to get version of application id "com.adobe.InDesign"
 		set IDver to text 1 thru 2 of result
-		tell application "Finder" to get version of application file id "com.adobe.InDesign"
+		tell application "Finder" to get version of application id "com.adobe.InDesign"
 		set IDverFull to text 1 thru 4 of result
 	else if AIexists = false and IDexists = false then
 		set part1beginning to "Before installing InDesign and Illustrator, update " & osfamily & ". Otherwise, you can only install old Adobe software, which can't open design work the rest of your team creates."
 	else if AIexists = true and IDexists = false then
 		set part1beginning to "Before installing InDesign and updating Illustrator, update " & osfamily & "."
-		tell application "Finder" to get version of application file id "com.adobe.Illustrator"
+		tell application "Finder" to get version of application id "com.adobe.Illustrator"
 		set AIver to text 1 thru 2 of result
 	else if AIexists = false and IDexists = true then
 		set part1beginning to "Before installing Illustrator and updating InDesign, update " & osfamily & "."
-		tell application "Finder" to get version of application file id "com.adobe.InDesign"
+		tell application "Finder" to get version of application id "com.adobe.InDesign"
 		set IDver to text 1 thru 2 of result
-		tell application "Finder" to get version of application file id "com.adobe.InDesign"
+		tell application "Finder" to get version of application id "com.adobe.InDesign"
 		set IDverFull to text 1 thru 4 of result
 	end if
 	
@@ -272,19 +274,10 @@ If you're not sure, just ask your senior designer. They're here to help."
 						end tell
 					end if
 				end try
-			else if addButton is "Quit" then
-				tell application id "edu.scrippsjournal.design" to quit
-				error number -128
 			end if
-		else if thisButton is "Quit" then
-			tell application id "edu.scrippsjournal.design" to quit
-			error number -128
 		end if
-		
+		tell application id "edu.scrippsjournal.design" to quit
 	end if
-	
-	(* Change app icon based on macOS*)
-	-- insert code here
 	
 	(* Check Adobe compatibility *)
 	
@@ -299,69 +292,60 @@ You need CC " & projectedadobeCCver & ". Ask the senior designer to confirm. It'
 	-- try (Getting rid of this try block, because it would render all the Quit buttons inside this code useless)
 	if osver is greater than or equal to compatibleos then
 		if AIexists is false and IDexists is false then
-			set adobeButton to button returned of (display alert "Install Adobe Creative Cloud first." message missingadobemsg buttons {"Quit", "Get Adobe Software…"} default button 2 cancel button 1 as critical)
+			set adobeButton to button returned of (display alert "Install Adobe Creative Cloud first." message missingadobemsg buttons {"Quit", "Get Adobe Software…"} default button 2 as critical)
 			if adobeButton is "Get Adobe Software…" then
 				open location "https://creativecloud.adobe.com/apps/download/creative-cloud"
 				display notification "Downloading the Adobe Creative Cloud installer"
 				delay 20
-				display notification "Once you install Creative Cloud, sign in with your Scripps credentials."
-				tell application id "edu.scrippsjournal.design" to quit
-				error number -128
+				display notification "Once you install Creative Cloud, sign in with your Scripps credentials." with title "If you don't have access to a subscription"
 			end if
+			tell application id "edu.scrippsjournal.design" to quit
 		else if IDexists is true and AIexists is false then
-			set adobeButton to button returned of (display alert "Install Adobe Illustrator first." message missingadobemsg buttons {"Quit", "Get Illustrator…"} default button 2 cancel button 1 as critical)
+			set adobeButton to button returned of (display alert "Install Adobe Illustrator first." message missingadobemsg buttons {"Quit", "Get Illustrator…"} default button 2 as critical)
 			if adobeButton is "Get Illustrator…" then
 				OpenCCManager(i)
-				tell application id "edu.scrippsjournal.design" to quit
-				error number -128
 			end if
+			tell application id "edu.scrippsjournal.design" to quit
 		else if AIexists is true and IDexists is false then
-			set adobeButton to button returned of (display alert "Install Adobe InDesign first." message missingadobemsg buttons {"Quit", "Get InDesign…"} default button 2 cancel button 1 as critical)
+			set adobeButton to button returned of (display alert "Install Adobe InDesign first." message missingadobemsg buttons {"Quit", "Get InDesign…"} default button 2 as critical)
 			if adobeButton is "Get InDesign…" then
 				OpenCCManager(a)
-				tell application id "edu.scrippsjournal.design" to quit
-				error number -128
 			end if
+			tell application id "edu.scrippsjournal.design" to quit
 		else if IDver is less than projectedminIDver and AIver is less than projectedminAIver then
 			if a is i then
 				set adobecheckmsg1 to "You have Adobe " & CCfamily & adobeCCver
 			else if a is not i then
 				set adobecheckmsg1 to "You have old versions of InDesign & Illustrator"
 			end if
-			set adobeButton to button returned of (display alert adobecheckhead message adobecheckmsg1 & adobecheckmsg buttons {"Quit", "Update…"} default button 2 cancel button 1 as critical)
+			set adobeButton to button returned of (display alert adobecheckhead message adobecheckmsg1 & adobecheckmsg buttons {"Quit", "Update…"} default button 2 as critical)
 			if adobeButton is "Update…" then
 				OpenCCManager(i)
-				tell application id "edu.scrippsjournal.design" to quit
-				error number -128
 			end if
+			tell application id "edu.scrippsjournal.design" to quit
 		else if IDver is greater than or equal to projectedminIDver and AIver is not greater than or equal to projectedminAIver then
-			set adobeButton to button returned of (display alert adobecheckhead message "You have an old version of Illustrator" & adobecheckmsg buttons {"Quit", "Update Illustrator…"} default button 2 cancel button 1 as critical)
+			set adobeButton to button returned of (display alert adobecheckhead message "You have an old version of Illustrator" & adobecheckmsg buttons {"Quit", "Update Illustrator…"} default button 2 as critical)
 			if adobeButton is "Update Illustrator…" then
 				OpenCCManager(a)
-				tell application id "edu.scrippsjournal.design" to quit
-				error number -128
 			end if
+			tell application id "edu.scrippsjournal.design" to quit
 		else if AIver is greater than or equal to projectedminAIver and IDver is not greater than or equal to projectedminIDver then
-			set adobeButton to button returned of (display alert adobecheckhead message "You have an old version of InDesign" & adobecheckmsg buttons {"Quit", "Update InDesign…"} default button 2 cancel button 1 as critical)
+			set adobeButton to button returned of (display alert adobecheckhead message "You have an old version of InDesign" & adobecheckmsg buttons {"Quit", "Update InDesign…"} default button 2 as critical)
 			if adobeButton is "Update InDesign…" then
 				OpenCCManager(i)
-				tell application id "edu.scrippsjournal.design" to quit
-				error number -128
 			end if
+			tell application id "edu.scrippsjournal.design" to quit
 		end if
 	end if
-	(* on error errorMessage number errorNumber
-	if errorNumber = -2753 then
-	end if
-end try 
-(Getting rid of this try block, because it would render all the Quit buttons inside this code useless) *)
 	
 	(* if a is i and AIver is greater than projectedminAIver then
 	display alert "You have a newer version of Adobe software than we expected you to!" message "Consult with your team to make sure they're on the same version as you. If they have an older version, they won't be able to open your files."
 end if
 *)
-	-- display dialog "Check CCC script says passed" -- for debugging
-	return {adobeCCver, IDver, AIver, osver, shortname, fullname, firstname, computername, macmodel, macmodelid, uuid, osname, IDverFull}
+	
+	set CCCpass to true
+	
+	return {adobeCCver, IDver, AIver, osver, shortname, fullname, firstname, computername, macmodel, macmodelid, uuid, osname, IDverFull, CCCpass}
 end DetermineCompatibility
 
 DetermineCompatibility()
@@ -374,28 +358,14 @@ on OpenCCManager(x)
 			run script runAdobe
 		on error
 			set aupdatebutton to button returned of (display alert "Sorry, we weren't able to open the Adobe updater." message "You'll have to open it yourself." buttons {"Quit"} default button "Quit")
-			if aupdatebutton is "Quit" then
-				tell application id "edu.scrippsjournal.design" to quit
-				error number -128
-			end if
 			-- display notification "Sorry, somehow we couldn't open the Adobe updater. You'll have to do it yourself." with title "Scripps College Journal"
 		end try
 	else if x is greater than 6 then
-		set CSbutton to button returned of (display alert "Sorry, you have Adobe Creative Suite, which is legacy Adobe software." message "You'll need to uninstall it and download Adobe Creative Cloud." buttons {"Quit", "Get Creative Cloud…"} default button 2 cancel button 1 as critical)
+		set CSbutton to button returned of (display alert "Sorry, you have Adobe Creative Suite, which is legacy Adobe software." message "You'll need to uninstall it and download Adobe Creative Cloud." buttons {"Quit", "Get Creative Cloud…"} default button 2 as critical)
 		if CSbutton is "Get Creative Cloud…" then
 			open location "https://creativecloud.adobe.com/apps/download/creative-cloud"
 			display notification "Downloading the Adobe Creative Cloud installer"
-			tell application id "edu.scrippsjournal.design" to quit
-			error number -128
 		end if
 	end if
+	tell application id "edu.scrippsjournal.design" to quit
 end OpenCCManager
-
-(* on idle
-	continue quit
-end idle
-
-on quit
-	-- add display notification "Press ⌘Q to quit" to all quit buttons
-	continue quit
-end quit *)
