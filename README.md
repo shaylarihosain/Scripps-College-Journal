@@ -2,9 +2,9 @@
 
 Introduces designers to Scripps College Journal's design and brand system, and prepares their computer automatically.
 
-Boasting tight integration with Adobe Creative Cloud, it installs fonts, configures InDesign’s layout, and shows designers around the latest available SCJ brand guides.
+Boasting tight integration with Adobe Creative Cloud, it installs fonts, configures InDesign’s layout, shows designers around the latest available SCJ brand guides, and imports submitted visual artwork onto the pages — all while maintaining a neat folder structure, with all the right files in the right place, so multiple designers' work is always ready for merging.
 
-Upon the designer’s request, it creates final packages for print (and web) that are formatted correctly for our print house, with appropriate color management and image resolution, all automatically.
+Upon the designer’s request, it creates final packages for print (and web) that are formatted to specification for our print house, with appropriate color management, image resolution, and trim marks — all automatically.
 
 The app can update the brand guides on the design team's computers when newer ones are available, update itself with bug fixes and new features, and download Creative Cloud when it's not already installed.
 
@@ -26,7 +26,7 @@ Open the downloaded installer on your Mac.
 
 **Running for the first time**
 
-For the app to work, please grant access when your Mac prompts you. It will ask about Finder, System Events, Preview, InDesign, and Documents.
+For the app to work, please grant access when your Mac prompts you. It will ask about Finder, System Events, Preview, InDesign, Documents, and Downloads.
 
 The first time it runs, it will download the design guides.
 
@@ -38,9 +38,10 @@ The first time it runs, it will download the design guides.
 
 - **Injects more convenient custom Adobe InDesign interface layout tailored to magazine design**
 
-- **Moves the issue's artwork into the correct folder**
-     - When leadership sends you the visual artwork selected for use in the _Journal_, you need to put it into the Artwork folder. (We all work with one set of artwork that was accepted for this year's issue. When we split up the issue for multiple designers to work on, we don't need to repackage the artwork every time.) 
+- **Moves the issue's artwork into the correct folder and places artwork in the design**
+     - When leadership provides the visual artwork selected for use in the _Journal_, it needs to go into the Artwork folder. (We all work with one set of artwork that was accepted for this year's issue. When we split up the issue for multiple designers to work on, we don't need to repackage the artwork every time.) 
      - With the _Scripps College Journal_ app, you can drag all the images you download onto its Dock icon, and it'll move those files to the correct folder automatically, so that when you export the PDF, the links will be intact for the senior designer, who combines everyone's work.
+     - Dragging one piece onto the icon will also place it in the magazine's InDesign document, if open. Unlike InDesign's native place function, SCJ will place it on the document in a manageable size, with a proportionally fitted frame, to ensure that the artwork is not masked or distortred.
 
 - **Automatic magazine export** (Beta, some features may not be functional or operating correctly for now) 
      - When you're done with your pages, drag the InDesign file onto the SCJ Dock icon, and click _Package for Senior Designer_. You'll have the option to email the created files. (Currently only exports preview PDF)
@@ -67,7 +68,7 @@ _These requirements will automatically change every year starting in 2023 until 
 # FAQ
 **I'm on Windows. How do I access the design system?**
 
-Unfortunately, we don't have an app for Windows. On a PC, download the _Assets.zip_ package.
+Unfortunately, we don't have an app for Windows. On a PC, [download the design guide package](https://github.com/shaylarihosain/Scripps-College-Journal/blob/main/Assets.zip?raw=true) directly.
 
 Everything you need to build Scripps College Journal, including our InDesign and Illustrator brand guides, font files, PDF export presets, and InDesign workspace is still included.
 
