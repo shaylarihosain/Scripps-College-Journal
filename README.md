@@ -63,7 +63,7 @@ macOS Mojave or later
 Adobe Creative Cloud 2021  
 2 GB of free space recommended, 0.2 GB required
 
-_These requirements will automatically change every year starting in 2023 until 2027_
+_Software requirements will automatically change every year starting in 2023 until 2027_
 
 # FAQ
 **I'm on Windows. How do I access the design system?**
