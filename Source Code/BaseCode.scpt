@@ -1,11 +1,11 @@
 --===============================================
 -- SCRIPPS COLLEGE JOURNAL Software for Mac
--- Version 0.8 (Beta)
+-- Version 0.8.1 (Beta)
 --------------------------------------------------------------------------------------
--- Compiled on macOS 10.15.7 (19H1030) (Intel-based)
+-- Compiled on macOS 10.15.7 (19H1217) (Intel-based)
 -- Intel x86 binary
 --------------------------------------------------------------------------------------
--- Last updated 						May 21 2021
+-- Last updated 						June 4 2021
 -- First released staffwide 				April 24 2021
 -- Beta entered limited staff testing 		February 28 2021
 -- Software development began 			July 11 2020
@@ -185,6 +185,7 @@ set IDver to item 2 of CCCinfo
 set AIver to item 3 of CCCinfo
 set osname to item 12 of CCCinfo
 set IDverFull to item 13 of CCCinfo
+set projectedadobeCCver to item 15 of CCCinfo
 
 set osver to item 4 of CCCinfo
 set shortname to item 5 of CCCinfo
@@ -239,9 +240,7 @@ if dontShowAlert is false then
 		set diffCompAlert to button returned of (display alert "This app was already run by " & lastUserName & " on " & pronoun & " " & lastMachine & "." message diffCompMsg buttons {"Don't Show Again", "Continue", "Reinstall……"} default button "Reinstall……" as critical)
 		if diffCompAlert is "Reinstall…" then
 			DownloadSCJ(true)
-			continue quit -- tell application id "edu.scrippsjournal.design" to quit
-			-- display notification "Press ⌘Q to quit"
-			-- error number -128
+			continue quit
 			if diffCompAlert is "Don't Show Again" then
 				set dontShowAlert to true
 			end if
@@ -302,11 +301,11 @@ if currentyear is greater than 2026 then
 end if
 
 --=========================
-(* BaseCode 12.0R *)
+(* BaseCode 12.1R *)
 
 -- Info: Main program that handles the primary tasks the SCJ application is designed for. Contains numerous smaller handlers or programs. Very early builds named Get Started.
 -- Created July 12 2020
--- Last updated May 21 2021
+-- Last updated June 4 2021
 --=========================
 
 -- Directory tree is damaged alert
@@ -322,9 +321,7 @@ on damagedDialog()
 	else if assetbutton is "Try Another Folder…" then
 		scjRestart()
 	else if assetbutton is "Quit" then
-		continue quit -- tell application id "edu.scrippsjournal.design" to quit
-		-- display notification "Press ⌘Q to quit"
-		-- error number -128
+		continue quit
 	end if
 end damagedDialog
 
@@ -334,11 +331,11 @@ on scjRestart()
 end scjRestart
 
 --=========================
-(* Download SCJ 5.1 *)
+(* Download SCJ 5.2 *)
 
 -- Info: 
 -- Created July 25 2020
--- Last updated May 20 2021
+-- Last updated June 3 2021
 --=========================
 
 on DownloadSCJ(installUpdate)
@@ -420,8 +417,7 @@ on downloadResources(FileDownload, FileExtension, FileName, FileDestination)
 		if networkError is "Try Again…" then
 			downloadResources(FileDownload, FileExtension, FileName, FileDestination)
 		else if networkError is "Quit" then
-			continue quit -- tell application id "edu.scrippsjournal.design" to quit
-			-- error number -128
+			continue quit
 		end if
 	end try
 end downloadResources
@@ -442,8 +438,27 @@ end relaunchSCJapp
 
 -- Download Assets folder to Documents folder
 
+property whenAssetsUpdated : missing value
+
+on determineDownloadDate()
+	global currentyear
+	global currentmonthInt
+	
+	set t to time of (get current date)
+	set h to t div hours
+	set m to t mod hours div minutes
+	set s to t mod minutes
+	
+	set assetsUpdatedTime to h & "." & m & "." & s as string
+	
+	set assetsUpdatedDate to (currentyear & "-" & currentmonthInt & "-" & (word 3 of (date string of (current date)) as integer)) as text
+	
+	set whenAssetsUpdated to assetsUpdatedDate & " at " & assetsUpdatedTime as string
+end determineDownloadDate
+
 on DownloadAssets(AssetsNew)
 	global new_name
+	global scjDesignVersion
 	try
 		try
 			set checkDocumentsFolder to ((((path to documents folder as text) & "Assets") as alias) as string)
@@ -455,7 +470,6 @@ on DownloadAssets(AssetsNew)
 		set documentsGood to true
 	end try
 	if documentsGood is false then
-		-- global runcountThisMachine -- it's already a property? Changed with 0.8
 		if runcountThisMachine is greater than 15 and AssetsNew is false then
 			global currentmonthInt
 			if currentmonthInt is greater than or equal to 4 and currentmonthInt is less than 8 then
@@ -477,11 +491,18 @@ on DownloadAssets(AssetsNew)
 		set replaceOldAssets to button returned of (display alert "We found existing SCJ assets in your Documents folder." message existingAssetsMsg buttons existingAssetsButtons as critical)
 		if replaceOldAssets is "Update…" then
 			try
-				set renameOldAssets to (new_name & " (Old)" as string)
+				set namePrefix to (new_name & " (" & "v" & scjDesignVersion) as string
 			on error
-				set renameOldAssets to ("Assets (Old)" as string)
+				try
+					set namePrefix to ("Scripps College Journal (Previous version" as string)
+				end try
 			end try
-			tell application "System Events" to set name of folder checkDocumentsFolder to (new_name & " (Old)" as string)
+			set renameOldAssets to (namePrefix & ", from " & whenAssetsUpdated & ")" as string)
+			if whenAssetsUpdated is missing value then
+				determineDownloadDate()
+				set renameOldAssets to (namePrefix & ", from " & whenAssetsUpdated & ")" as string)
+			end if
+			tell application "System Events" to set name of folder checkDocumentsFolder to (renameOldAssets as string)
 			downloadAssetsThemselves()
 			scjRestart()
 		else if replaceOldAssets contains "Update & Replace…" then
@@ -499,14 +520,14 @@ on DownloadAssets(AssetsNew)
 end DownloadAssets
 
 on downloadAssetsThemselves()
+	determineDownloadDate()
 	tell me to activate
-	display alert "Downloading latest SCJ design guides…" message "Please wait. You'll be up and running in no time." buttons {""} giving up after 3
+	display alert "Downloading latest SCJ design guides…" message "Please wait. You'll be up and running in no time." buttons {""} giving up after 2.5
 	set assetsDownload to "https://github.com/shaylarihosain/Scripps-College-Journal/blob/main/Assets.zip?raw=true" -- CHANGE FINAL URL
 	set assetsExtension to ".zip"
 	set assetsName to "SCJAssets"
 	set assetsDestination to "Documents"
 	downloadResources(assetsDownload, assetsExtension, assetsName, assetsDestination)
-	-- display notification "A new copy of SCJ has been downloaded to your downloads."
 	display notification with title "Almost done…"
 	tell application "Finder"
 		open file ((path to documents folder as text) & assetsName & assetsExtension)
@@ -542,8 +563,6 @@ on error
 		on error
 			if neverRanThisMachine is true then
 				DownloadAssets(true)
-			else if neverRanThisMachine is false then
-				set assets_path to (choose folder with prompt "The SCJ Assets folder has been renamed or moved. Please relocate it:") as alias as string
 			end if
 			set assetsLocated to true
 		end try
@@ -554,19 +573,6 @@ end try
 if neverRan is true then -- rename Assets folder to final name
 	try
 		tell application "System Events" to set name of folder (((assetInitial & "Assets") as alias) as string) to new_name
-		(*
-	on error
-		set assets_path to (choose folder with prompt "The SCJ Assets folder has been renamed or moved. Please relocate it:") as alias as string
-		try
-			set rcheck to ((assets_path & "Fonts") as alias) as string
-		on error
-			try
-				set rcheck to ((assets_path & ".Fonts") as alias) as string
-			on error
-				damagedDialog()
-			end try
-		end try
-		*)
 	end try
 end if
 
@@ -724,11 +730,11 @@ if neverRanThisMachine is true then
 end if
 
 --=========================
-(* WelcomeManager 2.12.2; Dynamic Welcome Message (Fork) *)
+(* WelcomeManager 2.13; Dynamic Welcome Message (Fork) *)
 
 -- Info: Program (now integrated within BaseCode) that provides the main front-end user interface and manages SCJ user authentication
 -- Created July 12 2020
--- Last updated May 16 2021
+-- Last updated June 3 2021
 --=========================
 
 set neverRan to false
@@ -756,6 +762,7 @@ on Welcome()
 	global scjLatestVersion
 	global appLatestVersion
 	global assetDisplayLocation
+	global projectedadobeCCver
 	set depnoticetext to "its compatibility rules to notify you of any Adobe or OS incompatibilities. Everyone on the design team must verify manually that they're using the same version of Adobe CC."
 	if scjissueyear is 2026 then
 		set deprecatednotice to return & return & "Starting next year, this app will no longer auto-update " & depnoticetext
@@ -895,6 +902,12 @@ on Welcome()
 		set assetDisplay to ""
 	end if
 	
+	set adobeStatusValid to ""
+	if projectedadobeCCver is greater than or equal to adobeCCver then
+		set adobeStatusValid to " ✓"
+	end if
+	set adobeCCstatusDisplay to ("Adobe CC " & adobeCCver & " " & "installed" & adobeStatusValid as string)
+	
 	-- 🎨📚🖌🌻
 	tell me to activate
 	set launchButton to button returned of (display alert "Welcome to the Scripps College Journal Design Guide" message welcomeMsg0 & firstname & welcomeMsg1 & scjvolume & ".
@@ -909,7 +922,7 @@ For internal use only
 
 Upcoming issue is Spring " & scjissueyear & ", Volume " & scjvolume & deprecatednotice & "
 
-Logged in as " & SCJuser & " on " & computername & assetDisplay & return & return & "Adobe CC " & adobeCCver & " " & "installed" & return & return & diskAbout & "App version " & version & aboutApp & return & "Design version " & scjDesignVersion & aboutDesign with title "About" buttons {adminButton, "Acknowledgments…", "Back…"} default button "Back…" with icon note) -- can change this to a different icon if we don't want the Construction icon
+Logged in as " & SCJuser & " on " & computername & assetDisplay & return & return & adobeCCstatusDisplay & return & return & diskAbout & "App version " & version & aboutApp & return & "Design version " & scjDesignVersion & aboutDesign with title "About" buttons {adminButton, "Acknowledgments…", "Back…"} default button "Back…" with icon note) -- can change this to a different icon if we don't want the Construction icon
 		if text of backButton is "Back…" then
 			Welcome()
 		else if text of backButton is "Acknowledgments…" then
@@ -937,6 +950,7 @@ Logged in as " & SCJuser & " on " & computername & assetDisplay & return & retur
 				if quitIDonInstall is "Continue" then
 					tell application id "com.adobe.InDesign" to quit
 					repeat until application id "com.adobe.InDesign" is not running
+						delay 0.05
 					end repeat
 					Designing()
 					-- create new global unique variable just for first run to tell the quit handler to quit InDesign at the end too?
@@ -1266,9 +1280,24 @@ on reopen
 			Welcome()
 		end if
 	else if launchFinished is true then
-		display notification "Press ⌘Q to quit when you're done. Click the icon for random tips if you're feeling spontaneous."
-		set IDtipscriptpath to (((path to me as text) & "Contents:Resources:Scripts:Tips.scpt") as alias) as string
-		run script file IDtipscriptpath
+		(* if application id "com.adobe.InDesign" is running then
+			tell application id "com.adobe.InDesign"
+				try
+					set inddDocName to true
+					set inddDocName to name of front document as string
+					-- if inddDocName does not contain "Magazine Design Guide" or inddDocName does not contain "Pages"
+				on error
+					set inddDocOpen to false
+				end try
+			end tell
+		end if *)
+		if application id "com.adobe.InDesign" is not running or application id "com.adobe.Illustrator" is not running then
+			scjRestart()
+		else
+			display notification "Press ⌘Q to quit when you're done. Click the icon for random tips if you're feeling spontaneous."
+			set IDtipscriptpath to (((path to me as text) & "Contents:Resources:Scripts:Tips.scpt") as alias) as string
+			run script file IDtipscriptpath
+		end if
 	end if
 end reopen
 
