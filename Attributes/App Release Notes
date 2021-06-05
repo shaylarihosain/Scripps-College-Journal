@@ -5,3 +5,4 @@
 Fixed bugs:
 • Updating guides without replacing resulted in endless loop under certain conditions
 • If you move the guides, you were prompted to relocate them twice rather than once
+• SCJ quick auto-updater would not update all parts of the app on macOS Big Sur
