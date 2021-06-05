@@ -1,9 +1,7 @@
-• Dropping an image onto the Dock icon now also places it in your magazine design
-• Huge speed improvements to update process, which relaunches the updated app
-• Informs you if the app has been open and idle for 24 hours
-• Some minor revisions to wording in the user interface
+• Some users don't quit when done, so now you can get right back to work without quitting
+• Check for updates without restarting the app
+• Minor speed improvements
 
 Fixed bugs:
-• Leaving InDesign open while running the app for the first time now works as expected
-• Selecting the cover doesn't open all the templates, just the one you want
-• After reading a compatibility notice, quitting the app works as expected 
+• Updating guides without replacing resulted in endless loop under certain conditions
+• If you move the guides, you were prompted to relocate them twice rather than once
