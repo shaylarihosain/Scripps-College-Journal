@@ -1,6 +1,6 @@
 --===============================================
 -- SCRIPPS COLLEGE JOURNAL Software for Mac
--- Version 0.8.1 (Beta)
+-- Version 0.8.1-b (Beta)
 --------------------------------------------------------------------------------------
 -- Compiled on macOS 10.15.7 (19H1217) (Intel-based)
 -- Intel x86 binary
@@ -335,7 +335,7 @@ end scjRestart
 
 -- Info: 
 -- Created July 25 2020
--- Last updated June 3 2021
+-- Last updated June 4 2021
 --=========================
 
 on DownloadSCJ(installUpdate)
@@ -390,13 +390,6 @@ on DownloadSCJ(installUpdate)
 	-- Installs new update
 	try
 		if installUpdate is true then
-			tell application "Finder"
-				try
-					delete POSIX file "/Applications/Scripps College Journal.app"
-				end try
-				move newAppFull to (path to applications folder) with replacing
-				eject disk "Install Scripps College Journal"
-			end tell
 			relaunchSCJapp()
 			display notification "The latest app, " & appLatestVersion & ", is installed" with title "SCJ is up to date"
 			continue quit
@@ -431,6 +424,10 @@ on relaunchSCJapp()
 	repeat until application \"" & nameOfThisApp & "\" is not running
 	delay 0.05
 	end repeat
+	tell application \"Finder\" to delete POSIX file \"/Applications/Scripps College Journal.app\"
+	set newAppFull to \"Install Scripps College Journal:Scripps College Journal.app\" as alias
+	tell application \"Finder\" to move newAppFull to (path to applications folder) with replacing
+	tell application \"Finder\" to eject disk \"Install Scripps College Journal\"
 	tell application \"" & nameOfThisApp & "\" to activate
    
 ' &> /dev/null &"
