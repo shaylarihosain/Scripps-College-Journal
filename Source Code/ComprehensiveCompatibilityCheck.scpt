@@ -1,9 +1,9 @@
 --=========================
-(* ComprehensiveCompatibilityCheck 8.0R *)
+(* ComprehensiveCompatibilityCheck 8.0.1R *)
 
--- Info: Validates user's computer for any Adobe Creative Cloud or macOS incompatibilities; instructs them in detail how to rectify issues if any exist. The program will keep up-to-date on its own—compatibility rules auto-update until SCJ Vol 27. Early builds named OSDetect until version 3. Debugged with sister program OSDetectDebugger which maintains parity in its codebase with CCC and does not ship in final release.
+-- Info: Validates user's computer for any Adobe Creative Cloud or macOS incompatibilities; instructs them in detail how to rectify issues if any exist. The program will keep up-to-date on its own—compatibility rules auto-update until SCJ Vol 27.
 -- Created July 17 2020
--- Last updated May 21 2021
+-- Last updated June 3 2021
 
 ---- © 2020–2021 Shay Lari-Hosain. All rights reserved. Unauthorized copying or reproduction of any part of the proprietary contents of this file, via any medium, is strictly prohibited.
 --=========================
@@ -345,7 +345,7 @@ end if
 	
 	set CCCpass to true
 	
-	return {adobeCCver, IDver, AIver, osver, shortname, fullname, firstname, computername, macmodel, macmodelid, uuid, osname, IDverFull, CCCpass}
+	return {adobeCCver, IDver, AIver, osver, shortname, fullname, firstname, computername, macmodel, macmodelid, uuid, osname, IDverFull, CCCpass, projectedadobeCCver}
 end DetermineCompatibility
 
 DetermineCompatibility()
