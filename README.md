@@ -54,8 +54,11 @@ The first time it runs, it will download the design guides.
 - **Auto-updating compatibility rules**
      - If each member of the design team uses different versions of InDesign, the work they create will not be compatible. To prevent this issue from occurring, _Scripps College Journal_ will notify users with out-of-date InDesign installations before letting them start, and provide them with clear instructions on how to rectify the issue. Each year, the app will keep team members on the same version automatically.
 
+- **Built-in hassle-free app upgrades bring new features and bug fixes**
+     - _Scripps College Journal_ will notify you when a new version of the SCJ app is available, and offer to quickly install the update before relaunching. You can choose to do so later if you want.
+
 - **For senior designers**
-     - When deploying a new design guide, the _Assets Version_ file and the _Assets_ zip folder here on GitHub, and the _SCJ Design Version_ file in the zip itself all need to be updated. After updating these attributes in this repository, the app downloads the newest guides on your design team's computers. In the _Assets_ folder, the app will use whatever font files exist in the fonts folder, and whatever version of the design guide is present.
+     - When deploying an updated design guide, the _Assets Version_ file and the _Assets_ zip folder here on GitHub, and the _SCJ Design Version_ file in the zip itself all need to be updated. After updating these attributes in this repository, the app downloads the newest guides on your design team's computers. In the _Assets_ folder, the app will use whatever font files exist in the fonts folder, and whatever version of the design guide is present.
      - (Beta) Signing in as a managing editor in the app will disable Adobe and macOS compatibility checks on that machine. Use at your own risk.
 
 # System requirements
@@ -85,4 +88,4 @@ The app notifies you on startup if the design guides you have are older, and you
 ###### ————————————————————
 
 ###### Unauthorized copying or reproduction of any part of the contents of this repository, including code, binaries, disk images, or Scripps College Journal logotypes, brand assets and design guides, via any medium, is strictly prohibited. 
-###### © 2019–2021 Shay Lari-Hosain. All rights reserved.
+###### © 2020–2021 Shay Lari-Hosain. All rights reserved.
