@@ -8,7 +8,7 @@ Upon the designer’s request, it creates final packages for print (and web) tha
 
 The app can update the brand guides on the design team's computers when newer ones are available, update itself with bug fixes and new features, and download Creative Cloud when it's not already installed.
 
-[Download it here](https://github.com/shaylarihosain/Scripps-College-Journal/releases/download/0.8/InstallScrippsCollegeJournal.dmg).
+[Download it here](https://github.com/shaylarihosain/Scripps-College-Journal/releases/download/0.8.1/InstallScrippsCollegeJournal.dmg).
 
 ![SCJ](https://user-images.githubusercontent.com/74567503/116485561-63c28d80-a840-11eb-93f1-52f50148abf6.jpg)
 
