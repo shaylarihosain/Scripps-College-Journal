@@ -1,3 +1,4 @@
+<a id="welcome"></a>
 # Scripps College Journal Design
 
 Introduces designers to Scripps College Journal's design and brand system, and prepares their computer automatically.
@@ -12,6 +13,7 @@ The app can update the brand guides on the design team's computers when newer on
 
 ![SCJ](https://user-images.githubusercontent.com/74567503/116485561-63c28d80-a840-11eb-93f1-52f50148abf6.jpg)
 
+<a id="installation"></a>
 # Installation
 
 Open the downloaded installer on your Mac.
@@ -32,21 +34,29 @@ The first time it runs, it will download the design guides.
 
 # Features
 
-- **Updates existing SCJ brand design guides to the newest ones**
+- **Updates existing SCJ brand design guides to the newest ones when available**
+     - Along with revisions to the design guides, any changes to typefaces or configuration files are automatically implemented
+     - Senior designer can deploy files and changes to entire team's computers quickly and easily, in a way users can't miss
 
 - **Installs our latest brand fonts**
 
 - **Injects more convenient custom Adobe InDesign interface layout tailored to magazine design**
 
-- **Moves the issue's artwork into the correct folder and places artwork in the design**
-     - When leadership provides the visual artwork selected for use in the _Journal_, it needs to go into the Artwork folder. (We all work with one set of artwork that was accepted for this year's issue. When we split up the issue for multiple designers to work on, we don't need to repackage the artwork every time.) 
-     - With the _Scripps College Journal_ app, you can drag all the images you download onto its Dock icon, and it'll move those files to the correct folder automatically, so that when you export the PDF, the links will be intact for the senior designer, who combines everyone's work.
-     - Dragging one piece onto the icon will also place it in the magazine's InDesign document, if open. Unlike InDesign's native place function, SCJ will place it on the document in a manageable size, with a proportionally fitted frame, to ensure that the artwork is not masked or distortred.
+- **Moves the issue's artwork into the correct folder**
+     - When leadership provides the visual artwork selected for use in the _Journal_, it needs to go into the Artwork folder. (We all work with one set of artwork that was accepted for this year's issue. That way, when we split up the issue for multiple designers to work on, we don't need to repackage the artwork every time.) 
+     - With the _Scripps College Journal_ app, you can drag all the images you download onto its Dock icon, and it'll move those files to the correct folder automatically. Therefore, the links to the artwork remain intact for the senior designer, who combines everyone's work.
 
-- **Automatic magazine export** (Beta, some features may not be functional or operating correctly for now) 
+- **Places artwork into your design conveniently**
+     - Dragging only one piece onto the SCJ icon in the Dock will — along with moving it to the correct folder — place it in the magazine's InDesign document, if it's open. 
+     - Unlike InDesign's native place function, SCJ will place artwork on the document in a manageable size, with a proportionally fitted frame, to ensure that the pieces is not clipped or distorted.
+
+- **Automatic magazine export** (Beta, some features may not be implemented yet) 
      - When you're done with your pages, drag the InDesign file onto the SCJ Dock icon, and click _Package for Senior Designer_. You'll have the option to email the created files. (Currently only exports preview PDF)
      - When you're done with the magazine, drag the InDesign file onto the SCJ Dock icon and the magazine will be packaged automatically with properly formatted, sized and colored print PDFs that matches our print house's specifications, a PDF suitable for digital viewing, the InDesign .indd file, and an .idml XML archive file for InDesign CS4. (Not functional right now)
      - Cuts down or completely eliminates diagnosing and rectifying print proofing errors. Preserves institutional memory, so that information on preparing files for Claremont Print is not lost.
+
+- **Built-in, fast, and automatic app upgrades bring new features and bug fixes**
+     - _Scripps College Journal_ will notify you when a new version of the SCJ app is available, and offer to quickly install the update before relaunching. You can choose to do so later if you want.
 
 - **Install Adobe Creative Cloud**
      - If you don't have Creative Cloud installed, _Scripps College Journal_ will download it for you.
@@ -54,12 +64,7 @@ The first time it runs, it will download the design guides.
 - **Auto-updating compatibility rules**
      - If each member of the design team uses different versions of InDesign, the work they create will not be compatible. To prevent this issue from occurring, _Scripps College Journal_ will notify users with out-of-date InDesign installations before letting them start, and provide them with clear instructions on how to rectify the issue. Each year, the app will keep team members on the same version automatically.
 
-- **Built-in hassle-free app upgrades bring new features and bug fixes**
-     - _Scripps College Journal_ will notify you when a new version of the SCJ app is available, and offer to quickly install the update before relaunching. You can choose to do so later if you want.
-
-- **For senior designers**
-     - When deploying an updated design guide, the _Assets Version_ file and the _Assets_ zip folder here on GitHub, and the _SCJ Design Version_ file in the zip itself all need to be updated. After updating these attributes in this repository, the app downloads the newest guides on your design team's computers. In the _Assets_ folder, the app will use whatever font files exist in the fonts folder, and whatever version of the design guide is present.
-     - (Beta) Signing in as a managing editor in the app will disable Adobe and macOS compatibility checks on that machine. Use at your own risk.
+- **Occasional announcement or staff news delivered on app launch** (Upcoming)
 
 # System requirements
 macOS Mojave or later  
@@ -84,6 +89,40 @@ On a Mac, the SCJ app does this all for you automatically. It imports the PDF pr
 **How do I make sure I have the latest version of the design guides?**
 
 The app notifies you on startup if the design guides you have are older, and you'll be given the option to update them. To check their status, click the _About_ button on the main _Welcome_ screen.
+
+**Why do the software requirements increase year to year?**
+
+Adobe software only supports the last 3 years of macOS releases, and Apple typically supports Macs with new macOS upgrades for up to 7 years (though not always). Effectively, our workflow typically supports Macs up to 10 years old. 
+
+For example, in 2022, the SCJ app requires Adobe Creative Cloud 2021, which in turn requires a minimum of macOS Mojave 10.14, which can be installed for free on Mac models from 2012 or newer.
+
+Staying one year behind the latest Adobe Creative Cloud release ensures that we stay up-to-date with lab and dorm computers in classrooms and residence halls at Scripps College. Deviating from adherence to the [Scripps ITS](http://inside.scrippscollege.edu/it/academic-software-on-scripps-campus) upgrade cycle could potentially cause file incompatibilities when transferring files to and from lab computers.
+
+These gradually increasing requirements pause in 2027.
+
+**I don't have an Adobe subscription.**
+
+During the COVID-19 pandemic, Adobe student licenses are provided to Scripps College students at no extra cost. The SCJ app will walk you through the process if you don't have Creative Cloud installed already.
+
+**Why are there multiple steps for initial installation, which include warnings from macOS?**
+
+This app is entirely student-developed. Apple has a master list of ‘known safe apps,’ which don’t require [installation steps 3 and 4](#installation). 
+
+To get on that list, we’d have to contact Apple. We do not have plans at this time to do so, due to limited organizational capacity during the pandemic.
+
+**For senior designers**
+
+When deploying an updated design guide, the _Assets Version_ file and the _Assets_ zip folder here on GitHub, and the _SCJ Design Version_ file in the zip itself all need to be updated. 
+
+To ship a new design guide, download the _Assets_ folder, make your changes, update the _SCJ Design Version_ hidden file, re-zip the folder, and then push it to GitHub using the GitHub Desktop app.
+
+To prompt the SCJ app to issue a new design guide revision to your team, update the _Assets Version_ file's version number in this repository. The app then fetches the newest guides and installs them on your design team's computers. 
+
+Within the _Assets_ folder, the app will install whatever font files exist in the fonts folder, inject whatever Adobe configuration files are present, and use the version of the design guide that is present.
+
+(Beta) Signing in as a managing editor in the app will disable Adobe and macOS compatibility checks on that machine. Use at your own risk.
+
+[**Back to top**](#welcome)
 
 ###### ————————————————————
 
