@@ -78,7 +78,7 @@ _Software requirements will automatically change every year starting in 2023 unt
 
 Unfortunately, we don't have an app for Windows. On a PC, [download the design guide package](https://github.com/shaylarihosain/Scripps-College-Journal/blob/main/Assets.zip?raw=true) directly.
 
-Everything you need to build Scripps College Journal, including our InDesign and Illustrator brand guides, font files, PDF export presets, and InDesign workspace is still included.
+Everything you need to build Scripps College Journal, including our InDesign and Illustrator brand guides, font files, PDF export presets, and InDesign workspace, is still included.
 
 You will have to open each file manually. For example, you'll drag the issue's artwork into the Artwork folder using Windows Explorer, install the included fonts on your PC by right-clicking on them, and export your final PDFs using InDesign's standard export dialog. Because there is no app to mandate any Adobe compatibility rules, please speak with a member of your team to ensure you use the correct versions of InDesign and Illustrator.
 
