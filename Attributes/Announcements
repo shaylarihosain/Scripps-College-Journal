@@ -1,0 +1,10 @@
+# NOTIFICATION TEXT:
+Editorial has selected pieces for every category! Production to begin shortly!
+# DATE NOTIFICATION TRIGGERED:
+mm.dd.yyyy
+# IMPORTANT? (no/yes):
+no
+# INSTRUCTIONS:
+# To trigger the notification for your team on a specific date, add the date on line 4, 
+# and make sure the word “today” is mentioned in the text of the announcement somewhere. 
+# To let the notification trigger on any day, ensure the word “today” isn't present. That's all!
