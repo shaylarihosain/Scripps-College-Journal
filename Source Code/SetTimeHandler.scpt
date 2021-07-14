@@ -32,9 +32,9 @@ end getTime
 on getIssueYear()
 	set currentyear to getYear()
 	set currentmonthint to getMonth()
-	if currentmonthint is less than 8 then
+	if currentmonthint is less than 9 then
 		set scjIssueYear to currentyear
-	else if currentmonthint is greater than 7 then
+	else if currentmonthint is greater than 8 then
 		set scjIssueYear to currentyear + 1
 	end if
 	return scjIssueYear
