@@ -1,9 +1,9 @@
 --=========================
-(* ComprehensiveCompatibilityCheck 8.0.1R *)
+(* ComprehensiveCompatibilityCheck 8.1R *)
 
 -- Info: Validates user's computer for any Adobe Creative Cloud or macOS incompatibilities; instructs them in detail how to rectify issues if any exist. The program will keep up-to-date on its own—compatibility rules auto-update until SCJ Vol 27.
 -- Created July 17 2020
--- Last updated June 3 2021
+-- Last updated June 11 2021
 
 ---- © 2020–2021 Shay Lari-Hosain. All rights reserved. Unauthorized copying or reproduction of any part of the proprietary contents of this file, via any medium, is strictly prohibited.
 --=========================
@@ -36,62 +36,50 @@ on DetermineCompatibility()
 	set scjissueyear to getIssueYear() of loadTime
 	set scjvolume to getVolume() of loadTime
 	
-	if osver starts with "11" then
+	if osver starts with "12" then
+		set osname to "Monterey"
+	else if osver starts with "11" or osver starts with "10.16" then
 		set osname to "Big Sur"
-	end if
-	if osver starts with "10.16" then
-		set osname to "Big Sur"
-		set osver to "11"
-	end if
-	if osver starts with "10.15" then
+		if osver starts with "10.16" then set osver to "11"
+	else if osver starts with "10.15" then
 		set osname to "Catalina"
-	end if
-	if osver starts with "10.14" then
+	else if osver starts with "10.14" then
 		set osname to "Mojave"
-	end if
-	if osver starts with "10.13" then
+	else if osver starts with "10.13" then
 		set osname to "High Sierra"
-	end if
-	if osver starts with "10.12" then
+	else if osver starts with "10.12" then
 		set osname to "Sierra"
-	end if
-	if osver starts with "10.11" then
+	else if osver starts with "10.11" then
 		set osname to "El Capitan"
-		set osfamily to "OS X"
-	end if
-	if osver starts with "10.10" then
+	else if osver starts with "10.10" then
 		set osname to "Yosemite"
-		set osfamily to "OS X"
-	end if
-	if osver starts with "10.9" then
+	else if osver starts with "10.9" then
 		set osname to "Mavericks"
-		set osfamily to "OS X"
 		set osver to "10.09"
-		set osverdisplay to "10.9"
-	end if
-	if osver starts with "10.8" then
+	else if osver starts with "10.8" then
 		set osname to "Mountain Lion"
-		set osfamily to "OS X"
 		set osver to "10.08"
-		set osverdisplay to "10.8"
-	end if
-	if osver starts with "10.7" then
+	else if osver starts with "10.7" then
 		set osname to "Lion"
-		set osfamily to "Mac OS X"
 		set osver to "10.07"
-		set osverdisplay to "10.7"
-	end if
-	if osver starts with "10.6" then
+	else if osver starts with "10.6" then
 		set osname to "Snow Leopard"
-		set osfamily to "Mac OS X"
 		set osver to "10.06"
-		set osverdisplay to "10.6"
 	end if
 	if osver is greater than or equal to "10.12" then
 		set osfamily to "macOS"
+	else if osver is greater than or equal to "10.08" and osver is less than "10.12" then
+		set osfamily to "OS X"
+	else if osver is less than "10.08" then
+		set osfamily to "Mac OS X"
 	end if
 	if osver is greater than or equal to "10.10" then
 		set osverdisplay to osver
+	else if osver is less than "10.10" then
+		set osverdisplay to system version of sysinfo
+	end if
+	if osver is greater than or equal to "13" then
+		set osname to osver
 	end if
 	
 	(* Get InDesign & Illustrator installation status and versions *)
@@ -181,11 +169,6 @@ on DetermineCompatibility()
 	set f to (x / 100)
 	set compatibleos to 10.13 + f as string
 	if x is greater than 2 then
-		-- incremental macOS naming scheme
-		(* set x to x - 4
-		set f to (x / 10)
-		set compatibleos to 11.1 + f as string *)
-		-- consecutive macOS naming scheme
 		set compatibleos to 8 + x
 	end if
 	-- Stop compatiblity checks in 2026
@@ -195,11 +178,11 @@ on DetermineCompatibility()
 	
 	(* Compatibility guide
 	10.13 	-- release date 2017, supported until late 2020, MacBook/iMac 2010/09, min require CC 2020	-- SCJ Vol 21 		SP'20
-	10.14 	-- release date 2018, supported until late 2021, MacBook/iMac 2012, min require CC 2021 		-- SCJ Vol 22, 23	SP'21,'22
-	10.15 	-- release date 2019, supported until late 2022, MacBook/iMac 2012, min require CC 2022 		-- SCJ Vol 24		SP'23
-	11.0   	-- release date 2020, supported until late 2023, MacBook/iMac 2013/14, min require CC 2023 	-- SCJ Vol 25		SP'24
-	11.1/12   -- release date 2021, supported until late 2024, MacBook/iMac 2013/14, min require CC 2024 	-- SCJ Vol 26		SP'25
-	11.2/13   -- release date 2022, supported until late 2025, min require CC 2025 						-- SCJ Vol 27		SP'26
+	10.14 	-- release date 2018, supported until late 2021, MacBook/iMac 2012, min require CC 2021 	-- SCJ Vol 22, 23	SP'21,'22
+	10.15 	-- release date 2019, supported until late 2022, MacBook/iMac 2012, min require CC 2022 	-- SCJ Vol 24		SP'23
+	11   		-- release date 2020, supported until late 2023, MacBook/iMac 2013/14, min require CC 2023 	-- SCJ Vol 25		SP'24
+	12   		-- release date 2021, supported until late 2024, MacBook/iMac 2015, min require CC 2024 	-- SCJ Vol 26		SP'25
+	13   		-- release date 2022, supported until late 2025, min require CC 2025 						-- SCJ Vol 27		SP'26
 							-- Steele lab computers as of 2020: iMac Late 2015
 	*)
 	
@@ -209,7 +192,9 @@ on DetermineCompatibility()
 		set compatibleosname to "Catalina"
 	else if compatibleos is "11" then
 		set compatibleosname to "Big Sur"
-	else if compatibleos is greater than or equal to "12" then
+	else if compatibleos is "12" then
+		set compatibleosname to "Monterey"
+	else if compatibleos is greater than or equal to "13" then
 		set compatibleosname to compatibleos
 	end if
 	
@@ -221,7 +206,7 @@ You'll have to update this " & macmodel & "'s software. We're sorry. Your versio
 	
 	set part2 to ", is too old to run newer Adobe software.
 
-Once you've done that, run Scripps College Journal again."
+Once you've done that, open Scripps College Journal again."
 	
 	set addinfo to "Newer Adobe software requires macOS" & " " & compatibleos & " or later. You have " & osfamily & " " & osverdisplay & ".
 
