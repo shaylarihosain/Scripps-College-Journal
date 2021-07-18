@@ -1,14 +1,14 @@
 --===============================================
 -- SCRIPPS COLLEGE JOURNAL Software for Mac
--- Version 0.8.1-b (Beta)
+-- Version 0.9 (Beta)
 --------------------------------------------------------------------------------------
 -- Compiled on macOS 10.15.7 (19H1217) (Intel-based)
 -- Intel x86 binary
 --------------------------------------------------------------------------------------
--- Last updated 						June 4 2021
--- First released staffwide 				April 24 2021
--- Beta entered limited staff testing 		February 28 2021
--- Software development began 			July 11 2020
+-- Last updated 							July 16 2021
+-- First released staffwide 					April 24 2021
+-- First beta entered limited staff testing 		February 28 2021
+-- Software development began 				July 11 2020
 --------------------------------------------------------------------------------------
 -- Copyright © 2020–2021 Shay Lari-Hosain. All rights reserved. Unauthorized copying or reproduction of any part of the contents of this file, via any medium, is strictly prohibited. Proprietary and confidential. Scripps College and The Claremont Colleges do not own any portion of this software. This software, design system, and the artwork and visual materials used with it are student-created. The author is not responsible for any modifications, or the consequences of modifications, that are made to this software in any form by others.
 -- Last updated by: Shay Lari-Hosain PZ
@@ -16,23 +16,40 @@
 --===============================================
 
 --=========================
-(* AppTranslocationSecurityCheck 1.3 *)
+(* InstallAssistant 2.0 *)
 
 -- Info: Complies with Apple security provisions for apps distributed via unsigned distribution methods
 -- Created March 1 2021
--- Last updated April 19 2021
+-- Last updated June 22 2021
 --=========================
 set appleTranslocationCheck to (((path to me as text) as alias) as string) as text
 -- display dialog appleAppTranslocationCheck -- debugger
 if appleTranslocationCheck does not contain "Users:" and appleTranslocationCheck does not contain "Applications:" and appleTranslocationCheck does not contain "Library:" then
-	-- ZIP alert display alert "To install the SCJ app, please move its icon out of the Visual Design System folder. Then place it right back in the folder." message "You can move the folder anywhere you want. We recommend Documents or Applications."
 	set correctPathInstalled to false
-	set atcButton to button returned of (display alert "To install SCJ, drag it to Applications." message "Please read the enclosed instructions before opening SCJ for the first time." buttons {"Quit", "Instructions"} default button "Instructions")
-	if atcButton is "Instructions" then
+	set appTransMsg to "To install SCJ, drag it to Applications."
+	set appTransButtons to {"Quit", "Instructions"}
+	try
+		set appAlreadyInstalled to "Applications:Scripps College Journal.app" as alias
+		set installStatus to true
+	on error
+		set installStatus to false
+	end try
+	if installStatus is true then
+		set appInstalledVersion to short version of (info for appAlreadyInstalled)
+		if my version is less than or equal to appInstalledVersion then
+			set appTransMsg to "SCJ is already installed. Open SCJ from your Applications folder."
+			set appTransButtons to {"Instructions", "View Folder & Instructions"}
+		end if
+	end if
+	set atcButton to button returned of (display alert appTransMsg message "Please read the enclosed instructions before opening SCJ for the first time." buttons appTransButtons default button 2)
+	if atcButton contains "Instructions" then
 		try
 			tell application "Finder" to open "Install Scripps College Journal:Read Me First.pdf"
+		on error
+			open location "https://github.com/shaylarihosain/Scripps-College-Journal/blob/main/README.md#installation"
 		end try
 	end if
+	if atcButton is "View Folder & Instructions" then do shell script "open /Applications"
 	continue quit
 else
 	set correctPathInstalled to true
@@ -47,26 +64,35 @@ if runcount is 0 then
 		end tell
 	on error msg number n
 		if n = -1743 then
-			set processAlert to "“System Events,”"
-			set processCategory to "Automation"
-			set processName to "System Events"
-			permissionsMsg(processAlert, processCategory, processName)
+			permissionsMsg("“System Events,”", "Automation", "System Events")
 		end if
 	end try
 end if
 
 on permissionsMsg(processAlert, processCategory, processName)
 	tell me to activate
-	display alert "Please grant Scripps College Journal access to " & processAlert & " or the app won't work." message "To do this, start by opening System Preferences." buttons {"Open System Preferences"}
-	try
-		do shell script "open /System/Library/PreferencePanes/Security.prefPane/"
-		set eventPermissionsAlert to "Now, click the “Privacy” tab."
-	on error
-		tell application "System Preferences" to activate
-		set eventPermissionsAlert to "Click “Security & Privacy.” Then, click the “Privacy” tab."
-	end try
-	tell me to activate
-	display alert eventPermissionsAlert message "Scroll down until you see the “" & processCategory & "” section." & return & return & "Then find Scripps College Journal, and tick the “" & processName & "” checkbox." buttons {"Done"}
+	set permissionsButton to button returned of (display alert "Please grant Scripps College Journal access to " & processAlert & " or the app won't work." message "To do this, start by opening System Preferences." buttons {"Why?", "Open System Preferences"} default button 2)
+	if permissionsButton is "Why?" then
+		tell application "Preview" to open file ((path to me as text) & "Contents:Resources:SCJ Usage Info.pdf" as alias)
+		permissionsMsg("“System Events,”", "Automation", "System Events")
+	else
+		if processCategory is "Automation" then
+			open location "x-apple.systempreferences:com.apple.preference.security?Privacy_Automation"
+			set eventPermissionsAlert to "Scroll down until you find Scripps College Journal in the list on the right."
+			set eventPermissionsMsg to "Then tick the “" & processName & "” checkbox."
+		else
+			try
+				open location "x-apple.systempreferences:com.apple.preference.security?Privacy"
+				set eventPermissionsAlert to "On the left is a list of categories."
+			on error
+				do shell script "open /System/Library/PreferencePanes/Security.prefPane/"
+				set eventPermissionsAlert to "Now, click the “Privacy” tab."
+			end try
+			set eventPermissionsMsg to "Scroll down until you see the “" & processCategory & "” section." & return & return & "Then find Scripps College Journal, and tick the “" & processName & "” checkbox."
+		end if
+		tell me to activate
+		display alert eventPermissionsAlert message eventPermissionsMsg buttons {"Done"}
+	end if
 end permissionsMsg
 
 if application "Preview" is running then
@@ -88,10 +114,7 @@ if runcount is 0 then -- doesn't need to be runcountThisMachine because regular 
 			tell application "Finder" to eject disk "Install Scripps College Journal"
 		on error msg number n
 			if n = -1743 then
-				set processAlert to "“Finder,”"
-				set processCategory to "Automation"
-				set processName to "Finder"
-				permissionsMsg(processAlert, processCategory, processName)
+				permissionsMsg("“Finder,”", "Automation", "Finder")
 			end if
 		end try
 		try
@@ -135,23 +158,22 @@ on error
 end try
 
 if checkSuccess is true then
-	if version is less than appLatestVersion then
+	if my version is less than appLatestVersion then
 		if appReleaseNotes is "" or appReleaseNotes is " " then
 			set updateMsg2 to ""
 		else
 			set updateMsg2 to return & return & "What's new:" & return & appReleaseNotes
 		end if
 		tell me to activate
-		set updateButton to button returned of (display alert "An update to the SCJ app is available. Would you like to download it now?" message "The latest version is " & appLatestVersion & ". You have " & version & "." & updateMsg2 buttons {"Not Now", "Update…"} default button 2)
+		set updateButton to button returned of (display alert "An update to the SCJ app is available. Would you like to install it now?" message "The latest version is " & appLatestVersion & ". You have " & my version & "." & updateMsg2 buttons {"Not Now", "Update…"} default button 2)
 		if updateButton is "Update…" then
 			DownloadSCJ(true)
 		end if
 	end if
 	
-	if version is less than "1.0" and appLatestVersion is greater than or equal to "1.0" then -- (REMOVE THIS BETA BLOCK on 1.0 release)
-		set betaWarningButton to button returned of (display alert "This beta version of Scripps College Journal was for testing purposes." message "You should upgrade to version " & appLatestVersion & ", the latest secure and stable release." & return & return & "Thanks for testing the app for us!" & return & "Love, the SCJ team ❤️" buttons {"Quit", "Update…"} default button 2)
+	if my version is less than "1.0" and appLatestVersion is greater than or equal to "1.0" then -- (REMOVE THIS BETA BLOCK on 1.0 release)
+		set betaWarningButton to button returned of (display alert "Scripps College Journal is now out of beta! 🤩" message "You should upgrade to version " & appLatestVersion & ", the latest secure and stable release." & return & return & "Thanks for testing the app for us!" & return & "Love, the SCJ leadership team ❤️" buttons {"Quit", "Update…"} default button 2)
 		if betaWarningButton is "Update…" then
-			display notification "After dragging the new app to the Applications folder, click “Replace” when prompted."
 			DownloadSCJ(true)
 		else
 			continue quit
@@ -255,7 +277,18 @@ if openedBeforeThisMachine is false then
 	set openedBeforeThisMachine to true
 end if
 
-
+-- Announcements & News
+set announcementsScript to (((path to me as text) & "Contents:Resources:Scripts:News.scpt") as alias) as string
+set loadAnnouncement to (load script file announcementsScript)
+try
+	if neverRan is false then
+		set userFacingAnnouncement to fetchNews(false) of loadAnnouncement
+	else
+		set userFacingAnnouncement to "none"
+	end if
+on error
+	set userFacingAnnouncement to "none"
+end try
 
 --=========================
 (* NLU Dialog 1.1 *)
@@ -301,11 +334,11 @@ if currentyear is greater than 2026 then
 end if
 
 --=========================
-(* BaseCode 12.1R *)
+(* BaseCode 13.0R *)
 
--- Info: Main program that handles the primary tasks the SCJ application is designed for. Contains numerous smaller handlers or programs. Very early builds named Get Started.
+-- Info: Main program that handles the primary tasks the SCJ application is designed for. Contains many smaller handlers, as well as programs like Download SCJ, WelcomeManager, Adobe Workspace Installer, and Transfer Artwork. Very early builds named Get Started.
 -- Created July 12 2020
--- Last updated June 4 2021
+-- Last updated July 16 2021
 --=========================
 
 -- Directory tree is damaged alert
@@ -331,11 +364,11 @@ on scjRestart()
 end scjRestart
 
 --=========================
-(* Download SCJ 5.2 *)
+(* Download SCJ 5.2.1 *)
 
 -- Info: 
 -- Created July 25 2020
--- Last updated June 4 2021
+-- Last updated July 11 2021
 --=========================
 
 on DownloadSCJ(installUpdate)
@@ -346,10 +379,10 @@ on DownloadSCJ(installUpdate)
 	if currentyear is greater than or equal to 2021 and currentmonthInt is greater than 8 then -- (September 2021)
 		set checkRepo to ("https://raw.githubusercontent.com/shaylarihosain/Scripps-College-Journal/main/Attributes/Use%20Original%20Repository")
 		try
-			set useInitialRepo to do shell script "curl" & checkRepo
+			set useInitialRepo to do shell script "curl " & checkRepo
 		end try
 		try
-			if useInitialRepo is false then
+			if useInitialRepo is "false" then
 				set scjDownload to ("https://github.com/scrippscollegejournal/Scripps-College-Journal/releases/latest/download/InstallScrippsCollegeJournal.dmg" as string)
 			end if
 		end try
@@ -666,8 +699,8 @@ if scjDesignVersion is not "unknown ⚠️" then
 				set additionalMsg to return & return & assetsInfo
 			end if
 			tell me to activate
-			set updateButton to button returned of (display alert "An update to the SCJ design guides is available. Would you like to download it now?" message "Design system version " & scjLatestVersion & " introduces new changes and rules. You have " & scjDesignVersion & "." & additionalMsg buttons {"Not Now", "Update…"} default button 2)
-			if updateButton is "Update…" then
+			set updateButton to button returned of (display alert "A revision to the SCJ design guides is available. Would you like to get it now?" message "Design system version " & scjLatestVersion & " introduces new changes and rules. You have " & scjDesignVersion & "." & additionalMsg buttons {"Not Now", "Get…"} default button 2)
+			if updateButton is "Get…" then
 				DownloadAssets(AssetsNew)
 			end if
 		end if
@@ -724,14 +757,16 @@ end if
 
 if neverRanThisMachine is true then
 	display notification with title "Welcome, " & firstname & "! Click Start Designing to begin."
+else
+	fetchNews(true) of loadAnnouncement
 end if
 
 --=========================
-(* WelcomeManager 2.13; Dynamic Welcome Message (Fork) *)
+(* WelcomeManager 2.14; Dynamic Welcome Message (Fork) *)
 
 -- Info: Program (now integrated within BaseCode) that provides the main front-end user interface and manages SCJ user authentication
 -- Created July 12 2020
--- Last updated June 3 2021
+-- Last updated July 13 2021
 --=========================
 
 set neverRan to false
@@ -760,13 +795,14 @@ on Welcome()
 	global appLatestVersion
 	global assetDisplayLocation
 	global projectedadobeCCver
-	set depnoticetext to "its compatibility rules to notify you of any Adobe or OS incompatibilities. Everyone on the design team must verify manually that they're using the same version of Adobe CC."
+	global userFacingAnnouncement
+	set depNoticeText to "its compatibility rules to notify you of Adobe incompatibilities. Everyone on the design team must manually verify that they're using the same Creative Cloud version."
 	if scjissueyear is 2026 then
-		set deprecatednotice to return & return & "Starting next year, this app will no longer auto-update " & depnoticetext
+		set deprecatedNotice to return & return & "Starting next year, this app will no longer auto-update " & depNoticeText
 	else if scjissueyear is greater than or equal to 2027 then
-		set deprecatednotice to return & return & "This app no longer auto-updates " & depnoticetext
+		set deprecatedNotice to return & return & "This app no longer auto-updates " & depNoticeText
 	else if scjissueyear is less than 2026 then
-		set deprecatednotice to return
+		set deprecatedNotice to return
 	end if
 	
 	if loggedIn is false then
@@ -777,14 +813,14 @@ on Welcome()
 		set SCJuser to "managing editor"
 	end if
 	
-	if version is greater than or equal to appLatestVersion then
+	if my version is greater than or equal to appLatestVersion then
 		set aboutApp to " — Up to date ✓"
 	else if appLatestVersion is "unknown" then
 		set aboutApp to " — Couldn't check for updates"
 	else
 		set aboutApp to " — Update available"
 		try
-			set aV to character 1 of version as integer
+			set aV to character 1 of my version as integer
 			set aLV to character 1 of appLatestVersion as integer
 			if (aLV - aV) is greater than or equal to 1 then
 				set aboutApp to " — Update available ⚠️"
@@ -809,10 +845,8 @@ on Welcome()
 	on error msg number n
 		if n = -2753 then
 			tell me to activate
-			set processAlert to "your Documents folder"
-			set processCategory to "Files and Folders"
-			set processName to "Documents Folder"
-			permissionsMsg(processAlert, processCategory, processName)
+			permissionsMsg("your Documents folder", "Files and Folders", "Documents Folder")
+			display notification with title "Click here to reopen Scripps College Journal"
 			continue quit
 		end if
 	end try
@@ -879,7 +913,7 @@ on Welcome()
 	end if
 	
 	set loadFDS to (load script diskscriptpath as alias)
-	set freeSpace to DetermineDisk() of loadFDS as integer
+	set freeSpace to DetermineDisk(false, false) of loadFDS as integer
 	set diskUnit to " GB"
 	if freeSpace is greater than 999 then
 		set diskUnit to " TB"
@@ -889,8 +923,8 @@ on Welcome()
 	
 	if loggedIn is true then
 		set diskAbout to freeSpace & diskUnit & " free on disk" & return & return
-		if assetDisplayLocation is not "missing" then
-			set assetDisplay to return & return & "Design guides located in " & assetDisplayLocation & " folder"
+		if assetDisplayLocation is not false then
+			set assetDisplay to return & return & "Design guides located in " & assetDisplayLocation & " folder ✓"
 		else
 			set assetDisplay to ""
 		end if
@@ -905,6 +939,13 @@ on Welcome()
 	end if
 	set adobeCCstatusDisplay to ("Adobe CC " & adobeCCver & " " & "installed" & adobeStatusValid as string)
 	
+	set activateWelcomeNews to false
+	if userFacingAnnouncement is "none" or activateWelcomeNews is false then
+		set welcomeNews to ""
+	else if activateWelcomeNews is true then
+		set welcomeNews to return & return & "News — " & userFacingAnnouncement
+	end if
+	
 	-- 🎨📚🖌🌻
 	tell me to activate
 	set launchButton to button returned of (display alert "Welcome to the Scripps College Journal Design Guide" message welcomeMsg0 & firstname & welcomeMsg1 & scjvolume & ".
@@ -917,9 +958,9 @@ To do that now, just click “Close” and drag the images onto the SCJ Dock ico
 		set backButton to button returned of (display dialog "© Scripps College Journal
 For internal use only
 
-Upcoming issue is Spring " & scjissueyear & ", Volume " & scjvolume & deprecatednotice & "
+Upcoming issue is Spring " & scjissueyear & ", Volume " & scjvolume & deprecatedNotice & "
 
-Logged in as " & SCJuser & " on " & computername & assetDisplay & return & return & adobeCCstatusDisplay & return & return & diskAbout & "App version " & version & aboutApp & return & "Design version " & scjDesignVersion & aboutDesign with title "About" buttons {adminButton, "Acknowledgments…", "Back…"} default button "Back…" with icon note) -- can change this to a different icon if we don't want the Construction icon
+Logged in as " & SCJuser & " on " & computername & assetDisplay & return & return & adobeCCstatusDisplay & return & return & diskAbout & "App version " & my version & aboutApp & return & "Design version " & scjDesignVersion & aboutDesign & welcomeNews with title "About" buttons {adminButton, "Acknowledgments…", "Back…"} default button "Back…" with icon note) -- can change this to a different icon if we don't want the Construction icon
 		if text of backButton is "Back…" then
 			Welcome()
 		else if text of backButton is "Acknowledgments…" then
@@ -966,7 +1007,6 @@ Logged in as " & SCJuser & " on " & computername & assetDisplay & return & retur
 	else if launchButton is "Close" then
 		display notification "Press ⌘Q to quit"
 		-- display notification "Press ⌘Q to quit. Drag files to the Dock icon to move them to the Artwork folder."
-		error number -128
 	end if
 	
 end Welcome
@@ -1024,6 +1064,7 @@ Welcome()
 -- Install SCJ typefaces; doesn't install any that are already installed
 
 global launchFinished
+global designWork
 
 on Designing()
 	
@@ -1174,7 +1215,7 @@ on Designing()
 	
 	-- Switch to SCJ Adobe workspaces
 	
-	if runcountThisMachine is 0 or designWork is "Both" or designWork is "Page Layout 📐" then
+	if designWork is "Both" or designWork is "Page Layout 📐" then
 		tell application id "com.adobe.InDesign" to activate
 		try
 			tell application id "com.adobe.InDesign"
@@ -1277,19 +1318,26 @@ on reopen
 			Welcome()
 		end if
 	else if launchFinished is true then
-		(* if application id "com.adobe.InDesign" is running then
-			tell application id "com.adobe.InDesign"
-				try
-					set inddDocName to true
+		if application id "com.adobe.InDesign" is running then
+			try
+				tell application id "com.adobe.InDesign"
 					set inddDocName to name of front document as string
-					-- if inddDocName does not contain "Magazine Design Guide" or inddDocName does not contain "Pages"
-				on error
+				end tell
+				if inddDocName contains "Magazine Design Guide" or inddDocName contains "Pages" or inddDocName contains "Workshop" then
+					set inddDocOpen to true
+				else
 					set inddDocOpen to false
-				end try
-			end tell
-		end if *)
-		if application id "com.adobe.InDesign" is not running or application id "com.adobe.Illustrator" is not running then
+				end if
+			on error
+				set inddDocOpen to false
+			end try
+		else
+			set inddDocOpen to false
+		end if
+		if designWork is "Both" and (inddDocOpen is false or application id "com.adobe.InDesign" is not running) and application id "com.adobe.Illustrator" is not running or designWork contains "Page Layout" and application id "com.adobe.InDesign" is not running or designWork contains "Cover Illustration" and application id "com.adobe.Illustrator" is not running then
 			scjRestart()
+		else if designWork is "Both" and inddDocOpen is false or designWork contains "Page Layout" and inddDocOpen is false then
+			Welcome()
 		else
 			display notification "Press ⌘Q to quit when you're done. Click the icon for random tips if you're feeling spontaneous."
 			set IDtipscriptpath to (((path to me as text) & "Contents:Resources:Scripts:Tips.scpt") as alias) as string
@@ -1305,21 +1353,14 @@ On Open Handler
 - key opens a preferences panel for compatibility rules
 - uninstaller deletes app and preferences
 - download tutorials
-
- on open --theDroppedItems
-	-- repeat with aDroppedItem in theDroppedItems
-	global assets_path
-	set documentLocation to assets_path & ":Sample InDesign File.indd"
-	set loadAssets to (((path to me as text) & "::InDesignExportPDF (Uninstaller) 2A.scpt") as alias) as string
-	run script loadAssets with parameters documentLocation
-end open *)
+*)
 
 --=========================
-(* Transfer Artwork 3.0 *)
+(* Transfer, Place, and Export Artwork 3.1 *)
 
--- Info: Convenient and quickly accessible way to drop files into the Artwork folder, even when it isn't open in Finder. Just drag the pieces onto the icon, and they'll transfer.
+-- Info: Convenient and quickly accessible way to drop files into the Artwork folder, even when it isn't open in Finder. Just drag the pieces onto the Dock icon, and they'll transfer. Drag an .indd onto the Dock icon, and you can export the magazine with a selection of SCJ-specific web and print presets (and even email it).
 -- Created February 13 2021
--- Last updated May 21 2021
+-- Last updated July 16 2021
 --=========================
 
 on open theDroppedItems
@@ -1352,6 +1393,8 @@ on open theDroppedItems
 					delay 0.5
 					set progress description to "Resetting Adobe apps…"
 					delay 0.5
+					set progress description to "Removing SCJ preferences…"
+					delay 0.5
 					set progress description to "Uninstalling SCJ app…"
 					delay 0.5
 					set progress description to "We've uninstalled SCJ."
@@ -1365,15 +1408,13 @@ on open theDroppedItems
 				continue quit
 			end if
 			if droppedFileExtension is "indd" then
-				set inddButton to button returned of (display alert "We'll start the export process. (Beta)" buttons {"Package for Senior Designer", "Export Magazine for Print", "Export Magazine for Web"} default button 1) -- UPDATE
-				if inddButton is "Package for Senior Designer" then
-					-- set passPath to (alias theCurrentDroppedItem) as string
-					set docName to (name of (info for theCurrentDroppedItem))
-					set action to "exportWeb"
-					-- Export(theCurrentDroppedItem, docName, action, droppedItemPath) -- not used anymore
-					set exportScript to (path to me as text) & "Contents:Resources:Scripts:ExportMagazine.scpt" as alias
-					set theResult to run script exportScript with parameters {droppedItemPath, docName, action}
-				end if
+				global adobeCCver
+				global firstname
+				global assets_path
+				set docName to (name of (info for theCurrentDroppedItem))
+				display notification with title docName subtitle "was added to the SCJ InDesign export queue"
+				set exportScript to (path to me as text) & "Contents:Resources:Scripts:ExportMagazine.scpt" as alias
+				set theResult to run script exportScript with parameters {droppedItemPath, docName, adobeCCver, assets_path}
 			end if
 			if droppedFileExtension is not "indd" then
 				set movingArt to true
