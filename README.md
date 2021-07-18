@@ -9,7 +9,7 @@ Upon the designer’s request, it creates final packages for print (and web) tha
 
 The app can update the brand guides on the design team's computers when newer ones are available, update itself with bug fixes and new features, and download Creative Cloud when it's not already installed.
 
-[Download it here](https://github.com/shaylarihosain/Scripps-College-Journal/releases/download/0.8.1/InstallScrippsCollegeJournal.dmg).
+[Download it here](https://github.com/shaylarihosain/Scripps-College-Journal/releases/download/0.9/InstallScrippsCollegeJournal.dmg).
 
 ![SCJ](https://user-images.githubusercontent.com/74567503/116485561-63c28d80-a840-11eb-93f1-52f50148abf6.jpg)
 
@@ -121,6 +121,8 @@ To prompt the SCJ app to issue a new design guide revision to your team, update 
 Within the _Assets_ folder, the app will install whatever font files exist in the fonts folder, inject whatever Adobe configuration files are present, and use the version of the design guide that is present.
 
 (Beta) Signing in as a managing editor in the app will disable Adobe and macOS compatibility checks on that machine. Use at your own risk.
+
+You can use the _Announcements_ feature, located in _Attributes_, to send brief information and news to your team when they launch the app, even for on a specific day.
 
 [**Back to top**](#welcome)
 
