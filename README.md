@@ -108,7 +108,7 @@ During the COVID-19 pandemic, Adobe student licenses are provided to Scripps Col
 
 This app is entirely student-developed. Apple has a master list of ‘known safe apps,’ which don’t require [installation steps 3 and 4](#installation). 
 
-To get on that list, we’d have to contact Apple. We do not have plans at this time to do so, due to limited organizational capacity during the pandemic.
+To get on that list, we have briefly discussed this matter with Apple, and concluded that we will not continue to pursue it at this time due to our limited organizational capacity during the pandemic.
 
 **For senior designers**
 
