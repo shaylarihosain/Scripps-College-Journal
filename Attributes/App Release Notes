@@ -1,8 +1,14 @@
-• Some users don't quit when done, so now you can get right back to work without quitting
-• Check for updates without restarting the app
-• Minor speed improvements
+• InDesign exporter's fully functional — package away!
+• That's right: drag your InDesign file onto the SCJ Dock icon to email your layout work to the senior designer, or package the magazine to our print house’s specification
+• Introducing announcements: delivers staff news
+• Some users don't quit when done, so you can get right back to work without quitting. Now it's intelligent, noting if you've got the issue open, and what you chose to work on, to decide whether to display Tips or offer the design guides again
+• Smart installer helps users avoid installing the app twice
+• Clearer wording better differentiates a new design guide from a software update
+• Enhanced experience if you haven't given the app proper access
+• Improvements when alerting you if your storage is too full
+• Adds compatibility with macOS Monterey
 
 Fixed bugs:
-• Updating guides without replacing resulted in endless loop under certain conditions
-• If you move the guides, you were prompted to relocate them twice rather than once
-• SCJ quick auto-updater would not update all parts of the app on macOS Big Sur
+• “Press ⌘Q to quit” notification works better
+
+Note: if you have a version older than 0.8.1, you will need to manually reinstall from our website to update. We're sorry.
