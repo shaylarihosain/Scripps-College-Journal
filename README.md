@@ -50,9 +50,9 @@ The first time it runs, it will download the design guides.
      - Dragging only one piece onto the SCJ icon in the Dock will — along with moving it to the correct folder — place it in the magazine's InDesign document, if it's open. 
      - Unlike InDesign's native place function, SCJ will place artwork on the document in a manageable size, with a proportionally fitted frame, to ensure that the pieces is not clipped or distorted.
 
-- **Automatic magazine export** (Beta, some features may not be implemented yet) 
-     - When you're done with your pages, drag the InDesign file onto the SCJ Dock icon, and click _Package for Senior Designer_. You'll have the option to email the created files. (Currently only exports preview PDF)
-     - When you're done with the magazine, drag the InDesign file onto the SCJ Dock icon and the magazine will be packaged automatically with properly formatted, sized and colored print PDFs that matches our print house's specifications, a PDF suitable for digital viewing, the InDesign .indd file, and an .idml XML archive file for InDesign CS4. (Not functional right now)
+- **Automatic magazine export** 
+     - When you're done with your pages, drag the InDesign file onto the SCJ Dock icon, and click _Send Pages to Senior Designer_. You'll have the option to email the created files.
+     - When you're done with the magazine, drag the InDesign file onto the SCJ Dock icon, and click _Export Magazine for Print_. The magazine will be packaged automatically with properly formatted, sized and colored print PDFs that matches our print house's specifications, a PDF suitable for digital viewing, the InDesign .indd master file, and an .idml XML archive file compatible with InDesign CS4, along with all of the typeface files and artwork used in the issue.
      - Cuts down or completely eliminates diagnosing and rectifying print proofing errors. Preserves institutional memory, so that information on preparing files for Claremont Print is not lost.
 
 - **Built-in, fast, and automatic app upgrades bring new features and bug fixes**
@@ -64,7 +64,7 @@ The first time it runs, it will download the design guides.
 - **Auto-updating compatibility rules**
      - If each member of the design team uses different versions of InDesign, the work they create will not be compatible. To prevent this issue from occurring, _Scripps College Journal_ will notify users with out-of-date InDesign installations before letting them start, and provide them with clear instructions on how to rectify the issue. Each year, the app will keep team members on the same version automatically.
 
-- **Occasional announcement or staff news delivered on app launch** (Upcoming)
+- **Announcement or staff news delivered on app launch**
 
 # System requirements
 macOS Mojave or later  
@@ -114,7 +114,7 @@ To get on that list, we’d have to contact Apple. We do not have plans at this 
 
 When deploying an updated design guide, the _Assets Version_ file and the _Assets_ zip folder here on GitHub, and the _SCJ Design Version_ file in the zip itself all need to be updated. 
 
-To ship a new design guide, download the _Assets_ folder, make your changes, update the _SCJ Design Version_ hidden file, re-zip the folder, and then push it to GitHub using the GitHub Desktop app.
+To ship a new design guide, download the _Assets_ folder, make your changes, update the _SCJ Design Version_ hidden file, re-zip the folder, and then push it to GitHub using the [GitHub Desktop app](https://desktop.github.com).
 
 To prompt the SCJ app to issue a new design guide revision to your team, update the _Assets Version_ file's version number in this repository. The app then fetches the newest guides and installs them on your design team's computers. 
 
