@@ -1,9 +1,9 @@
 --=========================
-(* AnnouncementsSystem 1.4) *)
+(* AnnouncementsSystem 1.4.1) *)
 
 -- Info: 
 -- Created July 8 2021
--- Last updated July 16 2021
+-- Last updated July 30 2021
 
 ---- © 2021 Shay Lari-Hosain. All rights reserved. Unauthorized copying or reproduction of any part of the proprietary contents of this file, via any medium, is strictly prohibited.
 --=========================
@@ -25,7 +25,7 @@ on fetchNews(displayActive)
 		set userFacingAnnouncement to "none"
 	end try
 	
-	if displayActive is true then displayNews(userFacingAnnouncement, announcementDate, priority)
+	if displayActive is true and userFacingAnnouncement is not "none" then displayNews(userFacingAnnouncement, announcementDate, priority)
 	
 	return userFacingAnnouncement
 end fetchNews
