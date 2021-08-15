@@ -54,8 +54,8 @@ The first time it runs, it will download the design guides.
      - With the _Scripps College Journal_ app, you can drag all the images you download onto its Dock icon, and it'll move those files to the correct folder automatically. Therefore, the links to the artwork remain intact for the senior designer, who combines everyone's work.
 
 - **Places artwork into your design conveniently**
-     - Dragging only one piece onto the SCJ icon in the Dock will — along with moving it to the correct folder — place it in the magazine's InDesign document, if it's open. 
-     - Unlike InDesign's native place function, SCJ will place artwork on the document in a manageable size, with a proportionally fitted frame, to ensure that the pieces is not clipped or distorted.
+     - Dragging one piece onto the SCJ Dock icon will — along with moving it to the correct folder — place it in the magazine's InDesign document, if it's open. 
+     - Unlike InDesign's native place function, SCJ will place artwork on the document in a manageable size, with a proportionally fitted frame, to ensure that the piece is not clipped or distorted.
 
 - **Automatic magazine export** 
      - When you're done with your pages, drag the InDesign file onto the SCJ Dock icon, and click _Send Pages to Senior Designer_. You'll have the option to email the created files.
@@ -66,7 +66,7 @@ The first time it runs, it will download the design guides.
 - **Built-in, fast, and automatic app upgrades bring new features and bug fixes**
      - _Scripps College Journal_ will notify you when a new version of the SCJ app is available, and offer to quickly install the update before relaunching. You can choose to do so later if you want.
 
-- **Install Adobe Creative Cloud**
+- **Get Adobe Creative Cloud**
      - If you don't have Creative Cloud installed, _Scripps College Journal_ will download it for you.
 
 - **Synchronizes Adobe software versions across the team with auto-updating compatibility rules**
