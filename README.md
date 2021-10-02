@@ -1,23 +1,24 @@
 <p align="center">
-<a href="https://github.com/shaylarihosain/Scripps-College-Journal/releases/download/0.9/InstallScrippsCollegeJournal.dmg">
+<a href="https://github.com/shaylarihosain/Scripps-College-Journal/releases/latest/download/InstallScrippsCollegeJournal.dmg">
 <img width="128" alt="Scripps College Journal for Mac Icon" src="https://user-images.githubusercontent.com/74567503/129142881-7e6665ca-0f06-42dd-973e-c7f52652b55e.png">
      </a>
 </p>
 
 <a id="welcome"></a>
-# [Scripps College Journal for Mac](https://github.com/shaylarihosain/Scripps-College-Journal/releases/download/0.9/InstallScrippsCollegeJournal.dmg)
+# [Scripps College Journal for Mac](https://github.com/shaylarihosain/Scripps-College-Journal/releases/latest/download/InstallScrippsCollegeJournal.dmg)
 
-Introduces designers to Scripps College Journal's design and brand system, and prepares their computer automatically.
+Introduces designers to Scripps College Journal's design and brand system, prepares their computer automatically, and places submitted written and visual work in the magazine.
 
-Boasting tight integration with Adobe Creative Cloud, it installs fonts, configures InDesign’s layout, shows designers around the latest available SCJ brand guides, and imports submitted visual artwork onto the pages — all while maintaining a neat folder structure, with all the right files in the right place, so multiple designers' work is always ready for merging.
+Boasting tight integration with Adobe Creative Cloud, the app installs fonts, configures InDesign’s layout, shows designers around the latest available SCJ brand guides, and imports submitted work onto the pages — all while maintaining a neat folder structure, with all the right files in the right place, so multiple designers' work is always ready for merging.
 
 Upon the designer’s request, it creates final packages for print (or web) that are formatted to specification for our print house, with appropriate color management, image resolution, and trim marks — all automatically. No dealing with export dialogs.
 
 The app keeps the brand guides on the design team's computers up to date, and automatically implements the senior designer's changes — making it easy to deploy new fonts, or revised InDesign settings, to the whole team instantly. It can update itself with bug fixes and new features, and downloads Creative Cloud when it's not already installed.
 
-[Download it here](https://github.com/shaylarihosain/Scripps-College-Journal/releases/download/0.9/InstallScrippsCollegeJournal.dmg).
+[Download it here](https://github.com/shaylarihosain/Scripps-College-Journal/releases/latest/download/InstallScrippsCollegeJournal.dmg).
 
-![SCJ](https://user-images.githubusercontent.com/74567503/116485561-63c28d80-a840-11eb-93f1-52f50148abf6.jpg)
+![SCJ](https://user-images.githubusercontent.com/74567503/135702666-52b7e4a1-2163-48f8-bc1e-892e542afe2b.jpg)
+
 
 <a id="installation"></a>
 # Installation
@@ -49,11 +50,13 @@ The first time it runs, it will download the design guides.
 
 - **Injects more convenient custom Adobe InDesign interface layout tailored to magazine design**
 
-- **Moves the issue's artwork into the correct folder**
-     - When leadership provides the visual artwork selected for use in the _Journal_, it needs to go into the Artwork folder. (We all work with one set of artwork that was accepted for this year's issue. That way, when we split up the issue for multiple designers to work on, we don't need to repackage the artwork every time.) 
-     - With the _Scripps College Journal_ app, you can drag all the images you download onto its Dock icon, and it'll move those files to the correct folder automatically. Therefore, the links to the artwork remain intact for the senior designer, who combines everyone's work.
+- **Places writing pieces into your design, properly formatted, with a few clicks**
+     - Dragging a Word document onto the SCJ Dock icon will place the written piece onto the active page of the magazine's InDesign document. 
+     - It will automatically select the right text box, typeset the text correctly — including font, type size, leading, and formatting — to SCJ style without any hassle, and reflow the text onto multiple pages if the text boxes are linked.
+     - No more opening Word and manually copying & pasting text from documents repeatedly, and manually applying paragraph styles. It's all automatic, quick, and convenient.
+     - Option to attempt to retain italics, which avoids having to redo them manually, if the source document is formatted correctly
 
-- **Places artwork into your design conveniently**
+- **Places visual artwork into your design conveniently**
      - Dragging one piece onto the SCJ Dock icon will — along with moving it to the correct folder — place it in the magazine's InDesign document, if it's open. 
      - Unlike InDesign's native place function, SCJ will place artwork on the document in a manageable size, with a proportionally fitted frame, to ensure that the piece is not clipped or distorted.
 
@@ -62,6 +65,10 @@ The first time it runs, it will download the design guides.
      - When you're done with the magazine, drag the InDesign file onto the SCJ Dock icon, and click _Export Magazine for Print_. The magazine will be packaged automatically with properly formatted, sized and colored print PDFs that matches our print house's specifications, a PDF suitable for digital viewing, the InDesign .indd master file, and an .idml XML archive file compatible with InDesign CS4, along with all of the typeface files and artwork used in the issue.
      - Cuts down or completely eliminates diagnosing and rectifying print proofing errors. Preserves institutional memory, so that information on preparing files for Claremont Print is not lost.
      - No repeatedly messing with package export dialogs or obscure color profile settings that the average student designer might not know about.
+
+- **Moves the issue's artwork into the correct folder**
+     - When leadership provides the visual artwork selected for use in the _Journal_, it needs to go into the Artwork folder. (We all work with one set of artwork that was accepted for this year's issue. That way, when we split up the issue for multiple designers to work on, we don't need to repackage the artwork every time.) 
+     - With the _Scripps College Journal_ app, you can drag all the images you download onto its Dock icon, and it'll move those files to the correct folder automatically. Therefore, the links to the artwork remain intact for the senior designer, who combines everyone's work.
 
 - **Built-in, fast, and automatic app upgrades bring new features and bug fixes**
      - _Scripps College Journal_ will notify you when a new version of the SCJ app is available, and offer to quickly install the update before relaunching. You can choose to do so later if you want.
