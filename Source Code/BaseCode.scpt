@@ -1,18 +1,20 @@
 --===============================================
 -- SCRIPPS COLLEGE JOURNAL Software for Mac
--- Version 0.9 (Beta)
+-- Version 1.0
 --------------------------------------------------------------------------------------
--- Compiled on macOS 10.15.7 (19H1217) (Intel-based)
--- Intel x86 binary
+-- Compiled on:		macOS 10.15.7 (19H1419) (Intel-based)
+-- Tested on:		macOS 10.15.7 (19H1419) (Intel-based)
+--			macOS 11.6 (20G165) (Intel-based)
+-- Platform:		Intel x86_64 binary
 --------------------------------------------------------------------------------------
--- Last updated 							July 16 2021
--- First released staffwide 					April 24 2021
--- First beta entered limited staff testing 		February 28 2021
--- Software development began 				July 11 2020
+-- Last updated: 					September 24 2021
+-- First released staffwide: 				April 24 2021
+-- First beta entered limited staff testing: 		February 28 2021
+-- Software development began: 				July 11 2020
 --------------------------------------------------------------------------------------
 -- Copyright © 2020–2021 Shay Lari-Hosain. All rights reserved. Unauthorized copying or reproduction of any part of the contents of this file, via any medium, is strictly prohibited. Proprietary and confidential. Scripps College and The Claremont Colleges do not own any portion of this software. This software, design system, and the artwork and visual materials used with it are student-created. The author is not responsible for any modifications, or the consequences of modifications, that are made to this software in any form by others.
--- Last updated by: Shay Lari-Hosain PZ
--- Created by: Shay Lari-Hosain PZ
+-- Last updated by:		Shay Lari-Hosain
+-- Created by:			Shay Lari-Hosain
 --===============================================
 
 --=========================
@@ -23,7 +25,6 @@
 -- Last updated June 22 2021
 --=========================
 set appleTranslocationCheck to (((path to me as text) as alias) as string) as text
--- display dialog appleAppTranslocationCheck -- debugger
 if appleTranslocationCheck does not contain "Users:" and appleTranslocationCheck does not contain "Applications:" and appleTranslocationCheck does not contain "Library:" then
 	set correctPathInstalled to false
 	set appTransMsg to "To install SCJ, drag it to Applications."
@@ -137,8 +138,10 @@ set currentmonthInt to getMonth() of loadTime
 set currenttime to getTime() of loadTime
 
 -- Run IconSwitcher
-set iconScript to (((path to me as text) & "Contents:IconSwitcher.scpt") as alias) as string
-run script file iconScript
+try
+	set iconScript to (((path to me as text) & "Contents:IconSwitcher.scpt") as alias) as string
+	run script file iconScript
+end try
 
 -- Check for app updates
 -- if runcountThisMachine mod 2 is 0 then
@@ -146,19 +149,21 @@ set checkSuccess to true
 set appVersionDownload to "https://raw.githubusercontent.com/shaylarihosain/Scripps-College-Journal/main/Attributes/App%20Version" -- CHANGE FINAL URL
 set getReleaseNotes to "https://raw.githubusercontent.com/shaylarihosain/Scripps-College-Journal/main/Attributes/App%20Release%20Notes" -- CHANGE FINAL URL
 try
-	set appLatestVersion to do shell script "curl " & appVersionDownload
+	set appLatestVersion to do shell script "curl --max-time 4 --connect-timeout 4 " & appVersionDownload
 on error
 	set checkSuccess to false
+	display notification "Couldn't check for software updates"
 end try
 
 try
-	set appReleaseNotes to do shell script "curl " & getReleaseNotes
+	set appReleaseNotes to do shell script "curl --max-time 4 --connect-timeout 4 " & getReleaseNotes
 on error
 	set appReleaseNotes to ""
 end try
 
 if checkSuccess is true then
 	if my version is less than appLatestVersion then
+		-- display notification "A software update is available"
 		if appReleaseNotes is "" or appReleaseNotes is " " then
 			set updateMsg2 to ""
 		else
@@ -169,15 +174,8 @@ if checkSuccess is true then
 		if updateButton is "Update…" then
 			DownloadSCJ(true)
 		end if
-	end if
-	
-	if my version is less than "1.0" and appLatestVersion is greater than or equal to "1.0" then -- (REMOVE THIS BETA BLOCK on 1.0 release)
-		set betaWarningButton to button returned of (display alert "Scripps College Journal is now out of beta! 🤩" message "You should upgrade to version " & appLatestVersion & ", the latest secure and stable release." & return & return & "Thanks for testing the app for us!" & return & "Love, the SCJ leadership team ❤️" buttons {"Quit", "Update…"} default button 2)
-		if betaWarningButton is "Update…" then
-			DownloadSCJ(true)
-		else
-			continue quit
-		end if
+		-- else
+		-- display notification "Your software is up to date ✓"
 	end if
 	
 else if checkSuccess is false then
@@ -186,11 +184,11 @@ end if
 -- end if
 
 -- Run compatibility verification
-property cverify : true
+property loggedIn : false
 set compatibilityscriptpath to (((path to me as text) & "Contents:Resources:Scripts:ComprehensiveCompatibilityCheck.scpt") as alias) as string
 set loadCCC to (load script file compatibilityscriptpath)
 set CCCinfo to DetermineCompatibility() of loadCCC
-if cverify is true then
+if loggedIn is false then
 	run script loadCCC
 	set CCCpass to item 14 of CCCinfo
 	if CCCpass is false then
@@ -236,8 +234,8 @@ global lastUniqueID
 property openedBeforeThisMachine : false
 property neverRan : true
 property neverRanThisMachine : true
--- used to define runcount here, but then moved up
 property runcountThisMachine : 0
+property runcountSinceLastDesignUpdate : 0
 property dontShowAlert : false
 
 if runcount is greater than 0 then
@@ -258,14 +256,11 @@ if dontShowAlert is false then
 			set pronoun to "a"
 		end if
 		set diffCompMsg to "If you got it from " & lastUserName & " instead of downloading it directly from us, it may not function as expected."
-		-- if runcount is greater than 0 then set diffCompMsg to diffCompMsg & return & return & "Make sure to save any work first."
-		set diffCompAlert to button returned of (display alert "This app was already run by " & lastUserName & " on " & pronoun & " " & lastMachine & "." message diffCompMsg buttons {"Don't Show Again", "Continue", "Reinstall……"} default button "Reinstall……" as critical)
+		set diffCompAlert to button returned of (display alert "This app was already run by " & lastUserName & " on " & pronoun & " " & lastMachine & "." message diffCompMsg buttons {"Don't Show Again", "Continue", "Reinstall…"} default button "Reinstall…" as critical)
 		if diffCompAlert is "Reinstall…" then
 			DownloadSCJ(true)
-			continue quit
-			if diffCompAlert is "Don't Show Again" then
-				set dontShowAlert to true
-			end if
+		else if diffCompAlert is "Don't Show Again" then
+			set dontShowAlert to true
 		end if
 	end if
 end if
@@ -334,11 +329,11 @@ if currentyear is greater than 2026 then
 end if
 
 --=========================
-(* BaseCode 13.0R *)
+(* BaseCode 14.0R *)
 
 -- Info: Main program that handles the primary tasks the SCJ application is designed for. Contains many smaller handlers, as well as programs like Download SCJ, WelcomeManager, Adobe Workspace Installer, and Transfer Artwork. Very early builds named Get Started.
 -- Created July 12 2020
--- Last updated July 16 2021
+-- Last updated September 13 2021
 --=========================
 
 -- Directory tree is damaged alert
@@ -364,45 +359,34 @@ on scjRestart()
 end scjRestart
 
 --=========================
-(* Download SCJ 5.2.1 *)
+(* Download SCJ 6.0 *)
 
 -- Info: 
 -- Created July 25 2020
--- Last updated July 11 2021
+-- Last updated September 6 2021
 --=========================
 
 on DownloadSCJ(installUpdate)
 	global currentyear
 	global currentmonthInt
 	
-	set scjDownload to ("https://github.com/shaylarihosain/Scripps-College-Journal/releases/latest/download/InstallScrippsCollegeJournal.dmg" as string)
-	if currentyear is greater than or equal to 2021 and currentmonthInt is greater than 8 then -- (September 2021)
+	set repo to "shaylarihosain/Scripps-College-Journal" as string
+	if currentyear is greater than or equal to 2021 and currentmonthInt is greater than 10 then -- (November 2021)
 		set checkRepo to ("https://raw.githubusercontent.com/shaylarihosain/Scripps-College-Journal/main/Attributes/Use%20Original%20Repository")
 		try
-			set useInitialRepo to do shell script "curl " & checkRepo
+			set useInitialRepo to do shell script "curl --max-time 4 --connect-timeout 4 " & checkRepo
 		end try
 		try
 			if useInitialRepo is "false" then
-				set scjDownload to ("https://github.com/scrippscollegejournal/Scripps-College-Journal/releases/latest/download/InstallScrippsCollegeJournal.dmg" as string)
+				set repo to "scrippscollegejournal/mac-app" as string
+			else if useInitialRepo is not "false" and useInitialRepo is not "true" then
+				set repo to useInitialRepo
 			end if
 		end try
 	end if
 	
-	-- start beta code
-	set appVersionDownload to "https://raw.githubusercontent.com/shaylarihosain/Scripps-College-Journal/main/Attributes/App%20Version" -- CHANGE FINAL URL
-	try
-		set checkSuccess to true
-		set appLatestVersion to do shell script "curl " & appVersionDownload
-	on error
-		set checkSuccess to false
-	end try
-	if checkSuccess is true then
-		if appLatestVersion is greater than or equal to "1.0" then
-			set scjDownload to ("https://github.com/shaylarihosain/Scripps-College-Journal/releases/latest/download/InstallScrippsCollegeJournal.dmg" as string)
-		else
-			set scjDownload to ("https://github.com/shaylarihosain/Scripps-College-Journal/releases/download/" & appLatestVersion & "/InstallScrippsCollegeJournal.dmg" as string)
-		end if
-	end if -- end beta code
+	# debug set scjDownload to "https://github.com/" & repo & "/releases/download/0.9/InstallScrippsCollegeJournal.dmg" as string
+	set scjDownload to "https://github.com/" & repo & "/releases/latest/download/InstallScrippsCollegeJournal.dmg" as string
 	
 	set scjExtension to ".dmg"
 	set scjName to "ReinstallScrippsCollegeJournal"
@@ -437,9 +421,9 @@ end DownloadSCJ
 on downloadResources(FileDownload, FileExtension, FileName, FileDestination)
 	
 	try
-		do shell script "curl -L -0 '" & FileDownload & "' -o ~/" & FileDestination & "/" & FileName & FileExtension -- untested on Google Drive files
+		do shell script "curl -L -0 --max-time 140 --connect-timeout 6 '" & FileDownload & "' -o ~/" & FileDestination & "/" & FileName & FileExtension -- untested on Google Drive files
 	on error
-		set networkError to button returned of (display alert "Check your network connection and try again." buttons {"Quit", "Try Again…"} default button 2 as critical)
+		set networkError to button returned of (display alert "Your Internet connection appears to be offline." message "Check your network connection and try again." buttons {"Quit", "Try Again…"} default button 2 as critical)
 		if networkError is "Try Again…" then
 			downloadResources(FileDownload, FileExtension, FileName, FileDestination)
 		else if networkError is "Quit" then
@@ -503,23 +487,27 @@ on DownloadAssets(AssetsNew)
 		if runcountThisMachine is greater than 15 and AssetsNew is false then
 			global currentmonthInt
 			if currentmonthInt is greater than or equal to 4 and currentmonthInt is less than 8 then
-				set existingAssetsMsg to "It seems like you've already worked on them a lot, so if you have, skip the update unless your senior designer tells you otherwise." & return & return & "If you do update, we'll rename the folder containing your work. We won't replace it."
+				set existingAssetsMsg to "It seems like you've already worked on them a lot. If you have, skip unless your senior designer tells you otherwise." & return & return & "If you do get the new design guides, we'll rename the folder containing your work. We won't replace it."
+			else
+				set existingAssetsMsg to "If you get the new design guides, we'll rename the folder containing your work. We won't replace it."
 			end if
-			set existingAssetsButtons to {"Skip", "Update…"}
+			set existingAssetsHeader to "Do you want to continue?"
+			set existingAssetsButtons to {"Skip", "Continue"}
 		else
 			if AssetsNew is false then
 				set cautionMsg to "⚠️ "
-				set cautionButton to "Update & Replace… ⚠️"
+				set cautionButton to "⚠️ Replace"
 			else
 				set cautionMsg to ""
-				set cautionButton to "Update & Replace…"
+				set cautionButton to "Replace"
 			end if
-			set existingAssetsMsg to cautionMsg & "“Update & Replace” will overwrite the guides you currently have." & return & return & "DO NOT select this option if you have done valuable work on the magazine that you don't want to lose."
-			set existingAssetsButtons to {cautionButton, "Skip", "Update…"}
+			set existingAssetsHeader to "Would you like to keep the existing design guides?"
+			set existingAssetsMsg to "“Keep” gets the new design guides while keeping the existing ones." & return & return & cautionMsg & "“Replace” overwrites the existing design guides with the new ones. This action cannot be undone. Do not select if you have done valuable work on the magazine that you don't want to lose."
+			set existingAssetsButtons to {cautionButton, "Skip", "Keep"}
 		end if
 		
-		set replaceOldAssets to button returned of (display alert "We found existing SCJ assets in your Documents folder." message existingAssetsMsg buttons existingAssetsButtons as critical)
-		if replaceOldAssets is "Update…" then
+		set replaceOldAssets to button returned of (display alert existingAssetsHeader message existingAssetsMsg buttons existingAssetsButtons)
+		if replaceOldAssets is "Keep" or replaceOldAssets is "Continue" then
 			try
 				set namePrefix to (new_name & " (" & "v" & scjDesignVersion) as string
 			on error
@@ -534,18 +522,21 @@ on DownloadAssets(AssetsNew)
 			end if
 			tell application "System Events" to set name of folder checkDocumentsFolder to (renameOldAssets as string)
 			downloadAssetsThemselves()
+			set runcountSinceLastDesignUpdate to 0
 			scjRestart()
-		else if replaceOldAssets contains "Update & Replace…" then
+		else if replaceOldAssets contains "Replace" then
 			try
 				tell application "System Events"
 					delete folder checkDocumentsFolder
 				end tell
 			end try
 			downloadAssetsThemselves()
+			set runcountSinceLastDesignUpdate to 0
 			scjRestart()
 		end if
 	else
 		downloadAssetsThemselves()
+		set runcountSinceLastDesignUpdate to 0
 	end if
 end DownloadAssets
 
@@ -553,7 +544,7 @@ on downloadAssetsThemselves()
 	determineDownloadDate()
 	tell me to activate
 	display alert "Downloading latest SCJ design guides…" message "Please wait. You'll be up and running in no time." buttons {""} giving up after 2.5
-	set assetsDownload to "https://github.com/shaylarihosain/Scripps-College-Journal/blob/main/Assets.zip?raw=true" -- CHANGE FINAL URL
+	set assetsDownload to "https://github.com/scrippscollegejournal/design-resources/blob/main/Assets.zip?raw=true"
 	set assetsExtension to ".zip"
 	set assetsName to "SCJAssets"
 	set assetsDestination to "Documents"
@@ -572,8 +563,6 @@ end downloadAssetsThemselves
 -- Define asset locations & asset integrity check
 
 set assetsLocated to false
-global assetsRedownloaded
-set assetsRedownloaded to false
 global new_name
 set new_name to "Scripps College Journal — Volume " & scjvolume
 
@@ -593,8 +582,8 @@ on error
 		on error
 			if neverRanThisMachine is true then
 				DownloadAssets(true)
+				set assetsLocated to true
 			end if
-			set assetsLocated to true
 		end try
 	end try
 	set assetInitial to (path to documents folder as text)
@@ -606,6 +595,8 @@ if neverRan is true then -- rename Assets folder to final name
 	end try
 end if
 
+set offerDesignUpdate to true
+set restartAfterNewGuides to false
 try
 	set assets_path to ((assetInitial & new_name) as alias) as string
 	set assetsLocated to true
@@ -616,11 +607,35 @@ on error
 		set assets_path to ((assetInitial & new_name) as alias) as string
 		set assetsLocated to true
 	on error
-		set assetsLocated to false
-		set assets_path to (choose folder with prompt "The SCJ Assets folder has been renamed or moved. Please relocate it:") as alias as string
+		try
+			-- Search for older assets
+			set assetsLocated to false
+			set searchScript to (path to me as text) & "Contents:Resources:Scripts:PollDesignGuides.scpt" as alias
+			set assetsReturned to run script searchScript with parameters {scjvolume}
+			if assetsReturned is "download" then
+				DownloadAssets(true)
+				set restartAfterNewGuides to true -- this variable is used in place because scjRestart handler errors here with "-1708: <<script>> doesn't understand the "return" message
+			else
+				set assets_path to assetsReturned as string
+				set assetsLocated to true
+				set offerDesignUpdate to false
+			end if
+		on error
+			set assetsLocated to false
+			set offerDesignUpdate to false
+			try
+				set assets_path to (choose folder with prompt "The SCJ design guides folder has been renamed or moved. Please relocate it:") as alias as string
+			on error number errorNumber
+				if errorNumber is -128 then
+					continue quit
+				end if
+			end try
+		end try
 		-- the below try block was moved from here
 	end try
 end try
+
+if restartAfterNewGuides is true then scjRestart()
 
 try -- checks if it's a real SCJ Assets folder; last line of defense (added with v0.5)
 	set rcheck to ((assets_path & "Fonts") as alias) as string
@@ -635,77 +650,76 @@ on error
 	end try
 end try
 
-if neverRan is true then
-	try
-		set check to ((assets_path & "Fonts") as alias) as string
-		set AssetsNew to true
-	on error
-		try
-			set check to ((assets_path & ".Fonts") as alias) as string
-			set AssetsNew to false
-		end try
-	end try
-end if
-
-if runcount is 0 then
-	try
-		set font_path to ((assets_path & "Fonts") as alias) as string
-	on error
-		if AssetsNew is false then
-			set font_path to ((assets_path & ".Fonts") as alias) as string
-		end if
-	end try
-end if
 if runcount is greater than 0 then
 	try
 		set font_path to ((assets_path & ".Fonts") as alias) as string
+		set AssetsNew to false
 	on error
 		set font_path to ((assets_path & "Fonts") as alias) as string
-		set AppOldNewAssets to true
+		set AssetsNew to true
+		-- set AppOldNewAssets to true
+	end try
+else
+	try
+		set font_path to ((assets_path & "Fonts") as alias) as string
+		set AssetsNew to true
+	on error
+		set font_path to ((assets_path & ".Fonts") as alias) as string
+		set AssetsNew to false
 	end try
 end if
 
--- Check for asset updates
+-- Check for design guide updates
 
 try
-	set versionLocation to POSIX path of (assets_path & ".SCJ Design Version.txt" as string) -- 'as string' inside the brackets was added for v0.6
+	set versionLocation to POSIX path of (assets_path & ".SCJ Design Version.txt" as string)
 	set scjDesignVersion to (paragraphs of (read POSIX file versionLocation) as text)
 on error
 	set scjDesignVersion to "unknown ⚠️"
 end try
 
 if scjDesignVersion is not "unknown ⚠️" then
-	set checkSuccess to true
 	
-	set assetsVersionDownload to "https://raw.githubusercontent.com/shaylarihosain/Scripps-College-Journal/main/Assets%20Version" -- CHANGE FINAL URL
-	set assetsInfoDownload to "https://raw.githubusercontent.com/shaylarihosain/Scripps-College-Journal/main/Assets%20Info" -- CHANGE FINAL URL
+	set assetsVersionDownload to "https://raw.githubusercontent.com/scrippscollegejournal/design-resources/main/Assets%20Version" -- URL
+	set assetsInfoDownload to "https://raw.githubusercontent.com/scrippscollegejournal/design-resources/main/Assets%20Info" -- URL
 	try
-		set scjLatestVersion to do shell script "curl " & assetsVersionDownload
+		set designCheckSuccess to true
+		set scjLatestVersion to do shell script "curl --max-time 4 --connect-timeout 4 " & assetsVersionDownload
 	on error
-		set checkSuccess to false
+		set designCheckSuccess to false
 	end try
 	
 	try
-		set assetsInfo to do shell script "curl " & assetsInfoDownload
+		set assetsInfo to do shell script "curl --max-time 4 --connect-timeout 4 " & assetsInfoDownload
 	on error
 		set assetsInfo to ""
 	end try
 	
-	if checkSuccess is true then
+	if designCheckSuccess is true and offerDesignUpdate is not false then
 		if scjDesignVersion is less than scjLatestVersion then
 			if assetsInfo is "" or assetsInfo is " " then
 				set additionalMsg to ""
 			else
 				set additionalMsg to return & return & assetsInfo
 			end if
+			if offerDesignUpdate is false then
+				set offeredOnceMsg to "Newer SCJ design guides than the ones you selected are available. Would you like to get them now?"
+			else
+				set offeredOnceMsg to "A revision to the SCJ design guides is available. Would you like to get it now?"
+			end if
 			tell me to activate
-			set updateButton to button returned of (display alert "A revision to the SCJ design guides is available. Would you like to get it now?" message "Design system version " & scjLatestVersion & " introduces new changes and rules. You have " & scjDesignVersion & "." & additionalMsg buttons {"Not Now", "Get…"} default button 2)
+			set updateButton to button returned of (display alert offeredOnceMsg message "Design system version " & scjLatestVersion & " introduces new changes and rules. You have " & scjDesignVersion & "." & additionalMsg buttons {"Not Now", "Get…"} default button 2)
 			if updateButton is "Get…" then
-				DownloadAssets(AssetsNew)
+				if offerDesignUpdate is false then
+					DownloadAssets(true)
+					scjRestart()
+				else
+					DownloadAssets(AssetsNew)
+				end if
 			end if
 		end if
 		
-	else if checkSuccess is false then
+	else if designCheckSuccess is false then
 		set scjLatestVersion to "unknown"
 	end if
 end if
@@ -762,17 +776,15 @@ else
 end if
 
 --=========================
-(* WelcomeManager 2.14; Dynamic Welcome Message (Fork) *)
+(* WelcomeManager 2.15 *)
 
 -- Info: Program (now integrated within BaseCode) that provides the main front-end user interface and manages SCJ user authentication
 -- Created July 12 2020
--- Last updated July 13 2021
+-- Last updated September 6 2021
 --=========================
 
 set neverRan to false
 set neverRanThisMachine to false
-
-property loggedIn : false
 
 on Welcome()
 	
@@ -830,7 +842,7 @@ on Welcome()
 	try
 		if scjDesignVersion is greater than or equal to scjLatestVersion then
 			set aboutDesign to " — Up to date ✓"
-		else if scjLatestVersion is "unknown" then
+		else if scjLatestVersion is "unknown" or scjDesignVersion contains "unknown" then
 			set aboutDesign to " — Couldn't check for updates"
 		else
 			set aboutDesign to " — Update available"
@@ -905,11 +917,25 @@ on Welcome()
 		end tell
 		if the result = 0 then
 			set transferMsg to "The Artwork folder is still empty. "
+			set showExtraTextQuitNotif to true
 		else
 			set transferMsg to ""
+			set showExtraTextQuitNotif to false
 		end if
 	else
 		set transferMsg to ""
+		set showExtraTextQuitNotif to false
+	end if
+	
+	set inddDocOpen to isMagazineOpen("InDesign")
+	if inddDocOpen is true then
+		set quitNotif to "Press ⌘Q to quit. Or drag an art piece onto the Dock icon to place it on your InDesign page."
+	else
+		if showExtraTextQuitNotif is true or runcountThisMachine is less than 2 then
+			set quitNotif to "Press ⌘Q to quit. Or drag art pieces onto the Dock icon to import them into the SCJ Artwork folder."
+		else
+			set quitNotif to "Press ⌘Q to quit"
+		end if
 	end if
 	
 	set loadFDS to (load script diskscriptpath as alias)
@@ -971,14 +997,12 @@ Logged in as " & SCJuser & " on " & computername & assetDisplay & return & retur
 			-- DEBUGGER display dialog "WelcomeDialog received login status: " & loggedIn
 			if loggedIn is true then
 				display notification "Welcome back, SCJ Senior Designer."
-				set cverify to false
 			end if
 			-- AuthenticationHandler()
 			Welcome()
 		else if text of backButton is "Log Out Of Admin…" then
 			set loggedIn to false
 			display notification "Logged out! Welcome back, SCJ Designer."
-			set cverify to true
 			Welcome()
 		end if
 	else if launchButton is "Start Designing" or launchButton is "Continue Designing" then
@@ -991,7 +1015,6 @@ Logged in as " & SCJuser & " on " & computername & assetDisplay & return & retur
 						delay 0.05
 					end repeat
 					Designing()
-					-- create new global unique variable just for first run to tell the quit handler to quit InDesign at the end too?
 				else if quitIDonInstall is "Back…" then
 					Welcome()
 				end if
@@ -1005,8 +1028,7 @@ Logged in as " & SCJuser & " on " & computername & assetDisplay & return & retur
 		-- else if launchFinished is true then
 		-- ?? make cleanUp a handler?
 	else if launchButton is "Close" then
-		display notification "Press ⌘Q to quit"
-		-- display notification "Press ⌘Q to quit. Drag files to the Dock icon to move them to the Artwork folder."
+		display notification quitNotif
 	end if
 	
 end Welcome
@@ -1021,7 +1043,7 @@ set privacybt to "Usage"
 on Acknowledgments()
 	global licensebt
 	global privacybt
-	set abtn to button returned of (display dialog "SCJ Visual Design System created by" & return & "Shay Lari-Hosain" & return & return & "Special thanks to" & return & "Ariel So, Jamie Jiang and Kerry Taylor" & return & return & "SCJ Leaf illustrated by" & return & "Karen Wang" & return & return & "SCJ Flag designed by" & return & "Shay Lari-Hosain" with title "Acknowledgments" buttons {licensebt, privacybt, "Back…"} default button "Back…")
+	set abtn to button returned of (display dialog "SCJ Visual Design System created by" & return & "Shay Lari-Hosain" & return & return & "Special thanks to" & return & "Ariel So, Kerry Taylor, and Jamie Jiang" & return & return & "SCJ Leaf illustrated by" & return & "Karen Wang" & return & return & "SCJ Flag designed by" & return & "Shay Lari-Hosain" with title "Acknowledgments" buttons {licensebt, privacybt, "Back…"} default button "Back…")
 	if abtn is "Back…" then
 		tell application "Preview" to close (every window whose name contains "SCJ License Agreement")
 		tell application "Preview" to close (every window whose name contains "SCJ Usage Info")
@@ -1073,11 +1095,11 @@ on Designing()
 	global assets_path
 	global font_path
 	global AssetsNew
-	global AppOldNewAssets
+	-- global AppOldNewAssets
 	global scjissueyear
 	global IDver
 	global IDverFull
-	-- global runcountThisMachine -- it's already a property? Changed with 0.8
+	global firstname
 	
 	if runcountThisMachine is greater than 0 then
 		set designWork to button returned of (display alert "What are you designing today?" buttons {"Both", "Cover Illustration 🎨", "Page Layout 📐"})
@@ -1090,9 +1112,6 @@ on Designing()
 		make new folder at end of (userLibraryFontPath) with properties {name:"SCJ"}
 	end tell
 	set computer_fonts to (((path to library folder from user domain as text) & "Fonts:SCJ") as alias) as string
-	
-	-- alternate: set computer_fonts to (((path to home folder as text) & "Library:Fonts" as alias) as string)
-	-- set computer_fonts to (((path to desktop as text) & "testfonts") as alias) as string -- for testing
 	
 	set font_path_POSIX to quoted form of the POSIX path of font_path
 	set computer_fonts_POSIX to quoted form of the POSIX path of computer_fonts
@@ -1215,8 +1234,9 @@ on Designing()
 	
 	-- Switch to SCJ Adobe workspaces
 	
-	if designWork is "Both" or designWork is "Page Layout 📐" then
+	if designWork is not "Cover Illustration 🎨" then
 		tell application id "com.adobe.InDesign" to activate
+		if runcountThisMachine is greater than 0 then delay 1.5
 		try
 			tell application id "com.adobe.InDesign"
 				apply workspace name "Scripps College Journal"
@@ -1235,8 +1255,6 @@ on Designing()
 			end if
 		end if
 	end if
-	
-	delay 2
 	
 	set launchFinished to true
 	return assets_path
@@ -1268,8 +1286,6 @@ end rsyncWorkspaces
 
 on rsyncPDFpresets() -- install PDF presets
 	
-	global IDver
-	global IDverFull -- remove these first two? don't seem to be used
 	global assets_path
 	
 	set scj_PDFpresets to ((assets_path & ".PDF Preset") as alias) as string
@@ -1286,17 +1302,46 @@ on roundThis(n, numDecimals)
 	(((n * x) + 0.5) div 1) / x
 end roundThis
 
+on isMagazineOpen(program)
+	set programID to "com.adobe." & program as string
+	if application id programID is running then
+		try
+			tell application id programID
+				set docName to name of front document as string
+			end tell
+			if docName contains "Magazine Design Guide" or docName contains "Pages" or docName contains "Workshop" or docName contains "Layout" or docName contains "Cover" then
+				set docOpen to true
+			else
+				set docOpen to false
+			end if
+		on error
+			set docOpen to false
+		end try
+	else
+		set docOpen to false
+	end if
+	
+	return docOpen
+end isMagazineOpen
+
 -- Clean up
 
 if launchFinished is true then -- this new if statement accounts for always-on behavior
-	if runcount is 0 then
-		tell application "System Events" to set name of folder font_path to ".Fonts"
+	if runcountThisMachine is 0 then -- and AssetsNew is true then
+		try
+			set welcomeSound to POSIX path of file ((path to me as text) & "Contents:Resources:DesignerWelcome.m4a") as string
+			do shell script "afplay '" & welcomeSound & "'"
+		end try
+		try
+			tell application id "com.adobe.InDesign"
+				display alert "Nice, " & firstname & "! You’ve got all our fonts, PDF presets, and other materials installed. You're ready to go." message "Now you get to start creating. Scripps College Journal is well-integrated with InDesign — letting you focus on the important stuff. Here’s a few things you can do." & return & return & "✒️ To place a writing piece on the current page, drag and drop a Word doc onto the SCJ icon in the Dock. We’ll place and format it automatically." & return & return & "🎨 To place visual art on the current spread, drag and drop an image on the SCJ icon." & return & return & "📚 To export the magazine with one click, drag and drop the InDesign file from the Finder onto the SCJ icon." & return & return & "It’s pretty sweet. We can’t wait to see what you do." buttons {"Woo!"}
+			end tell
+		end try
+	else
+		delay 1
 	end if
-	try
-		if AppOldNewAssets is true then
-			tell application "System Events" to set name of folder font_path to ".Fonts"
-		end if
-	end try
+	if runcount is 0 then tell application "System Events" to set name of folder font_path to ".Fonts"
+	if runcount is greater than 0 and (AssetsNew is true or runcountSinceLastDesignUpdate is 0) then tell application "System Events" to set name of folder font_path to ".Fonts"
 	
 	set lastUser to fullname
 	set lastComputer to computername
@@ -1308,6 +1353,7 @@ if launchFinished is true then -- this new if statement accounts for always-on b
 	
 	set runcount to runcount + 1
 	set runcountThisMachine to runcountThisMachine + 1
+	set runcountSinceLastDesignUpdate to runcountSinceLastDesignUpdate + 1
 end if
 
 
@@ -1316,27 +1362,15 @@ on reopen
 		global assetsLocated
 		if assetsLocated is true then
 			Welcome()
+			-- else
+			-- scjRestart()
 		end if
 	else if launchFinished is true then
-		if application id "com.adobe.InDesign" is running then
-			try
-				tell application id "com.adobe.InDesign"
-					set inddDocName to name of front document as string
-				end tell
-				if inddDocName contains "Magazine Design Guide" or inddDocName contains "Pages" or inddDocName contains "Workshop" then
-					set inddDocOpen to true
-				else
-					set inddDocOpen to false
-				end if
-			on error
-				set inddDocOpen to false
-			end try
-		else
-			set inddDocOpen to false
-		end if
-		if designWork is "Both" and (inddDocOpen is false or application id "com.adobe.InDesign" is not running) and application id "com.adobe.Illustrator" is not running or designWork contains "Page Layout" and application id "com.adobe.InDesign" is not running or designWork contains "Cover Illustration" and application id "com.adobe.Illustrator" is not running then
+		set inddDocOpen to isMagazineOpen("InDesign")
+		set aiDocOpen to isMagazineOpen("Illustrator")
+		if designWork is "Both" and application id "com.adobe.InDesign" is not running and application id "com.adobe.Illustrator" is not running or designWork contains "Page Layout" and application id "com.adobe.InDesign" is not running or designWork contains "Cover Illustration" and application id "com.adobe.Illustrator" is not running then
 			scjRestart()
-		else if designWork is "Both" and inddDocOpen is false or designWork contains "Page Layout" and inddDocOpen is false then
+		else if designWork is "Both" and (inddDocOpen is false or aiDocOpen is false) or designWork contains "Page Layout" and inddDocOpen is false or designWork contains "Cover Illustration" and aiDocOpen is false then
 			Welcome()
 		else
 			display notification "Press ⌘Q to quit when you're done. Click the icon for random tips if you're feeling spontaneous."
@@ -1356,19 +1390,16 @@ On Open Handler
 *)
 
 --=========================
-(* Transfer, Place, and Export Artwork 3.1 *)
+(* Transfer, Place, and Export 4.0 *)
 
 -- Info: Convenient and quickly accessible way to drop files into the Artwork folder, even when it isn't open in Finder. Just drag the pieces onto the Dock icon, and they'll transfer. Drag an .indd onto the Dock icon, and you can export the magazine with a selection of SCJ-specific web and print presets (and even email it).
 -- Created February 13 2021
--- Last updated July 16 2021
+-- Last updated September 19 2021
 --=========================
 
 on open theDroppedItems
 	if neverRanThisMachine is false then
 		global assets_path
-		-- display dialog assets_path as string
-		
-		-- display alert "Do you want to move the selected files into the Artwork folder?" buttons {"No","Yes","Yes, and Don't Ask Me Again"}
 		
 		set uninstalled to false
 		set movingArt to false
@@ -1378,11 +1409,11 @@ on open theDroppedItems
 		
 		repeat with a from 1 to length of theDroppedItems
 			set theCurrentDroppedItem to item a of theDroppedItems
-			set the item_info to info for theCurrentDroppedItem
+			set the itemInfo to info for theCurrentDroppedItem
 			set droppedItemPath to alias theCurrentDroppedItem as text
-			set droppedFileExtension to the name extension of item_info
-			set uNameCheck to (name of (info for theCurrentDroppedItem)) as string
-			if uNameCheck is "Uninstaller" then
+			set droppedFileExtension to the name extension of itemInfo
+			set docName to (name of (info for theCurrentDroppedItem))
+			if docName is "Uninstaller" then
 				-- try
 				set uninstalled to true
 				set progress description to "Preparing to uninstall…"
@@ -1408,16 +1439,156 @@ on open theDroppedItems
 				continue quit
 			end if
 			if droppedFileExtension is "indd" then
+				global runcountThisMachine
+				if runcountThisMachine is less than 1 then
+					rsyncPDFpresets()
+					display notification with title "SCJ PDF export presets were installed."
+				end if
 				global adobeCCver
 				global firstname
 				global assets_path
-				set docName to (name of (info for theCurrentDroppedItem))
 				display notification with title docName subtitle "was added to the SCJ InDesign export queue"
 				set exportScript to (path to me as text) & "Contents:Resources:Scripts:ExportMagazine.scpt" as alias
 				set theResult to run script exportScript with parameters {droppedItemPath, docName, adobeCCver, assets_path}
-			end if
-			if droppedFileExtension is not "indd" then
+			else if droppedFileExtension is "docx" or droppedFileExtension is "doc" or droppedFileExtension is "rtf" then
+				set itemCount to (length of theDroppedItems as string)
+				if itemCount is less than 2 then
+					if droppedFileExtension is "docx" or droppedFileExtension is "doc" then
+						set docTypeHumanReadable to "Word document"
+					else
+						set docTypeHumanReadable to "text file"
+					end if
+					set getLargest to true
+					try
+						set getLargestIDTextFrame to (path to me as text) & "Contents:Resources:Scripts:PollTextFramesInDesign.scpt" as alias
+						set textFrameInfo to run script getLargestIDTextFrame
+						set largestTextFrameID to item 1 of textFrameInfo
+						set largestTextFrameArea to item 2 of textFrameInfo
+						set largestTextFrameSize to item 3 of textFrameInfo
+						set largestTextFrameIndex to item 4 of textFrameInfo
+					on error
+						set getLargest to false
+					end try
+					set writingFile to theCurrentDroppedItem as «class furl»
+					tell application id "com.adobe.InDesign"
+						tell word RTF import preferences
+							set convert page breaks to none
+							set import endnotes to false
+							set import footnotes to false
+							set import index to false
+							set import TOC to false
+							set import unused styles to false
+							set preserve graphics to false
+							set remove formatting to true
+							-- set preserve track changes to true
+							-- set resolve character style clash to resolve clash use existing
+							-- set resolve paragraph style clash to resolve clash use existing
+							set use typographers quotes to true
+						end tell
+						activate
+						try
+							set storyType to button returned of (display alert "Is this a poetry piece or a prose piece?" buttons {"Poetry", "Prose"} default button "Prose")
+						on error
+							set storyType to "Prose"
+						end try
+						try
+							set italicsPref to button returned of (display alert "Do you want to try to preserve italics?" message "If this " & docTypeHumanReadable & " uses custom formatting, preserving italics can also transfer other formatting issues." & return & return & "Don’t consider it unless you know the piece uses italicized text." buttons {"Preserve", "Don’t Preserve"})
+						on error
+							set italicsPref to "Don’t Preserve"
+						end try
+						if italicsPref is "Preserve" then
+							tell word RTF import preferences to set preserve local overrides to true
+						else
+							tell word RTF import preferences to set preserve local overrides to false
+						end if
+						try
+							if storyType is "Poetry" then
+								tell active document to set myParaStyle to paragraph style "Body Copy (Poetry)" of paragraph style group "Poetry" of paragraph style group "Magazine"
+							else
+								tell active document to set myParaStyle to paragraph style "Body Copy (Prose)" of paragraph style group "Prose" of paragraph style group "Magazine"
+							end if
+							tell active page of layout window 1 of active document
+								if getLargest is true then
+									set emptyFrame to text frame largestTextFrameIndex
+								else
+									if storyType is "Poetry" then
+										set emptyFrame to text frame 2
+									else
+										set emptyFrame to text frame 1
+									end if
+								end if
+								tell parent story of emptyFrame to set contents to ""
+								tell first insertion point of parent story of emptyFrame to place writingFile -- with properties {label:"Story Piece"}
+								apply paragraph style (text of parent story of emptyFrame) using next style of myParaStyle without clearing overrides
+								if storyType is "Prose" then apply paragraph style (first paragraph of parent story of emptyFrame) using myParaStyle without clearing overrides
+							end tell
+							set placeWritingSuccess to true
+						on error errorMessage number errorNumber
+							set placeWritingSuccess to false
+							if errorMessage contains "Can’t get paragraph style" then -- -1728
+								display alert "Writing pieces can't be placed in this particular InDesign document, which seems to be missing a required SCJ paragraph style." message "The InDesign document provided by the SCJ senior designer normally includes a paragraph style called “Body Copy (Prose),” which should be located inside a style group folder called “Prose,” which is itself located in another called “Magazine.”" & return & return & "The style and/or style group folders may have been renamed, or may be missing." as critical
+							else if errorMessage contains "Can’t get text frame" then -- also -1728
+								display alert "There are no text boxes on this page to place a written piece into."
+							else if errorMessage contains "No documents are open" or errorNumber is 90884 then
+								activate
+								display alert "To place a written piece in Scripps College Journal, please open the InDesign document and navigate to the page you want it on."
+							else
+								if errorMessage contains "Cannot handle the request because a modal dialog" then
+									set errorGuess to "Our best guess: the document you tried placing used footnotes or endnotes. These documents will not work." & return & return -- error 30486
+								else
+									set errorGuess to ""
+								end if
+								global firstname
+								display alert "Oops! Sorry, " & firstname & ". Scripps College Journal encountered an issue placing the writing piece. Please try again." message errorGuess & "Here's some info from InDesign about what went wrong: " & return & return & errorMessage & return & "Error code: " & errorNumber
+							end if
+						end try
+						if placeWritingSuccess is true then
+							try
+								find text preferences
+								set find what of find text preferences to nothing
+								set font style of find text preferences to "Italic"
+								set change to of change text preferences to nothing
+								set font style of change text preferences to "Medium Italic"
+								tell emptyFrame to change text
+								set font style of find text preferences to nothing
+								set font style of change text preferences to nothing
+							end try
+							if italicsPref is "Preserve" then
+								try
+									set redoButton to button returned of (display alert "Italicized text was preserved when placing. Does the rest of the text look correct?" message "If not, choose “Reformat.” Doing so will remove italics." buttons {"Reformat", "Looks Good"})
+								on error
+									set redoButton to "Looks Good"
+								end try
+								if redoButton is "Reformat" then
+									apply paragraph style (text of parent story of emptyFrame) using next style of myParaStyle
+									apply paragraph style (first paragraph of parent story of emptyFrame) using myParaStyle
+								end if
+							end if
+						end if
+					end tell
+					if placeWritingSuccess is true then
+						set writingTitle to docName
+						set writingTitleLength to count (writingTitle)
+						if writingTitleLength is greater than 22 then
+							set writingTitle to (characters 1 thru 22 of writingTitle as string) & "…"
+						end if
+						display notification storyType & " piece placed in SCJ magazine, and SCJ typefaces and leading styles applied." with title "“" & writingTitle & "”" & " placed in magazine"
+						try
+							do shell script "afplay '/System/Library/PrivateFrameworks/ToneLibrary.framework/Versions/A/Resources/AlertTones/PhotosMemoriesNotification.caf'"
+						on error
+							beep
+						end try
+					end if
+				else
+					display alert "To place a prose or poetry piece in the magazine, place one document at a time." message "Make sure to have the magazine open in InDesign as well."
+					exit repeat
+				end if
+			else if droppedFileExtension is "txt" or droppedFileExtension is "pages" or droppedFileExtension is "rtfd" or droppedFileExtension is "odt" or droppedFileExtension is "tex" then
+				display alert "Only Word documents can be placed in the SCJ magazine. This type of text file is not supported."
+			else
+				-- display alert "Do you want to move the selected files into the Artwork folder?" buttons {"No","Yes","Yes, and Don't Ask Me Again"}
 				set movingArt to true
+				set artPlaceSuccess to false
 				set progress additional description to "Preparing…"
 				set progress total steps to -1
 				set progress total steps to length of theDroppedItems
@@ -1433,7 +1604,7 @@ on open theDroppedItems
 					set placeInID to false
 				end if
 				try
-					set progress additional description to "Moving " & a & " out of " & length of theDroppedItems & " art " & pieces & return & "File: " & (name of (info for theCurrentDroppedItem))
+					set progress additional description to "Moving " & a & " out of " & length of theDroppedItems & " art " & pieces & return & "File: " & docName
 					
 					-- Move the files to the Artwork folder
 					tell application "Finder"
@@ -1466,13 +1637,24 @@ on open theDroppedItems
 				
 				if placeInID is true and transferSuccess is true then
 					try
-						set imageNewPath to ((assets_path) & "Artwork") & ":" & ((name of (info for theCurrentDroppedItem) as string))
+						tell application id "com.adobe.InDesign"
+							tell layout window 1 of active document
+								select nothing
+								set theZoom to zoom percentage
+								zoom given show pasteboard
+								set zoom percentage to theZoom
+							end tell
+						end tell
+					end try
+					try
+						set imageNewPath to ((assets_path) & "Artwork") & ":" & (docName as string)
 						set imageFile to imageNewPath as «class furl»
+						set layerName to ("Placed with SCJ: " & (docName as string)) as string
 						tell application id "com.adobe.InDesign"
 							activate
-							tell active page of layout window 1 of active document
-								set importedImage to make rectangle with properties {geometric bounds:{0, 0, 400, 400}, name:"SCJimportedImage"}
-								set importedImage to page item "SCJimportedImage"
+							tell active spread of layout window 1 of active document
+								set importedImage to make rectangle with properties {geometric bounds:{24, 24, 384, 384}, name:layerName, stroke weight:0}
+								set importedImage to page item layerName
 								place imageFile on importedImage with properties {label:"scjGraphic"}
 								tell importedImage
 									fit given proportionally
@@ -1480,6 +1662,15 @@ on open theDroppedItems
 								end tell
 							end tell
 						end tell
+						set artPlaceSuccess to true
+					on error errorMessage number errorNumber
+						set artPlaceSuccess to false
+						if errorMessage contains "No documents are open" or errorNumber is 90884 then
+							activate
+							display alert "To place a visual art piece in Scripps College Journal, please open the InDesign document and navigate to the page you want it on."
+						else
+							display alert "Oops! Sorry, " & firstname & ". Scripps College Journal encountered an issue placing the visual art piece. Please try again." message "Here's some info from InDesign about what went wrong: " & return & return & errorMessage & return & "Error code: " & errorNumber
+						end if
 					end try
 				end if
 				
@@ -1488,7 +1679,7 @@ on open theDroppedItems
 		
 		if movingArt is true and uninstalled is false and transferSuccess is true then
 			set itemCount to ((progress completed steps) as string)
-			set artTitle to (name of (info for theCurrentDroppedItem))
+			set artTitle to docName
 			set artTitleLength to count (artTitle)
 			if artTitleLength is greater than 14 then
 				set artTitle to (characters 1 thru 14 of artTitle as string) & "…"
@@ -1497,18 +1688,22 @@ on open theDroppedItems
 			if itemCount is "1" then
 				set notifTransferSuccess to "“" & artTitle & "”"
 			else
-				set notifTransferSuccess to itemCount & " " & pieces
+				set notifTransferSuccess to itemCount & " " & "visual art " & pieces
 			end if
-			display notification "You can now place " & pronoun & " on your pages." with title notifTransferSuccess & " transferred to Artwork folder"
-			try
-				do shell script "afplay /System/Library/PrivateFrameworks/ToneLibrary.framework/Versions/A/Resources/AlertTones/PhotosMemoriesNotification.caf"
-			on error
-				beep
-			end try
+			if artPlaceSuccess is true then
+				display notification "Artwork was also placed in SCJ magazine. Frame is proportionally sized to artwork." with title notifTransferSuccess & " transferred to Artwork folder"
+				try
+					if placeInID is true then do shell script "afplay '/System/Library/PrivateFrameworks/ToneLibrary.framework/Versions/A/Resources/AlertTones/PhotosMemoriesNotification.caf'"
+				on error
+					beep
+				end try
+			else
+				display notification "You can now place " & pronoun & " on your pages." with title notifTransferSuccess & " transferred to Artwork folder"
+			end if
 		end if
 		
 	else if neverRanThisMachine is true then
-		display alert "You haven't opened SCJ before. Please open the app. When you reach the Welcome screen, click “Close” and drag the files onto the icon again."
+		display alert "You haven't opened SCJ before. Please open the app. When you reach the Welcome screen, click “Close” and drag the items onto the icon again."
 		continue quit
 	end if
 	
