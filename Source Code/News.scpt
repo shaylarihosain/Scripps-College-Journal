@@ -1,9 +1,9 @@
 --=========================
-(* AnnouncementsSystem 1.4.1) *)
+(* AnnouncementsSystem 1.4.2) *)
 
 -- Info: 
 -- Created July 8 2021
--- Last updated July 30 2021
+-- Last updated September 24 2021
 
 ---- © 2021 Shay Lari-Hosain. All rights reserved. Unauthorized copying or reproduction of any part of the proprietary contents of this file, via any medium, is strictly prohibited.
 --=========================
@@ -11,7 +11,7 @@
 on fetchNews(displayActive)
 	
 	try
-		set announcementRaw to do shell script "curl --max-time 0.5 --connect-timeout 0.5 https://raw.githubusercontent.com/shaylarihosain/Scripps-College-Journal/main/Attributes/Announcements"
+		set announcementRaw to do shell script "curl --max-time 0.5 --connect-timeout 0.5 https://raw.githubusercontent.com/scrippscollegejournal/preferences/main/Announcements"
 		if announcementRaw is not "404: Not Found" or announcementRaw is not "" then
 			if announcementRaw contains "NOTIFICATION TEXT" then
 				set userFacingAnnouncement to paragraph 2 of announcementRaw
