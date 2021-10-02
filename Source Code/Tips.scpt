@@ -1,9 +1,9 @@
 --=========================
-(* Tips 2.0 *)
+(* Tips 2.1 *)
 
 -- Info: Displays random InDesign tips
 -- Created July 28 2020
--- Last updated April 23 2021
+-- Last updated July 25 2021
 
 ---- © 2020–2021 Shay Lari-Hosain. All rights reserved. Unauthorized copying or reproduction of any part of the proprietary contents of this file, via any medium, is strictly prohibited.
 --=========================
@@ -33,7 +33,7 @@ on RandomTips()
 		end if
 	end if
 	
-	set myList to {"You can export an .IDML (InDesign Markup Language) file to open it in an earlier version of InDesign than the one the document was created with. (File ➜ Export…)", "Text Frame Options:" & return & "⌘ + B", "Paste in Place:" & return & "OPT + SHIFT + ⌘ + V", "Fit Content Proportionally:" & return & "OPT + SHIFT + ⌘ + E", "Fit Frame to Content:" & return & "OPT + ⌘ + C", "Toggle All Grids, Columns & Guides:" & return & "W", "Toggle Document Grid:" & return & "⌘ + “ ", "Toggle Typography Grid:" & return & "OPT + ⌘ + “ ", "SCJ always delivers a CMYK color PDF to the printer, and an RGB color PDF for all other uses, including onscreen display and preview.", "Tutorial — How to Use InDesign's Clipping Paths (adobe.com)", "Tutorial — How to Become a Pro at Reflowing Text (adobe.com)"}
+	set myList to {"You can export an .IDML (InDesign Markup Language) file to open it in an earlier version of InDesign than the one the document was created with. (File ➜ Export…)", "Text Frame Options:" & return & "⌘ + B", "Paste in Place:" & return & "OPT + SHIFT + ⌘ + V", "Fit Content Proportionally:" & return & "OPT + SHIFT + ⌘ + E", "Fit Frame to Content:" & return & "OPT + ⌘ + C", "Toggle All Grids, Columns & Guides:" & return & "W", "Toggle Document Grid:" & return & "⌘ + “ ", "Toggle Typography Grid:" & return & "OPT + ⌘ + “ ", "SCJ always delivers a CMYK color PDF to the printer, and an RGB color PDF for all other uses, including onscreen display and preview.", "Tutorial — How to Use InDesign's Clipping Paths (adobe.com)", "Tutorial — How to Become a Pro at Reflowing Text (adobe.com)", "Tutorial — SCJ Tutorials (drive.google.com)"}
 	set theItem to some item of myList
 	
 	if slackInstalled is true then
@@ -68,11 +68,13 @@ on RandomTips()
 			set tutorialLink to "http://helpx.adobe.com/indesign/using/clipping-paths.html"
 		else if theItem contains "reflowing" then
 			set tutorialLink to "https://helpx.adobe.com/indesign/using/threading-text.html#cut_or_delete_threaded_text_frames"
+		else if theItem contains "SCJ Tutorials" then
+			set tutorialLink to "https://drive.google.com/drive/folders/1TEU21ZBLcriMadFMfd3cOdeJdUx1SS69"
 		end if
 		open location tutorialLink
 		RandomTips()
 	else if rnbutton is "Search…" then
-		searchTips()
+		searchTips("Type a topic")
 	else
 		RandomTips()
 	end if
@@ -81,13 +83,13 @@ end RandomTips
 
 -- Search lookup function
 -- ===============
-on searchTips()
+on searchTips(defaultText)
 	
-	set tipsDialog to (display dialog "Ask for help. If we can't find what you're looking for, you'll return here." & return & return & "You can also use Slackbot. Go to your Slack DMs, and type ‘scj help.’" buttons {"Stop", "Back…", "Search"} default answer "Type a topic" default button "Search" with title "Tips" with icon note)
+	set tipsDialog to (display dialog "Ask for help. If we can't find what you're looking for, you'll return here." & return & return & "You can also ask Slackbot. Go to your Slack DMs, and type ‘scj help.’" buttons {"Stop", "Back…", "Search"} default answer defaultText default button "Search" with title "Tips" with icon note)
 	
 	if text returned of tipsDialog is "fonts" or text returned of tipsDialog is "typography" or text returned of tipsDialog is "type" or text returned of tipsDialog is "font" then
 		display alert "Consult the style guide for the latest information about the fonts we use." buttons {"Back…"}
-		searchTips()
+		searchTips("Type a topic")
 	else if text returned of tipsDialog is "Duplicating" then
 		set duplicatingCollege to button returned of (display dialog "Which college's duplicating services would you like to contact?" buttons {"Pitzer", "Pomona"} with title "Tips — Duplicating")
 		if duplicatingCollege is "Pitzer" then
@@ -104,16 +106,22 @@ on searchTips()
 		else if duplicatingHelp is "Email" then
 			open location item 3 of dupContact
 		end if
-		searchTips()
+		searchTips("Type a topic")
 	else if text returned of tipsDialog is "tutorial" or text returned of tipsDialog is "tutorials" then
 		open location "https://drive.google.com/drive/folders/1TEU21ZBLcriMadFMfd3cOdeJdUx1SS69"
-		searchTips()
+		searchTips("Type a topic")
+	else if text returned of tipsDialog is "meeting" or text returned of tipsDialog is "meetings" or text returned of tipsDialog is "workshop" or text returned of tipsDialog is "workshops" or text returned of tipsDialog contains "scj workshop" or text returned of tipsDialog contains "scj meeting" then
+		open location "https://drive.google.com/drive/u/3/folders/1xtubOESfrhelZYPabR3Kd38a-rOpDgEx"
+		searchTips("Type a topic")
+	else if text returned of tipsDialog is "video" or text returned of tipsDialog is "video tutorial" then
+		tell application "QuickTime Player" to open URL "https://github.com/scrippscollegejournal/video-tutorials/blob/main/Assets%20Tutorial.mov?raw=true"
+		searchTips("Type a topic")
 	else if button returned of tipsDialog is "Back…" then
 		RandomTips()
 	else if button returned of tipsDialog is "Stop" then
 		error number -128
 	else
-		searchTips()
+		searchTips("Try another topic")
 	end if
 	
 end searchTips
