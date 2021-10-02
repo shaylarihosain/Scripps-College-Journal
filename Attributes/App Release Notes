@@ -1,14 +1,19 @@
-• InDesign exporter's fully functional — package away!
-• That's right: drag your InDesign file onto the SCJ Dock icon to email your layout work to the senior designer, or package the magazine to our print house’s specification
-• Introducing announcements: delivers staff news
-• You can get right back to work later, without restarting the app. And now it intelligently decides, noting if you've got the issue open, and what you chose to work on, whether to display Tips or offer the design guides again if you're returning after a while
-• Smart installer helps new users avoid installing the app twice
-• Clearer wording better differentiates a new design guide from a software update
-• Enhanced experience if you haven't given the app proper access
-• Improvements when alerting you if your storage is too full
-• Adds compatibility with macOS Monterey
+• Drag a Word doc onto the SCJ Dock icon to place that story on your page. Yup! Picks the text box, formats text in SCJ style, and reflows story through all linked pages — it's automatic
+• Finds & suggests old SCJ design guides on your computer if you don’t have the newest
+• Improvements to magazine exporter, including sound notifications when exports finish, a cancel job option, and clearer options afterwards
+• Welcome sound and message on first run when the design guides are successfully installed
+• App now also intelligently knows when the cover illustration is open, not just the magazine design
+• Much clearer wording when design guides are updated over existing guides
+• Explanation added when app requests access to Documents & Downloads folders
+• More reliable on unstable Internet connections
+• Various optimizations and improved security
 
 Fixed bugs:
-• “Press ⌘Q to quit” notification works better
+• Reliability improvements when placing visual art on the page
+• On subsequent runs, SCJ InDesign workspace wouldn’t always be reapplied
+• Running the app in a different user account on the same computer would crash
+• Now exports all pages even if InDesign export dialog had select pages chosen, and won’t export without PDF presets installed
+• Choosing a design guide manually and then updating it would not use the updated one until next time
+• Rare: if app is run on one computer and then on a different one, resulting options wouldn’t work
 
 Note: if you have a version older than 0.8.1, except for 0.7.1, you will need to manually reinstall from our website to update. We're sorry.
