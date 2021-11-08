@@ -1,6 +1,6 @@
 • Drag a Word doc onto the SCJ Dock icon to place that story on your page. Yup! Picks the text box, formats text in SCJ style, and reflows story through all linked pages — it's automatic
 • Finds & suggests old SCJ design guides on your computer if you don’t have the newest
-• Improvements to magazine exporter, including sound notifications when exports finish, a cancel job option, and clearer options afterwards
+• Improvements to magazine exporter, including sound notifications when exports finish, a cancel job option, and clearer options after finishing
 • Welcome sound and message on first run when the design guides are successfully installed
 • App now also intelligently knows when the cover illustration is open, not just the magazine design
 • Much clearer wording when design guides are updated over existing guides
@@ -12,7 +12,7 @@ Fixed bugs:
 • Reliability improvements when placing visual art on the page
 • On subsequent runs, SCJ InDesign workspace wouldn’t always be reapplied
 • Running the app in a different user account on the same computer would crash
-• Now exports all pages even if InDesign export dialog had select pages chosen, and won’t export without PDF presets installed
+• Now exports all pages even if InDesign export dialog had select pages chosen, and won’t try export without PDF presets installed
 • Choosing a design guide manually and then updating it would not use the updated one until next time
 • Rare: if app is run on one computer and then on a different one, resulting options wouldn’t work
 
