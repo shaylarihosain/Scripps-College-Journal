@@ -1,5 +1,6 @@
+
 NEW IN 1.1:
-• Native support for Macs with Apple M chips. Speed improvements on models: MacBook Air (Late 2020), MacBook Pro (Late 2020 or later), Mac mini (Late 2020), iMac (Early 2021)
+• Native support for Macs with Apple M chips. Speed improvements on the following models: MacBook Air (Late 2020), MacBook Pro (Late 2020 or later), Mac mini (Late 2020), iMac (Early 2021)
 • Official multi-user support
 • Your settings & usage history now persist through app updates; independently for each user account
 • With Tips Actions, open Artwork folder in Finder, or tracker in browser
@@ -8,17 +9,6 @@ NEW IN 1.1:
 • New features are highlighted after installing a software update
 • App size reduced by over half (~4 MB to ~1.5 MB)
 • Senior designer features enabled (log in to uninstall, reset settings, or disable Adobe version checks)
-		
-NEW IN 1.0:
-• Drag a Word doc onto SCJ Dock icon to place that story on your page. Picks text box, formats text in SCJ style, and reflows story through pages — it's automatic
-• Finds & suggests old SCJ design guides on your computer if you don’t have the newest
-• Improvements to magazine exporter, including sounds when jobs finish, a cancel job option, and clearer options after
-• Welcome message on first run when design guides are successfully installed
-• App intelligently knows when the cover illustration is open also, not just the magazine design
-• Clearer wording when design guides are updated over existing guides
-• Explanation when app requests access to Documents & Downloads folders
-• More reliable on unstable Internet connections
-• Various optimizations and improved security
 
 FIXED BUGS IN 1.1:
 • If you delete Artwork folder, new one is auto-created instead of crashing
@@ -27,6 +17,17 @@ FIXED BUGS IN 1.1:
 • On macOS Big Sur or later, when offered older design guides, titles could be truncated
 • When magazine is delayed, issue year didn’t match volume number
 • One-time security warning from Apple is worded more positively for new users
+		
+NEW IN 1.0:
+• Drag a Word doc onto SCJ Dock icon to place that story on your page. Picks text box, formats text in SCJ style, and reflows story through pages — it's automatic
+• Finds & suggests old SCJ design guides on your computer if you don’t have the newest
+• Improvements to magazine exporter: sounds when jobs finish, cancel job option, and clearer options after
+• Welcome message on first run when design guides are successfully installed
+• App intelligently knows when cover illustration is open, not just magazine design
+• Clearer wording when design guides are updated over existing guides
+• Explanation when app requests access to Documents & Downloads folders
+• More reliable on unstable Internet connections
+• Various optimizations and improved security
 
 FIXED BUGS IN 1.0:
 • Reliability improvements when placing visual art
