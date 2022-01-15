@@ -1,11 +1,11 @@
 --=========================
-(* SetTimeHandler 2.0) *)
+(* SetTimeHandler 2.0.1) *)
 
 -- Info: Relocates older code for time-setting present in all programs into global/centralized handler that can be accessed by all programs
 -- Created January 30 2021
--- Last updated September 23 2021
+-- Last updated January 8 2022
 
----- © 2020–2021 Shay Lari-Hosain. All rights reserved. Unauthorized copying or reproduction of any part of the proprietary contents of this file, via any medium, is strictly prohibited.
+---- © 2020–2022 Shay Lari-Hosain. All rights reserved. Unauthorized copying or reproduction of any part of the proprietary contents of this file, via any medium, is strictly prohibited.
 --=========================
 
 
@@ -38,12 +38,26 @@ on getIssueYear()
 	else if currentmonthint is greater than (incrementMonth - 1) then
 		set scjIssueYear to currentyear + 1
 	end if
+	set delayVolume to item 2 of adjustSchedule()
+	if delayVolume is not 0 or delayVolume is not "" then set scjIssueYear to (scjIssueYear - delayVolume) as integer
 	return scjIssueYear
 end getIssueYear
 
+on getIssueYearBase()
+	set currentyear to getYear()
+	set currentmonthint to getMonth()
+	set incrementMonth to item 1 of adjustSchedule()
+	if currentmonthint is less than incrementMonth then
+		set scjIssueYear to currentyear
+	else if currentmonthint is greater than (incrementMonth - 1) then
+		set scjIssueYear to currentyear + 1
+	end if
+	return scjIssueYear
+end getIssueYearBase
+
 on getVolume()
 	set delayVolume to item 2 of adjustSchedule()
-	set scjIssueYear to getIssueYear()
+	set scjIssueYear to getIssueYearBase()
 	set scjVolume to (scjIssueYear - 1999)
 	if delayVolume is not 0 or delayVolume is not "" then set scjVolume to (scjVolume - delayVolume) as integer
 	return scjVolume
