@@ -1,19 +1,22 @@
 --=========================
-(* PasswordProtect 3.0 *)
+(* PasswordProtect 3.1 *)
 
 -- Info: Handler that can allow user such as senior designer or managing editor to elevate privileges and override SCJ compatibility rules, and possibly other settings in the future. Back-end for WelcomeDialog authentication interface.
 -- Created July 31 2020
--- Last updated January 22 2021
+-- Last updated November 28 2021
 
 ---- © 2020–2021 Shay Lari-Hosain. All rights reserved. Unauthorized copying or reproduction of any part of the proprietary contents of this file, via any medium, is strictly prohibited.
 --=========================
 
-property loggedIn : false -- changed this from a property
+on run {loggedIn}
+	
+	if loggedIn is false then set loggedIn to adminApproval(loggedIn, "Enter password:")
+	
+	return loggedIn
+	
+end run
 
-set passwordDialog to "Enter password:"
-
-on adminApproval()
-	global passwordDialog
+on adminApproval(loggedIn, passwordDialog)
 	try
 		set passwordIcon to "System:Library:PrivateFrameworks:AOSUI.framework:Versions:A:Resources:pref_accounts.icns" as alias
 	on error
@@ -33,10 +36,8 @@ on adminApproval()
 				do shell script "afplay /System/Library/PrivateFrameworks/ScreenReader.framework/Versions/A/Resources/Sounds/EnterVisibleArea.aiff"
 			end try
 			set loggedIn to false
-			set passwordDialog to "Incorrect. Try again:"
-			adminApproval()
+			adminApproval(loggedIn, "Incorrect. Try again:")
 		end if
 	end if
+	return loggedIn
 end adminApproval
-
-adminApproval()
