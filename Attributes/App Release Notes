@@ -1,19 +1,39 @@
-• Drag a Word doc onto the SCJ Dock icon to place that story on your page. Yup! Picks the text box, formats text in SCJ style, and reflows story through all linked pages — it's automatic
+NEW IN 1.1:
+• Native support for Macs with Apple M chips. Speed improvements on models: MacBook Air (Late 2020), MacBook Pro (Late 2020 or later), Mac mini (Late 2020), iMac (Early 2021)
+• Official multi-user support
+• Your settings & usage history now persist through app updates; independently for each user account
+• With Tips Actions, open Artwork folder in Finder, or tracker in browser
+• Consistent, rich notifications experience that suits macOS Monterey
+• Privacy improvements: no longer retains info about system after quitting (like last user, or macOS version). No longer reads hardware identifier
+• New features are highlighted after installing a software update
+• App size reduced by over half (~4 MB to ~1.5 MB)
+• Senior designer features enabled (log in to uninstall, reset settings, or disable Adobe version checks)
+		
+NEW IN 1.0:
+• Drag a Word doc onto SCJ Dock icon to place that story on your page. Picks text box, formats text in SCJ style, and reflows story through pages — it's automatic
 • Finds & suggests old SCJ design guides on your computer if you don’t have the newest
-• Improvements to magazine exporter, including sound notifications when exports finish, a cancel job option, and clearer options after finishing
-• Welcome sound and message on first run when the design guides are successfully installed
-• App now also intelligently knows when the cover illustration is open, not just the magazine design
-• Much clearer wording when design guides are updated over existing guides
-• Explanation added when app requests access to Documents & Downloads folders
+• Improvements to magazine exporter, including sounds when jobs finish, a cancel job option, and clearer options after
+• Welcome message on first run when design guides are successfully installed
+• App intelligently knows when the cover illustration is open also, not just the magazine design
+• Clearer wording when design guides are updated over existing guides
+• Explanation when app requests access to Documents & Downloads folders
 • More reliable on unstable Internet connections
 • Various optimizations and improved security
 
-Fixed bugs:
-• Reliability improvements when placing visual art on the page
+FIXED BUGS IN 1.1:
+• If you delete Artwork folder, new one is auto-created instead of crashing
+• Crash if InDesign and Illustrator versions are from different years
+• On MacBook Pro with Touch Bar, touchscreen icons could be misshapen on macOS Big Sur or later
+• On macOS Big Sur or later, when offered older design guides, titles could be truncated
+• When magazine is delayed, issue year didn’t match volume number
+• One-time security warning from Apple is worded more positively for new users
+
+FIXED BUGS IN 1.0:
+• Reliability improvements when placing visual art
 • On subsequent runs, SCJ InDesign workspace wouldn’t always be reapplied
-• Running the app in a different user account on the same computer would crash
-• Now exports all pages even if InDesign export dialog had select pages chosen, and won’t try export without PDF presets installed
-• Choosing a design guide manually and then updating it would not use the updated one until next time
-• Rare: if app is run on one computer and then on a different one, resulting options wouldn’t work
+• Running the app in different user account on the same computer would crash
+• Exports all pages even if InDesign had less chosen. Won’t export without PDF presets installed
+• Locating old design guide manually, and then updating it wouldn’t use the updated one until next time
+• Rare: if app is run on one computer, then transferred to another, displayed options wouldn’t work
 
 Note: if you have version 0.7.1 or older, you will need to manually reinstall from our website to update. We're sorry.
