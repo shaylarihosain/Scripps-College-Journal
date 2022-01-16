@@ -137,17 +137,17 @@ When deploying an updated design guide, the _Assets Version_ file and the _Asset
 
 To ship a new design guide, download the _Assets_ folder, make your changes, update the _SCJ Design Version_ hidden file, re-zip the folder, and then push it to GitHub using the [GitHub Desktop app](https://desktop.github.com).
 
-To prompt the SCJ app to issue a new design guide revision to your team, update the _Assets Version_ file’s version number in the organization’s repository. The app then fetches the newest guides and installs them on your design team’s computers. 
+To prompt the SCJ app to issue a new design guide revision to your team, update the _Assets Version_ file’s version number in the organization’s _Design Resources_ repository. The app then fetches the newest guides and installs them on your design team’s computers. 
 
 Within the _Assets_ folder, the app will install whatever font files exist in the fonts folder, inject whatever Adobe configuration files are present, and use the version of the design guide that is present.
 
 (Beta) Signing in as a managing editor in the app will disable Adobe and macOS compatibility checks on that machine. Use at your own risk.
 
-You can use the _Announcements_ feature, located in _Attributes_, to send brief information and news to your team when they launch the app, even for on a specific day.
+You can use the _Announcements_ feature, located in Scripps College Journal’s _Preferences_ repository, to send brief information and news to your team when they launch the app, even for on a specific day.
 
 [**Back to top**](#welcome)
 
 ###### ————————————————————
 
 ###### Unauthorized copying or reproduction of any part of the contents of this repository, including code, binaries, disk images, or Scripps College Journal logotypes, brand assets and design guides, via any medium, is strictly prohibited. 
-###### © 2020–2021 Shay Lari-Hosain. All rights reserved.
+###### © 2020–2022 Shay Lari-Hosain. All rights reserved.
