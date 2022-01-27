@@ -7,13 +7,15 @@
 <a id="welcome"></a>
 # [Scripps College Journal for Mac](https://github.com/shaylarihosain/Scripps-College-Journal/releases/latest/download/InstallScrippsCollegeJournal.dmg)
 
-Introduces designers to Scripps College Journal’s design and brand system, prepares their computer automatically, and places submitted written and visual work in the magazine.
+Introduces designers to Scripps College Journal’s design and brand system, prepares their computer, places submitted work in the magazine, and exports the issue for print & web — all quickly and easily.
 
-Boasting tight integration with Adobe Creative Cloud, the app installs fonts, configures InDesign’s layout, shows designers around the latest available SCJ brand guides, and imports submitted work onto the pages — all while maintaining a neat folder structure, with all the right files in the right place, so multiple designers’ work is always ready for merging.
+Boasting tight integration with Adobe Creative Cloud, the app installs fonts, configures InDesign’s layout, and shows designers around the latest SCJ brand guides — all while maintaining a neat folder structure, so multiple designers’ work is always ready for merging.
 
-Upon the designer’s request, it creates final packages for print (or web) that are formatted to specification for our print house, with appropriate color management, image resolution, and trim marks — all automatically. No dealing with export dialogs.
+Placing work in the issue is as simple as drag-and-drop, leaving more time for creativity. Don’t worry about digging through the magazine’s included paragraph styles — stories and poems are typeset correctly like magic. Visual artwork is sized manageably and predictably, ready for precise arrangement.
 
-The app keeps the brand guides on the design team’s computers up to date, and automatically implements the senior designer’s changes — making it easy to deploy new fonts, or revised InDesign settings, to the whole team instantly. It can update itself with bug fixes and new features, and downloads Creative Cloud when it’s not already installed.
+Upon the designer’s request, the app creates packages for print (or web) formatted to specification for our print house, with appropriate color management, image resolution, and trim marks — all automatically. No dealing with export dialogs or reviewing proof errors.
+
+The app keeps the brand guides on the design team’s computers up to date, and implements the senior designer’s changes — making it easy to deploy new fonts, or revised InDesign settings, to the whole team instantly. It can update itself with bug fixes and new features, and downloads Creative Cloud when it’s not already installed.
 
 [Download it here](https://github.com/shaylarihosain/Scripps-College-Journal/releases/latest/download/InstallScrippsCollegeJournal.dmg).
 
@@ -42,7 +44,7 @@ The first time it runs, it will download the design guides.
 # Features
 
 - **Updates existing SCJ brand design guides to the newest ones when available**
-     - Along with revisions to the design guides, any changes to typefaces or configuration files are automatically implemented
+     - Along with revisions to the design guides, any changes to typefaces, export settings, or other configuration files are automatically implemented
      - Senior designer can deploy sweeping design changes to entire team’s computers quickly and easily, in a way users can’t miss
      - No effort on the part of the user, and highly reduced effort for senior designer compared to manual alternatives
 
@@ -50,7 +52,7 @@ The first time it runs, it will download the design guides.
 
 - **Injects more convenient custom Adobe InDesign interface layout tailored to magazine design**
 
-- **Rapidly and easily places writing pieces, like short stories and poems, into your design, properly formatted**
+- **Rapidly and easily places writing pieces, like short stories and poems, into your design completely formatted**
      - Dragging a Word document onto the SCJ Dock icon will place the written piece onto the active page of the magazine’s InDesign document. 
      - It will automatically select the right text box, typeset the text correctly — including font, type size, leading, and formatting — in the SCJ style, and reflow the text onto multiple pages if the text boxes are linked.
      - No more opening Word and manually copying & pasting text from documents repeatedly, fussing with strange formatting, and manually applying paragraph styles. It’s all automatic, quick, and convenient.
@@ -71,14 +73,14 @@ The first time it runs, it will download the design guides.
      - When leadership provides the visual artwork selected for use in the _Journal_, it needs to go into the Artwork folder. (We all work with one set of artwork that was accepted for this year’s issue. That way, when we split up the issue for multiple designers to work on, we don’t need to relink the artwork every time.) 
      - With the _Scripps College Journal_ app, you can drag all the images you download onto its Dock icon, and it’ll move those files to the correct folder automatically. Therefore, the links to the artwork remain intact for the senior designer, who combines everyone’s work.
 
-- **Built-in, fast, and automatic app upgrades bring new features and bug fixes**
+- **Built-in fast app upgrades bring new features and bug fixes**
      - _Scripps College Journal_ will notify you when a new version of the SCJ app is available, and offer to quickly install the update before relaunching. You can choose to do so later if you want.
 
 - **Get Adobe Creative Cloud**
      - If you don’t have Creative Cloud installed, _Scripps College Journal_ will download it for you.
 
 - **Synchronizes Adobe software versions across the team with auto-updating compatibility rules**
-     - If each member of the design team uses different versions of InDesign, the work they create will not be compatible. To prevent this issue from occurring, _Scripps College Journal_ will notify users with out-of-date InDesign installations before letting them start working, and provide them with clear instructions on how to rectify the issue.
+     - If each member of the design team uses different versions of InDesign, the work they create will not be compatible. To prevent this issue from occurring, _Scripps College Journal_ will notify users with out-of-date InDesign installations before they start working, and provide them with clear instructions on how to rectify the issue.
 
 - **Announcement or staff news delivered on app launch**
      - The senior designer can choose to display information that will be delivered to the team quietly in Notification Center, or as an alert.
@@ -99,7 +101,7 @@ Unfortunately, we don’t have an app for Windows. On a PC, download the design 
 
 Everything you need to build Scripps College Journal, including our InDesign and Illustrator brand guides, font files, PDF export presets, and InDesign workspace, is still included.
 
-You will have to open each file manually. For example, you’ll move the issue’s artwork into the Artwork folder using Windows Explorer, install the included fonts on your PC by right-clicking on them, and export your final PDFs using InDesign’s standard export dialog. Because there is no app to mandate any Adobe compatibility rules, please speak with a member of your team to ensure you use the correct versions of InDesign and Illustrator.
+During setup, you will have to open each file manually. For example, you’ll move the issue’s artwork into the Artwork folder using Windows Explorer, install the included fonts on your PC by right-clicking on them, and export your final PDFs using InDesign’s standard export dialog. Because there is no app to mandate any Adobe compatibility rules, please speak with a member of your team to ensure you use the correct versions of InDesign and Illustrator.
 
 (Note: On Windows, be sure to import the included SCJ-specific PDF export presets before exporting any PDFs. This is absolutely mandatory if you are creating a final print file, so that the magazine prints correctly. Then when you use InDesign's export PDF dialog box, you must select the corresponding “Scripps College Journal” preset.
 
@@ -109,7 +111,7 @@ Lastly, while you won’t be able to place writing as quickly without the SCJ ap
 
 **How do I make sure I have the latest version of the design guides?**
 
-The app notifies you on startup if the design guides you have are older, and you’ll be given the option to update them. To check their status, click the _About_ button on the main _Welcome_ screen.
+The app notifies you on startup if your design guides have been superseded by newer ones, and you’ll be given the option to update them. To check their status, click the _About_ button on the main _Welcome_ screen.
 
 **Why do the software requirements increase year to year?**
 
