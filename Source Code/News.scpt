@@ -1,11 +1,11 @@
 --=========================
-(* AnnouncementsSystem 1.4.3) *)
+(* AnnouncementsSystem 1.4.4) *)
 
 -- Info: 
 -- Created July 8 2021
--- Last updated November 19 2021
+-- Last updated March 11 2022
 
----- © 2021 Shay Lari-Hosain. All rights reserved. Unauthorized copying or reproduction of any part of the proprietary contents of this file, via any medium, is strictly prohibited.
+---- © 2021–2022 Shay Lari-Hosain. All rights reserved. Unauthorized copying or reproduction of any part of the proprietary contents of this file, via any medium, is strictly prohibited.
 --=========================
 
 on fetchNews(displayActive)
@@ -16,7 +16,7 @@ on fetchNews(displayActive)
 			if announcementRaw contains "NOTIFICATION TEXT" then
 				set userFacingAnnouncement to paragraph 2 of announcementRaw
 				set announcementDate to paragraph 4 of announcementRaw
-				set priority to paragraph 6 of announcementRaw
+				set priority to paragraph 6 of announcementRaw as boolean
 			end if
 		else
 			set userFacingAnnouncement to "none"
@@ -37,13 +37,13 @@ on displayNews(userFacingAnnouncement, announcementDate, priority)
 		set dateString to do shell script "date '+%m.%d.%Y'"
 		
 		if userFacingAnnouncement contains "today" then
-			if priority is "yes" then
+			if priority is true then
 				if announcementDate is dateString then display alert "Announcements & News 📣" message userFacingAnnouncement giving up after 4 buttons {"Dismiss"} default button 1
 			else
 				if announcementDate is dateString then display notification userFacingAnnouncement with title "Announcements & News 📣"
 			end if
 		else
-			if priority is "yes" then
+			if priority is true then
 				display alert "Announcements & News 📣" message userFacingAnnouncement giving up after 4 buttons {"Dismiss"} default button 1
 				
 			else
