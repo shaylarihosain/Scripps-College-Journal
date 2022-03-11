@@ -1,13 +1,12 @@
 --===============================================
 -- SCRIPPS COLLEGE JOURNAL Software for Mac
--- Version 1.1
+-- Version 1.1.1
 --------------------------------------------------------------------------------------
--- Compiled on:		macOS 12.1 (21C52) (Intel-based)
--- Tested on:		macOS 12.1 (21C52) (Intel-based)
---					macOS 12.0.1 (21A559) (Intel-based)
+-- Compiled on:		macOS 12.2.1 (21D62) (Intel-based)
+-- Tested on:		macOS 12.2.1 (21D62) (Intel-based)
 -- Platform:			Universal (Apple arm64 binary and Intel x86_64 binary)
 --------------------------------------------------------------------------------------
--- Last updated: 								December 29 2021
+-- Last updated: 								March 9 2022
 -- First released staffwide: 						April 24 2021
 -- First beta entered limited staff testing: 		February 28 2021
 -- Software development began: 				July 11 2020
@@ -331,11 +330,11 @@ if currentyear is greater than 2026 then
 end if
 
 --=========================
-(* BaseCode 14.1R *)
+(* BaseCode 14.1.1R *)
 
 -- Info: Main program that handles the primary tasks the SCJ application is designed for. Contains many smaller handlers, as well as programs like Download SCJ, WelcomeManager, Adobe Workspace Installer, and Transfer Artwork. Very early builds named Get Started.
 -- Created July 12 2020
--- Last updated December 29 2021
+-- Last updated March 7 2021
 --=========================
 
 -- Directory tree is damaged alert
@@ -757,6 +756,26 @@ on error
 	set assetDisplayLocation to false
 end try
 
+try
+	tell application "Finder" to set inddCount to (count (every file of folder assets_path whose name extension is "indd"))
+	if inddCount is 2 then
+		set displayMsgCount to "an"
+		set pluralIDmsg to ""
+		set pronounIDmsg to "it"
+	else if inddCount is greater than 2 then
+		set displayMsgCount to (inddCount - 1)
+		set pluralIDmsg to "s"
+		set pronounIDmsg to "they"
+	end if
+	if inddCount is greater than 1 then
+		set inddExtraButton to button returned of (display alert "There’s " & displayMsgCount & " extra InDesign document" & pluralIDmsg & " in the design guides folder." message "Please move the unrelated document" & pluralIDmsg & " out of the folder. If improperly prepared, " & pronounIDmsg & " could cause issues." buttons {"Skip", "Open Folder"} default button 2 as critical)
+		if inddExtraButton is "Open Folder" then
+			tell application "Finder" to open assets_path
+			display alert "When you’re finished removing the extra InDesign document" & pluralIDmsg & ", click “Continue.”" message "Be sure to remove the unrelated file" & pluralIDmsg & ", not the relevant one for SCJ that you’re working on." buttons {"Continue"} default button "Continue"
+		end if
+	end if
+end try
+
 -- Verification is complete and installer launch may begin
 
 (* set progress completed steps to 8
@@ -835,11 +854,11 @@ else
 end if
 
 --=========================
-(* WelcomeManager 2.16 *)
+(* WelcomeManager 2.16.1 *)
 
 -- Info: Program (now integrated within BaseCode) that provides the main front-end user interface and manages SCJ user authentication
 -- Created July 12 2020
--- Last updated November 28 2021
+-- Last updated March 7 2022
 --=========================
 
 set neverRan to false
@@ -870,6 +889,7 @@ on Welcome()
 	global projectedadobeCCver
 	global userFacingAnnouncement
 	global showQuitNotif
+	global inddCount
 	set depNoticeText to "its compatibility rules to notify you of Adobe incompatibilities. Everyone on the design team must manually verify that they’re using the same Creative Cloud version."
 	if scjissueyear is 2026 then
 		set deprecatedNotice to return & return & "Starting next year, this app will no longer auto-update " & depNoticeText
@@ -984,9 +1004,20 @@ on Welcome()
 			set transferMsg to ""
 			set showExtraTextQuitNotif to false
 		end if
+		
+		try
+			if inddCount is greater than 1 then
+				set inddCountMsg to return & return & "You have an extra InDesign document in the design guides folder. Move it to eliminate unexpected behavior."
+			else
+				set inddCountMsg to ""
+			end if
+		on error
+			set inddCountMsg to ""
+		end try
 	else
 		set transferMsg to ""
 		set showExtraTextQuitNotif to false
+		set inddCountMsg to ""
 	end if
 	
 	set inddDocOpen to isMagazineOpen("InDesign")
@@ -1042,7 +1073,7 @@ on Welcome()
 
 " & transferMsg & "Move art to the Artwork folder before placing on your pages.
 
-To do that now, just click “Close” and drag the images onto the SCJ Dock icon. Then click the icon to return here." & welcomeMsg2 buttons {"About…", "Close", startButton} default button 3)
+To do that now, just click “Close” and drag the images onto the SCJ Dock icon. Then click the icon to return here." & welcomeMsg2 & inddCountMsg buttons {"About…", "Close", startButton} default button 3)
 	
 	if (text of launchButton) is "About…" then
 		set backButton to button returned of (display dialog "SCRIPPS COLLEGE JOURNAL" & return & "Interactive Design System" & return & return & "Upcoming issue is Spring " & scjissueyear & ", Volume " & scjvolume & return & return & "Logged in as " & SCJuser & " on " & computername & assetDisplay & return & return & adobeCCstatusDisplay & deprecatedNotice & return & return & diskAbout & "App version " & my version & aboutApp & return & "Design version " & scjDesignVersion & aboutDesign & welcomeNews with title "About" buttons {adminButton, "Acknowledgments…", "Back…"} default button "Back…" with icon note) -- can change this to a different icon if we don’t want the Construction icon
@@ -1494,9 +1525,11 @@ on reopen
 			Welcome()
 		else
 			global assets_path
+			global adobeCCver
+			global inddCount
 			display notification "Press ⌘Q to quit when you’re done. Click the Dock icon for random tips if you’re feeling spontaneous." with title "Tips 💭"
 			set IDtipscriptpath to (((path to me as text) & "Contents:Resources:Scripts:Tips.scpt") as alias) as string
-			run script file IDtipscriptpath with parameters {assets_path}
+			run script file IDtipscriptpath with parameters {assets_path, adobeCCver}
 		end if
 	end if
 end reopen
@@ -1549,7 +1582,7 @@ on open theDroppedItems
 				global assets_path
 				display notification "was added to the SCJ InDesign export queue" subtitle "“" & docName & "”" with title "Export Magazine 📚"
 				set exportScript to (path to me as text) & "Contents:Resources:Scripts:ExportMagazine.scpt" as alias
-				set theResult to run script exportScript with parameters {droppedItemPath, docName, adobeCCver, assets_path, IDver}
+				set theResult to run script exportScript with parameters {droppedItemPath, docName, adobeCCver, assets_path, IDver, "choose"}
 			else if droppedFileExtension is "docx" or droppedFileExtension is "doc" or droppedFileExtension is "rtf" then
 				set itemCount to (length of theDroppedItems as string)
 				if itemCount is less than 2 then
