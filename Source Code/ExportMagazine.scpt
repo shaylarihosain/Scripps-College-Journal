@@ -1,34 +1,42 @@
 --=========================
-(* Export SCJ Magazine 3.1.1 *)
+(* Export SCJ Magazine 3.2 *)
 
 -- Info: Export the magazine easily, quickly and intuitively in a variety of formats, while bypassing the complexity of the InDesign Package or PDF Export interfaces, which use specific terms that students or non-designers may not be familiar with. Generated files comply with the particular SCJ workflow and print house's requirements, and use the SCJ PDF presets that BaseCode installs on the user's machine. BaseCode ensures that dropping the InDesign .indd file onto the SCJ application's Dock icon calls this program.
 -- Created August 24 2020
--- Last updated November 7 2021
+-- Last updated March 9 2022
 
----- © 2020–2021 Shay Lari-Hosain. All rights reserved. Unauthorized copying or reproduction of any part of the proprietary contents of this file, via any medium, is strictly prohibited.
+---- © 2020–2022 Shay Lari-Hosain. All rights reserved. Unauthorized copying or reproduction of any part of the proprietary contents of this file, via any medium, is strictly prohibited.
 --=========================
 
-on run {myDocument, docName, adobeCCver, assets_path, IDver}
+on run {myDocument, docName, adobeCCver, assets_path, IDver, action}
 	if application id "com.adobe.InDesign" is not running then tell application id "com.adobe.InDesign" to launch
-	exportMagazine(myDocument, docName, adobeCCver, assets_path, IDver)
+	exportMagazine(myDocument, docName, adobeCCver, assets_path, IDver, action)
 end run
 
-on exportMagazine(myDocument, docName, adobeCCver, assets_path, IDver)
+on exportMagazine(myDocument, docName, adobeCCver, assets_path, IDver, action)
 	set currentPrintHouse to ""
-	if adobeCCver contains "mismatched" then
-		if IDver is greater than or equal to 12 then
-			set IDdisplayVersion to (IDver + 2005)
-		else if IDver is less than 9 then
-			set IDdisplayVersion to ""
-		else
-			set IDdisplayVersion to (IDver + 2004)
-		end if
+	if IDver is "tips" and adobeCCver contains "mismatched" then
+		set IDdisplayversion to ""
+	else if IDver is "tips" and adobeCCver does not contain "mismatch" then
+		set IDdisplayversion to adobeCCver
 	else
-		set IDdisplayVersion to adobeCCver
+		if adobeCCver contains "mismatched" then
+			if IDver is greater than or equal to 12 then
+				set IDdisplayversion to (IDver + 2005)
+			else if IDver is less than 9 then
+				set IDdisplayversion to ""
+			else
+				set IDdisplayversion to (IDver + 2004)
+			end if
+		else
+			set IDdisplayversion to adobeCCver
+		end if
 	end if
 	set docNameNoExt to text 1 thru ((offset of ".indd" in docName) - 1) of docName
 	
-	set action to button returned of (display alert "Let's start the magazine export process." message "SEND PAGES FOR SENIOR DESIGNER — Along with your InDesign file, which the senior designer needs, a preview PDF is generated, which you and your team can evaluate in design reviews. If you use Apple Mail, you can email your work directly to the senior designer or anyone else, right from here." & return & return & "EXPORT MAGAZINE FOR WEB — Exports a PDF of the magazine with formatting and color best suited for viewing onscreen, online upload, or printing on a home inkjet printer." & return & return & "EXPORT MAGAZINE FOR PRINT — Exports a package of the magazine, which includes a PDF with formatting and color built to specification for our commercial print house, " & currentPrintHouse & "an InDesign CC " & IDdisplayVersion & " master file for archival, separate full-resolution image files of all art pieces, all typeface files used, and a backwards-compatible “emergency” IDML file usable with InDesign CS4." buttons {"Send Pages for Senior Designer", "Export Magazine for Web", "Export Magazine for Print"} default button 1) -- UPDATE
+	if action is "choose" then
+		set action to button returned of (display alert "Let's start the magazine export process." message "PREVIEW PAGES FOR SENIOR DESIGNER — A preview PDF is generated, which you and your team can evaluate in design reviews. If you use Apple Mail, we’ll give you the option to email your preview PDF and InDesign file directly, right from here." & return & return & "EXPORT MAGAZINE FOR WEB — Exports a PDF of the magazine with formatting and color best suited for viewing onscreen, online upload, or printing pages on a home inkjet printer." & return & return & "EXPORT MAGAZINE FOR PRINT — Exports a package of the magazine, which includes a PDF with formatting and color built to specification for our commercial print house, " & currentPrintHouse & "an InDesign CC " & IDdisplayversion & " master file for archival, separate full-resolution image files of all art pieces, all font files used, and a backwards-compatible “emergency” IDML file usable with InDesign CS4." buttons {"Preview Pages for Senior Designer", "Export Magazine for Web", "Export Magazine for Print"} default button 1) -- UPDATE
+	end if
 	
 	tell application id "com.adobe.InDesign"
 		open myDocument
@@ -41,7 +49,7 @@ on exportMagazine(myDocument, docName, adobeCCver, assets_path, IDver)
 			set MyPDFexportPreset to PDF export preset PDFPreset
 			set exportPresetStatus to true
 		on error number -1728
-			display notification "SCJ PDF presets aren't present, so preview PDFs weren't exported" with title "Export Magazine ⚠️"
+			display notification "SCJ PDF presets aren’t present, so preview PDFs weren’t exported" with title "Export Magazine ⚠️"
 			set exportPresetStatus to false
 		end try
 	end tell
@@ -53,7 +61,7 @@ on exportMagazine(myDocument, docName, adobeCCver, assets_path, IDver)
 		set scjvolume to getVolume() of loadTime
 		set congratsOptions to {"Congrats!", "Aww yeah!"}
 		
-		if action is "Send Pages for Senior Designer" then
+		if action is "Preview Pages for Senior Designer" then
 			tell application id "com.adobe.InDesign"
 				open myDocument
 				tell PDF export preferences
@@ -90,7 +98,7 @@ on exportMagazine(myDocument, docName, adobeCCver, assets_path, IDver)
 		else if action is "Export Magazine for Web" then
 			set lastMinuteCancelButton to button returned of (display alert "Starting export of Scripps College Journal Volume " & scjvolume & " for Web…" buttons {"Cancel"} giving up after 2)
 			if lastMinuteCancelButton is "Cancel" then
-				display notification "was removed from the SCJ InDesign export queue" subtitle docName with title "Export Magazine 📚"
+				display notification "was removed from the SCJ InDesign export queue" subtitle "“" & docName & "”" with title "Export Magazine 📚"
 				error number -128
 			end if
 			tell application id "com.adobe.InDesign"
@@ -113,14 +121,14 @@ on exportMagazine(myDocument, docName, adobeCCver, assets_path, IDver)
 		else if action is "Export Magazine for Print" then
 			set lastMinuteCancelButton to button returned of (display alert "Starting export of Scripps College Journal Volume " & scjvolume & " for Print…" buttons {"Cancel"} giving up after 2)
 			if lastMinuteCancelButton is "Cancel" then
-				display notification with title docName subtitle "was removed from the SCJ InDesign export queue"
+				display notification "was removed from the SCJ InDesign export queue" subtitle "“" & docName & "”" with title "Export Magazine 📚"
 				error number -128
 			end if
 			try
 				tell application "Finder" to make new folder at (path to desktop) with properties {name:"Scripps College Journal — Volume " & scjvolume & " (Print)"}
 			on error
 				display alert "There's already an SCJ Magazine Package of Volume " & scjvolume & " on the desktop." message "Please rename or move that folder and try again." buttons {"Cancel", "Try Again"} cancel button 1 default button 2 as critical
-				exportMagazine(myDocument, docName, adobeCCver, assets_path, IDver)
+				exportMagazine(myDocument, docName, adobeCCver, assets_path, IDver, action)
 			end try
 			tell application id "com.adobe.InDesign"
 				open myDocument
@@ -141,10 +149,10 @@ on exportMagazine(myDocument, docName, adobeCCver, assets_path, IDver)
 			-- play sound of delight
 		end if
 		if action is not "Export Magazine for Print" then
-			set reExport to button returned of (display alert "Would you like to export the magazine in another format?" buttons {"Quit", "Export Another", "Go Home"})
-			if reExport is "Export Another" then
-				exportMagazine(myDocument, docName, adobeCCver, assets_path, IDver)
-			else if reExport is "Go Home" then
+			set reExport to button returned of (display alert "Would you like to export the magazine for print also?" buttons {"Quit", "Yes", "No"})
+			if reExport is "Yes" then
+				exportMagazine(myDocument, docName, adobeCCver, assets_path, IDver, "Export Magazine for Print")
+			else if reExport is "No" then
 				error number -128
 			else if reExport is "Quit" then
 				tell application id "edu.scrippsjournal.design" to quit
