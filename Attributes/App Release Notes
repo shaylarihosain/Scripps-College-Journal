@@ -1,3 +1,8 @@
+NEW IN 1.1.1:
+• Start magazine exports from Tips Actions also (type ‘export’)
+• Warning if unrelated InDesign docs are in design guides folder. Random files might have unrelated missing font or link issues
+• ‘Send Pages to Senior Designer’ export category renamed to ‘Preview Pages for Senior Designer’
+• User interface touch-ups and tweaks
 
 NEW IN 1.1:
 • Native support for Macs with Apple M chips. Speed improvements on the following models: MacBook Air (Late 2020), MacBook Pro (Late 2020 or later), Mac mini (Late 2020), iMac (Early 2021)
@@ -17,24 +22,5 @@ FIXED BUGS IN 1.1:
 • On macOS Big Sur or later, when offered older design guides, titles could be truncated
 • When magazine is delayed, issue year didn’t match volume number
 • One-time security warning from Apple is worded more positively for new users
-		
-NEW IN 1.0:
-• Drag a Word doc onto SCJ Dock icon to place that story on your page. Picks text box, formats text in SCJ style, and reflows story through pages — it's automatic
-• Finds & suggests old SCJ design guides on your computer if you don’t have the newest
-• Improvements to magazine exporter: sounds when jobs finish, cancel job option, and clearer options after
-• Welcome message on first run when design guides are successfully installed
-• App intelligently knows when cover illustration is open, not just magazine design
-• Clearer wording when design guides are updated over existing guides
-• Explanation when app requests access to Documents & Downloads folders
-• More reliable on unstable Internet connections
-• Various optimizations and improved security
-
-FIXED BUGS IN 1.0:
-• Reliability improvements when placing visual art
-• On subsequent runs, SCJ InDesign workspace wouldn’t always be reapplied
-• Running the app in different user account on the same computer would crash
-• Exports all pages even if InDesign had less chosen. Won’t export without PDF presets installed
-• Locating old design guide manually, and then updating it wouldn’t use the updated one until next time
-• Rare: if app is run on one computer, then transferred to another, displayed options wouldn’t work
 
 Note: if you have version 0.7.1 or older, you will need to manually reinstall from our website to update. We're sorry.
