@@ -1,6 +1,7 @@
+
 NEW IN 1.1.1:
-• Start magazine exports from Tips Actions also (type ‘export’)
-• Warning if unrelated InDesign docs are in design guides folder. Random files might have unrelated missing font or link issues
+• Start magazine exports from Tips Actions window also (type ‘export’)
+• Warning if unrelated InDesign docs are in design guides folder
 • ‘Send Pages to Senior Designer’ export category renamed to ‘Preview Pages for Senior Designer’
 • User interface touch-ups and tweaks
 
