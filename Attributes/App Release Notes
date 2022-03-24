@@ -1,4 +1,6 @@
 
+⚠️ IMPORTANT: macOS 12.3 (released by Apple in March 2022) introduces multiple serious issues and is not compatible with Scripps College Journal at this time. macOS 12.2.1 and earlier are not affected.
+
 NEW IN 1.1.1:
 • Start magazine exports from Tips Actions window also (type ‘export’)
 • Warning if unrelated InDesign docs are in design guides folder
