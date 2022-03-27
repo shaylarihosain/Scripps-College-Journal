@@ -1,12 +1,12 @@
 --===============================================
 -- SCRIPPS COLLEGE JOURNAL Software for Mac
--- Version 1.1.1
+-- Version 1.1.2
 --------------------------------------------------------------------------------------
--- Compiled on:		macOS 12.2.1 (21D62) (Intel-based)
--- Tested on:		macOS 12.2.1 (21D62) (Intel-based)
+-- Compiled on:		macOS 12.3 (21E230) (Intel-based)
+-- Tested on:		macOS 12.3 (21E230) (Intel-based)
 -- Platform:			Universal (Apple arm64 binary and Intel x86_64 binary)
 --------------------------------------------------------------------------------------
--- Last updated: 								March 9 2022
+-- Last updated: 								March 26 2022
 -- First released staffwide: 						April 24 2021
 -- First beta entered limited staff testing: 		February 28 2021
 -- Software development began: 				July 11 2020
@@ -27,11 +27,11 @@ set progress completed steps to 0
 *)
 
 --=========================
-(* InstallAssistant 2.0 *)
+(* InstallAssistant 2.0.1 *)
 
 -- Info: Complies with Apple security provisions for apps distributed via unsigned distribution methods
 -- Created March 1 2021
--- Last updated June 22 2021
+-- Last updated March 26 2022
 --=========================
 set appleTranslocationCheck to (((path to me as text) as alias) as string) as text
 if appleTranslocationCheck does not contain "Users:" and appleTranslocationCheck does not contain "Applications:" and appleTranslocationCheck does not contain "Library:" then
@@ -54,7 +54,8 @@ if appleTranslocationCheck does not contain "Users:" and appleTranslocationCheck
 	set atcButton to button returned of (display alert appTransMsg message "Please read the enclosed instructions before opening SCJ for the first time." buttons appTransButtons default button 2)
 	if atcButton contains "Instructions" then
 		try
-			tell application "Finder" to open "Install Scripps College Journal:Read Me First.pdf"
+			set readMePOSIX to POSIX path of "Install Scripps College Journal:Read Me First.pdf"
+			do shell script "open " & quoted form of readMePOSIX
 		on error
 			open location "https://github.com/shaylarihosain/Scripps-College-Journal/blob/main/README.md#installation"
 		end try
@@ -330,11 +331,11 @@ if currentyear is greater than 2026 then
 end if
 
 --=========================
-(* BaseCode 14.1.1R *)
+(* BaseCode 14.1.2R *)
 
 -- Info: Main program that handles the primary tasks the SCJ application is designed for. Contains many smaller handlers, as well as programs like Download SCJ, WelcomeManager, Adobe Workspace Installer, and Transfer Artwork. Very early builds named Get Started.
 -- Created July 12 2020
--- Last updated March 7 2021
+-- Last updated March 26 2021
 --=========================
 
 -- Directory tree is damaged alert
@@ -360,16 +361,17 @@ on scjRestart()
 end scjRestart
 
 --=========================
-(* Download SCJ 6.0.1 *)
+(* Download SCJ 6.0.2 *)
 
 -- Info: 
 -- Created July 25 2020
--- Last updated November 4 2021
+-- Last updated March 26 2022
 --=========================
 
 on DownloadSCJ(installUpdate)
 	global currentyear
 	global currentmonthInt
+	global appLatestVersion
 	
 	set repo to "shaylarihosain/Scripps-College-Journal" as string
 	if currentyear is greater than or equal to 2021 and currentmonthInt is greater than 10 then -- (November 2021)
@@ -392,7 +394,7 @@ on DownloadSCJ(installUpdate)
 	set scjName to "ReinstallScrippsCollegeJournal"
 	set scjDestination to "Desktop"
 	downloadResources(scjDownload, scjExtension, scjName, scjDestination)
-	tell application "Finder" to open file ((path to desktop folder as text) & scjName & scjExtension)
+	tell application "System Events" to open file ((path to desktop folder as text) & scjName & scjExtension)
 	
 	repeat
 		tell application "System Events" to set diskNames to name of every disk
@@ -412,7 +414,7 @@ on DownloadSCJ(installUpdate)
 			continue quit
 		end if
 	on error
-		display notification "After dragging the new app to the Applications folder, click “Replace” when prompted."
+		display notification "After dragging the new app to the Applications folder, click “Replace” when prompted." with title "Software Update ↓"
 		continue quit
 	end try
 	
@@ -1241,6 +1243,7 @@ on Designing()
 	-- global IDver
 	global IDverFull
 	global firstname
+	global osver
 	
 	if runcountThisMachine is greater than 0 then
 		set designWork to button returned of (display alert "What are you designing today?" buttons {"Both", "Cover Illustration 🎨", "Page Layout 📐"})
@@ -1334,15 +1337,29 @@ on Designing()
 		set myFolder to assets_path as alias
 		set myIDFiles to (every item of myFolder whose name extension is "indd") as alias list
 		set myAIFiles to (every item of myFolder whose name extension is "ai") as alias list
-		if designWork is "Page Layout 📐" then
-			open myIDFiles
-		else if designWork is "Cover Illustration 🎨" then
-			open myAIFiles
-		else
-			open myIDFiles
-			open myAIFiles
-		end if
 	end tell
+	if osver is less than "12.3" then
+		tell application "Finder"
+			if designWork is "Page Layout 📐" then
+				open myIDFiles
+			else if designWork is "Cover Illustration 🎨" then
+				open myAIFiles
+			else
+				open myIDFiles
+				open myAIFiles
+			end if
+		end tell
+	else
+		if designWork is "Page Layout 📐" then
+			tell application id "com.adobe.InDesign" to open myIDFiles
+		else if designWork is "Cover Illustration 🎨" then
+			tell application id "com.adobe.Illustrator" to activate
+			tell application id "com.adobe.Illustrator" to open myAIFiles
+		else -- earlier, pre-12.3 approach using Finder is nicer, because it opens all the documents at the same time
+			tell application id "com.adobe.InDesign" to open myIDFiles
+			tell application id "com.adobe.Illustrator" to open myAIFiles
+		end if
+	end if
 	
 	-- Show each document and explain their purposes 
 	
@@ -1954,6 +1971,9 @@ on uninstallSCJ(location)
 			set appRemoved to true
 			set appPath to (path to me) as alias
 			tell application "Finder" to move appPath to trash
+			try
+				do shell script "afplay '/System/Library/Components/CoreAudio.component/Contents/SharedSupport/SystemSounds/finder/empty trash.aif'"
+			end try
 		on error
 			set uninstalled to false
 			set progress description to "Paused…"
