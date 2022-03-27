@@ -335,7 +335,7 @@ end if
 
 -- Info: Main program that handles the primary tasks the SCJ application is designed for. Contains many smaller handlers, as well as programs like Download SCJ, WelcomeManager, Adobe Workspace Installer, and Transfer Artwork. Very early builds named Get Started.
 -- Created July 12 2020
--- Last updated March 26 2021
+-- Last updated March 26 2022
 --=========================
 
 -- Directory tree is damaged alert
@@ -1561,11 +1561,11 @@ On Open Handler
 *)
 
 --=========================
-(* Transfer, Place, and Export 4.1 *)
+(* Transfer, Place, and Export 4.1.1 *)
 
 -- Info: Convenient and quickly accessible way to drop files into the Artwork folder, even when it isn’t open in Finder. Just drag the pieces onto the Dock icon, and they’ll transfer. Drag an .indd onto the Dock icon, and you can export the magazine with a selection of SCJ-specific web and print presets (and even email it).
 -- Created February 13 2021
--- Last updated November 18 2021
+-- Last updated March 9 2022
 --=========================
 
 on open theDroppedItems
