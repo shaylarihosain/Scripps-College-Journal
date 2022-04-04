@@ -91,7 +91,7 @@ macOS Mojave or later
 Adobe Creative Cloud 2021  
 2 GB of free space recommended, 0.2 GB required
 
-_Software requirements will automatically change every year starting in 2023 until 2027_
+_Software requirements will automatically change every year starting in 2023 until 2027_ [_Why?_](#whyincrement)
 
 <a id="faq"></a>
 # FAQ
@@ -113,6 +113,7 @@ Lastly, while you won’t be able to place writing as quickly without the SCJ ap
 
 The app notifies you on startup if your design guides have been superseded by newer ones, and you’ll be given the option to update them. To check their status, click the _About_ button on the main _Welcome_ screen.
 
+<a id="whyincrement"></a>
 **Why do the software requirements increase year to year?**
 
 Adobe software only supports the last 3 years of macOS releases, and Apple typically supports Macs with new macOS upgrades for up to 7 years (though not always). Effectively, our workflow typically supports Macs up to 10 years old. 
