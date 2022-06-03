@@ -146,7 +146,7 @@ Within the _Assets_ folder, the app will install whatever font files exist in th
 
 (Beta) Signing in as a managing editor in the app will disable Adobe and macOS compatibility checks on that machine. Use at your own risk.
 
-You can use the _Announcements_ feature, located in Scripps College Journal’s _Preferences_ repository, to send brief information and news to your team when they launch the app, even for on a specific day.
+You can use the _Announcements_ feature, located in Scripps College Journal’s _Preferences_ repository, to relay brief information and news to your team when they launch the app, even only on a specific day.
 
 [**Back to top**](#welcome)
 
