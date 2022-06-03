@@ -1,12 +1,12 @@
 --===============================================
 -- SCRIPPS COLLEGE JOURNAL Software for Mac
--- Version 1.1.2
+-- Version 1.1.3
 --------------------------------------------------------------------------------------
--- Compiled on:		macOS 12.3 (21E230) (Intel-based)
--- Tested on:		macOS 12.3 (21E230) (Intel-based)
+-- Compiled on:		macOS 12.4 (21F79) (Intel-based)
+-- Tested on:		macOS 12.4 (21F79) (Intel-based)
 -- Platform:			Universal (Apple arm64 binary and Intel x86_64 binary)
 --------------------------------------------------------------------------------------
--- Last updated: 								March 26 2022
+-- Last updated: 								June 2 2022
 -- First released staffwide: 						April 24 2021
 -- First beta entered limited staff testing: 		February 28 2021
 -- Software development began: 				July 11 2020
@@ -331,11 +331,11 @@ if currentyear is greater than 2026 then
 end if
 
 --=========================
-(* BaseCode 14.1.2R *)
+(* BaseCode 14.1.3R *)
 
 -- Info: Main program that handles the primary tasks the SCJ application is designed for. Contains many smaller handlers, as well as programs like Download SCJ, WelcomeManager, Adobe Workspace Installer, and Transfer Artwork. Very early builds named Get Started.
 -- Created July 12 2020
--- Last updated March 26 2022
+-- Last updated June 2 2022
 --=========================
 
 -- Directory tree is damaged alert
@@ -555,14 +555,17 @@ on downloadAssetsThemselves()
 	set assetsDestination to "Documents"
 	downloadResources(assetsDownload, assetsExtension, assetsName, assetsDestination)
 	display notification "Almost done…" with title "Design Guide 📘"
-	tell application "Finder"
-		open file ((path to documents folder as text) & assetsName & assetsExtension)
-	end tell
+	-- tell application "Finder" to open file ((path to documents folder as text) & assetsName & assetsExtension)
+	set assetsZipPOSIX to POSIX path of ((path to documents folder as text) & assetsName & assetsExtension)
+	do shell script "unzip -uo " & quoted form of assetsZipPOSIX & " -d " & quoted form of the POSIX path of (path to documents folder)
 	
 	delay 3
-	tell application "System Events"
-		delete file ((path to documents folder as text) & assetsName & assetsExtension)
-	end tell
+	try
+		tell application "System Events"
+			delete file ((path to documents folder as text) & assetsName & assetsExtension)
+			delete folder ((path to documents folder as text) & "__MACOSX")
+		end tell
+	end try
 end downloadAssetsThemselves
 
 -- Define asset locations & asset integrity check
@@ -1338,7 +1341,7 @@ on Designing()
 		set myIDFiles to (every item of myFolder whose name extension is "indd") as alias list
 		set myAIFiles to (every item of myFolder whose name extension is "ai") as alias list
 	end tell
-	if osver is less than "12.3" then
+	if osver is not "12.3" then
 		tell application "Finder"
 			if designWork is "Page Layout 📐" then
 				open myIDFiles
@@ -1355,7 +1358,7 @@ on Designing()
 		else if designWork is "Cover Illustration 🎨" then
 			tell application id "com.adobe.Illustrator" to activate
 			tell application id "com.adobe.Illustrator" to open myAIFiles
-		else -- earlier, pre-12.3 approach using Finder is nicer, because it opens all the documents at the same time
+		else -- earlier, non-12.3 approach using Finder is nicer, because it opens all the documents at the same time
 			tell application id "com.adobe.InDesign" to open myIDFiles
 			tell application id "com.adobe.Illustrator" to open myAIFiles
 		end if
