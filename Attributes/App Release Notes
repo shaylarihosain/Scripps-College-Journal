@@ -1,5 +1,3 @@
-If you have macOS 12.2.1 or earlier, this update can be installed. On macOS 12.3, quit and manually reinstall from our website.
-
 NEW IN 1.1.2 and 1.1.3:
 • Compatibility with macOS 12.3 update
 
@@ -27,3 +25,5 @@ FIXED BUGS IN 1.1:
 • On macOS Big Sur or later, when offered older design guides, titles in list could be truncated
 • When magazine is delayed, issue year didn’t match volume number
 • One-time security warning from Apple is worded more positively for new users
+
+If you have SCJ 1.1.1 or earlier on macOS 12.3, quit and manually redownload SCJ from our website to install this update.
