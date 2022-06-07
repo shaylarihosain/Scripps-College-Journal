@@ -1,11 +1,11 @@
 --=========================
-(* ComprehensiveCompatibilityCheck 9.0R *)
+(* ComprehensiveCompatibilityCheck 9.0.1R *)
 
 -- Info: Validates user's computer for any Adobe Creative Cloud or macOS incompatibilities; instructs them in detail how to rectify issues if any exist. The program will keep up-to-date on its own—compatibility rules auto-update until SCJ Vol 27.
 -- Created July 17 2020
--- Last updated November 10 2021
+-- Last updated June 6 2022
 
----- © 2020–2021 Shay Lari-Hosain. All rights reserved. Unauthorized copying or reproduction of any part of the proprietary contents of this file, via any medium, is strictly prohibited.
+---- © 2020–2022 Shay Lari-Hosain. All rights reserved. Unauthorized copying or reproduction of any part of the proprietary contents of this file, via any medium, is strictly prohibited.
 --=========================
 
 (* Determine system configuration *)
@@ -48,7 +48,9 @@ on DetermineCompatibility()
 	set scjissueyear to getIssueYear() of loadTime
 	set scjvolume to getVolume() of loadTime
 	
-	if osver starts with "12" then
+	if osver starts with "13" then
+		set osname to "Ventura"
+	else if osver starts with "12" then
 		set osname to "Monterey"
 	else if osver starts with "11" or osver starts with "10.16" then
 		set osname to "Big Sur"
@@ -90,7 +92,7 @@ on DetermineCompatibility()
 	else if osver is less than "10.10" then
 		set osverdisplay to system version of sysinfo
 	end if
-	if osver is greater than or equal to "13" then
+	if osver is greater than or equal to "14" then
 		set osname to osver
 	end if
 	
@@ -195,7 +197,7 @@ on DetermineCompatibility()
 	10.15 	-- release date 2019, supported until late 2022, MacBook/iMac 2012, min require CC 2022 	-- SCJ Vol 24		SP'23
 	11   	-- release date 2020, supported until late 2023, MacBook/iMac 2013/14, min require CC 2023 	-- SCJ Vol 25		SP'24
 	12   	-- release date 2021, supported until late 2024, MacBook/iMac 2015, min require CC 2024 	-- SCJ Vol 26		SP'25
-	13   	-- release date 2022, supported until late 2025, min require CC 2025 							-- SCJ Vol 27		SP'26
+	13   	-- release date 2022, supported until late 2025, MacBook/iMac 2017, min require CC 2025 	-- SCJ Vol 27		SP'26
 							-- Steele lab computers as of 2020: iMac Late 2015
 	*)
 	
@@ -207,7 +209,9 @@ on DetermineCompatibility()
 		set compatibleosname to "Big Sur"
 	else if compatibleos is "12" then
 		set compatibleosname to "Monterey"
-	else if compatibleos is greater than or equal to "13" then
+	else if compatibleos is "13" then
+		set compatibleosname to "Ventura"
+	else if compatibleos is greater than or equal to "14" then
 		set compatibleosname to compatibleos
 	end if
 	
